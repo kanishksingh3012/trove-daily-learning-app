@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+<style>
+body{margin:0;background:#e9e7e2;font-family:'Manrope',sans-serif;display:flex;justify-content:center;padding:48px 24px}
+.frame{width:240px;height:560px;background:#fff;border-radius:24px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.status{display:flex;justify-content:space-between;padding:8px 16px 0;font-size:10px;font-weight:700;color:#121210}
+.batt{width:10px;height:6px;border:1px solid #121210;border-radius:1px}
+.title{font-size:20px;font-weight:800;color:#121210}
+.navbar{position:absolute;left:14px;right:14px;bottom:10px;display:flex;gap:10px;align-items:center;z-index:5}
+.pill{flex:1;height:54px;border-radius:27px;background:#fff;border:1px solid #e4e2dc;box-shadow:0 4px 14px rgba(0,0,0,.08);display:flex;justify-content:space-around;align-items:center}
+.navitem{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;background:none;border:none;font-family:inherit}
+.fab{width:54px;height:54px;border-radius:50%;background:#5c6b2c;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;box-shadow:0 4px 12px rgba(92,107,44,.35);border:none;cursor:pointer}
+.msr{font-family:'Material Symbols Rounded';line-height:1}
+.tag{font-size:9px;font-weight:700;border-radius:10px;padding:3px 8px;display:inline-flex;white-space:nowrap}
+.listrow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid #e4e2dc;font-size:11px;color:#121210;gap:8px;cursor:pointer;background:none;width:100%;text-align:left;font-family:inherit}
+.card{background:none;border:none;text-align:left;font-family:inherit;cursor:pointer;padding:0}
+</style>
+</helmet>
+
+<div class="frame">
+
+<sc-if value="{{ showTabBar }}" hint-placeholder-val="{{ true }}">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+</sc-if>
+
+<sc-if value="{{ showHome }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px 6px"><span style="font-size:16px;font-weight:800;color:#121210">Hi Kans</span><div style="width:30px;height:30px;border-radius:50%;border:1.5px solid #e4e2dc;display:flex;align-items:center;justify-content:center;color:#121210"><span class="msr" style="font-size:16px">edit_note</span></div></div>
+<div style="padding: 10px 16px 0; width: 208px; height: 22px"><span style="font-size: 12px; font-weight: 600; color: #9c9a92; position: absolute">Today's topic</span></div>
+<div style="margin:6px 16px 0;border-radius:20px;overflow:hidden;position:relative;height:180px;background:#f3f2ee">
+<div style="position:absolute;left:0;right:0;bottom:0;padding:14px;display:flex;flex-direction:column;gap:8px">
+<span class="tag" style="background:#e3eaf9;color:#2c468e;align-self:flex-start">Math &amp; Logic</span>
+<span style="font-size:18px;font-weight:800;color:#121210;line-height:1.15">Nash Equilibrium</span>
+<button class="card" style="background:#5c6b2c;color:#fff;text-align:center;padding:10px;border-radius:14px;font-size:12px;font-weight:700;margin-top:2px" onClick="{{ openMainNote }}">Read now →</button>
+</div>
+</div>
+<div style="padding:14px 16px 0;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;color:#9c9a92;font-weight:600">For tomorrow, select</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ tomorrowOptions }}" as="opt" hint-placeholder-count="4">
+<button class="card" style="border-radius:14px;padding:9px 6px;font-size:10px;text-align:center;background:{{ opt.bg }};border:{{ opt.border }};color:{{ opt.color }};font-weight:{{ opt.weight }}" onClick="{{ opt.pick }}">{{ opt.name }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:9px;color:#9c9a92;font-weight:700">YESTERDAY</span><span style="font-size:11px;color:#5f5d56">mRNA Vaccines</span></div>
+<button class="card" style="border:1px solid #e4e2dc;border-radius:10px;padding:5px 12px;font-size:10px;color:#121210" onClick="{{ openYesterdayNote }}">Read</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showTopics }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px"><span class="title">Topics</span><span style="display:flex;align-items:center;gap:3px;color:#46531f;font-size:12px;font-weight:700"><span class="msr" style="font-size:16px">add</span>Domain</span></div>
+<div style="padding:0 16px 12px"><div style="display:flex;background:#f3f2ee;border-radius:10px;padding:2px;height:32px">
+<button class="card" style="flex:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;background:{{ catBg }};box-shadow:{{ catShadow }};font-weight:700;color:#46531f" onClick="{{ setCategorical }}">Categorical</button>
+<button class="card" style="flex:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;background:{{ allBg }};box-shadow:{{ allShadow }};font-weight:700;color:#46531f" onClick="{{ setAll }}">All</button>
+</div></div>
+
+<sc-if value="{{ isCategorical }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow:auto;max-height:400px">
+<sc-for list="{{ domains }}" as="d" hint-placeholder-count="6">
+<button class="card" style="background:#fff;border:1px solid #e4e2dc;border-radius:16px;padding:11px;display:flex;flex-direction:column;gap:10px" onClick="{{ d.open }}">
+<div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:{{ d.light }};border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:{{ d.main }};border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div>
+<div style="display:flex;flex-direction:column;gap:1px"><span style="font-size:12px;font-weight:700;color:#121210">{{ d.name }}</span><span style="font-size:9px;color:#9c9a92">{{ d.count }} notes</span></div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ isAll }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 16px"><div style="background:#fff;border:1px solid #e4e2dc;border-radius:14px;overflow:hidden">
+<sc-for list="{{ allList }}" as="n" hint-placeholder-count="9">
+<div class="listrow" style="cursor:default"><span>{{ n.title }}</span><span class="tag" style="background:{{ n.bg }};color:{{ n.fg }}">{{ n.tagName }}</span></div>
+</sc-for>
+</div></div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ showSettings }}" hint-placeholder-val="{{ false }}">
+<div style="padding:10px 16px 12px"><span class="title">Settings</span></div>
+<div style="padding:0 12px;display:flex;flex-direction:column;gap:14px">
+<div style="background:#f3f2ee;border-radius:14px;overflow:hidden">
+<div style="padding:11px 12px;border-bottom:1px solid #e4e2dc;font-size:11px;color:#121210;display:flex;flex-direction:column;gap:3px"><span style="font-weight:700">Prompt</span><span style="font-size:9px;color:#9c9a92">"Daily at 8:00 AM: deliver one new topic…"</span></div>
+<div style="display:flex;flex-direction:column;gap:2px;padding:11px 12px"><div style="display:flex;justify-content:space-between;font-size:12px;color:#121210"><span>Timing</span><span style="color:#9c9a92">8:00 AM</span></div><span style="font-size:9px;color:#9c9a92">Change schedule in Cowork — view only here</span></div>
+</div>
+<div style="background:#f3f2ee;border-radius:14px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border-bottom:1px solid #e4e2dc;font-size:12px;color:#121210"><span>Today's note ready</span>
+<button class="card" style="width:28px;height:16px;background:{{ notif1Bg }};border-radius:9px;position:relative" onClick="{{ toggleNotif1 }}"><div style="width:12px;height:12px;background:#fff;border-radius:50%;position:absolute;top:2px;left:{{ notif1Pos }}"></div></button>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 12px;font-size:12px;color:#121210"><span>Custom topic ready</span>
+<button class="card" style="width:28px;height:16px;background:{{ notif2Bg }};border-radius:9px;position:relative" onClick="{{ toggleNotif2 }}"><div style="width:12px;height:12px;background:#fff;border-radius:50%;position:absolute;top:2px;left:{{ notif2Pos }}"></div></button>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font-size:10px;font-weight:700;color:#9c9a92;padding-left:4px">STATS</span>
+<div style="background:#f3f2ee;border-radius:14px;padding:12px;display:flex;gap:10px">
+<div style="flex:1;text-align:center;display:flex;flex-direction:column;gap:2px"><span style="font-size:19px;font-weight:800;color:#121210">90</span><span style="font-size:9px;color:#9c9a92">total notes</span></div>
+<div style="flex:1;text-align:center;display:flex;flex-direction:column;gap:2px"><span style="font-size:19px;font-weight:800;color:#121210">15</span><span style="font-size:9px;color:#9c9a92">domains</span></div>
+</div>
+<div style="background:#f3f2ee;border-radius:14px;padding:11px 12px;font-size:10px;color:#121210">Most active: <span style="font-weight:700">Science &amp; Nature</span> (14)</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showNote }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px 0">
+<button class="card" onClick="{{ closeDetail }}"><span class="msr" style="font-size:20px;color:#121210">arrow_back_ios</span></button>
+<button class="card" onClick="{{ toggleToc }}"><span class="msr" style="font-size:20px;color:{{ tocColor }}">toc</span></button>
+</div>
+<div style="padding:8px 16px 0;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:17px;font-weight:800;color:#121210">{{ noteTopic }}</span>
+<span class="tag" style="background:#e3eaf9;color:#2c468e;align-self:flex-start">{{ noteTag }}</span>
+</div>
+<button class="card" style="padding:14px 16px 0;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:1.5;color:#3c3a35;text-align:left" onClick="{{ toggleEdit }}">
+<span style="font-weight:700;color:#121210;font-size:9px;letter-spacing:.04em">BRIEF</span>
+<span>A Nash equilibrium is a state where no player can improve their outcome by changing strategy alone, given everyone else's strategy stays fixed.</span>
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+<span style="background:#fde68a;padding:1px 2px;border-radius:2px;align-self:flex-start">The Prisoner's Dilemma is the standard proof of this.</span>
+</sc-if>
+</button>
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;bottom:76px;background:#121210;color:#fff;border-radius:8px;padding:5px 10px;font-size:9px;font-weight:600;display:flex;gap:8px;white-space:nowrap;z-index:4">Highlight&nbsp;·&nbsp;Copy&nbsp;·&nbsp;Link</div>
+<div style="position:absolute;left:14px;right:14px;bottom:10px;display:flex;justify-content:space-around;padding:10px;background:#fff;border:1px solid #e4e2dc;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.08);z-index:4">
+<span class="msr" style="font-size:18px;color:#121210">text_fields</span>
+<span class="msr" style="font-size:18px;color:#5c6b2c">highlight</span>
+<span class="msr" style="font-size:18px;color:#121210">image</span>
+<span class="msr" style="font-size:18px;color:#121210">link</span>
+</div>
+</sc-if>
+<sc-if value="{{ tocOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.2);z-index:2" onClick="{{ toggleToc }}"></div>
+<div style="position:absolute;inset:0;top:auto;height:48%;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.12);padding:14px;display:flex;flex-direction:column;gap:10px;z-index:3">
+<div style="width:36px;height:4px;background:#d1d1d6;border-radius:2px;align-self:center"></div>
+<span style="font-size:13px;font-weight:800;color:#121210">Sections</span>
+<div style="display:flex;flex-direction:column">
+<div class="listrow" style="color:#5c6b2c;font-weight:700;cursor:default">Brief</div>
+<div class="listrow" style="cursor:default">Concept Index</div>
+<div class="listrow" style="cursor:default">Detailed Notes</div>
+<div class="listrow" style="border-bottom:none;cursor:default">Resources</div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showDomain }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:2px;color:#5c6b2c;padding:12px 16px 0">
+<button class="card" onClick="{{ closeDetail }}"><span class="msr" style="font-size:18px;color:#5c6b2c">arrow_back_ios</span></button>
+<span style="font-size:12px" onClick="{{ closeDetail }}">Topics</span>
+</div>
+<div style="padding:6px 16px 12px"><span class="title">{{ domainName }}</span></div>
+<div style="padding:0 16px"><div style="background:#fff;border:1px solid #e4e2dc;border-radius:14px;overflow:hidden">
+<sc-for list="{{ domainNotes }}" as="n" hint-placeholder-count="2">
+<div class="listrow" onClick="{{ n.open }}"><span>{{ n.title }}</span><span class="msr" style="color:#c7c5bf;font-size:15px">chevron_right</span></div>
+</sc-for>
+</div></div>
+</sc-if>
+
+<sc-if value="{{ showTabBar }}" hint-placeholder-val="{{ true }}">
+<div class="navbar"><div class="pill">
+<button class="navitem" style="color:{{ homeColor }}" onClick="{{ goHome }}"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px;font-weight:{{ homeWeight }}">Home</span></button>
+<button class="navitem" style="color:{{ topicsColor }}" onClick="{{ goTopics }}"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px;font-weight:{{ topicsWeight }}">Topics</span></button>
+<button class="navitem" style="color:{{ settingsColor }}" onClick="{{ goSettings }}"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px;font-weight:{{ settingsWeight }}">Settings</span></button>
+</div>
+<button class="fab" onClick="{{ openAdd }}">+</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:76px;background:#121210;color:#fff;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;box-shadow:0 8px 20px rgba(0,0,0,.2);z-index:6"><span class="msr" style="font-size:16px;color:#a9d18f">check_circle</span>Saved as tomorrow's pick</div>
+</sc-if>
+
+<sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.25);z-index:7" onClick="{{ closeAdd }}"></div>
+
+<sc-if value="{{ addStepForm }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:10px 16px 20px;display:flex;flex-direction:column;gap:14px;z-index:8">
+<div style="width:36px;height:4px;background:#d1d1d6;border-radius:2px;align-self:center"></div>
+<span style="font-size:15px;font-weight:800;color:#121210;text-align:center">New topic</span>
+<div style="background:#f3f2ee;border-radius:12px;overflow:hidden">
+<div style="padding:10px 12px;border-bottom:1px solid #e4e2dc;font-size:11px;color:#121210">Ottoman Empire administrative structure</div>
+<button class="card" style="display:flex;justify-content:space-between;padding:10px 12px;font-size:12px;color:#46531f;font-weight:700;width:100%" onClick="{{ openPicker }}"><span>Domain</span><span>{{ addDomain }}</span></button>
+</div>
+<button class="card" style="background:#5c6b2c;color:#fff;text-align:center;padding:11px;border-radius:12px;font-size:13px;font-weight:700" onClick="{{ submitAdd }}">Submit</button>
+<span style="font-size:9px;color:#9c9a92;text-align:center">Queued — appears after tomorrow's run, not instantly</span>
+</div>
+
+<sc-if value="{{ pickerOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.15);z-index:9">
+<div style="display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #e4e2dc;font-size:12px">
+<button class="card" style="color:#9c9a92" onClick="{{ closePicker }}">Cancel</button>
+<span style="color:#121210;font-weight:700">Domain</span>
+<button class="card" style="color:#5c6b2c;font-weight:800" onClick="{{ closePicker }}">Done</button>
+</div>
+<div style="padding:16px 0;display:flex;flex-direction:column;align-items:center;position:relative">
+<div style="position:absolute;left:16px;right:16px;top:50%;height:26px;transform:translateY(-50%);background:#f3f2ee;border-radius:8px"></div>
+<sc-for list="{{ pickerOptions }}" as="p" hint-placeholder-count="3">
+<button class="card" style="font-size:{{ p.size }};color:{{ p.color }};font-weight:{{ p.weight }};padding:4px 0;z-index:1" onClick="{{ p.pick }}">{{ p.name }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ addStepConfirm }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 30px;display:flex;flex-direction:column;gap:10px;align-items:center;z-index:8">
+<div style="width:36px;height:4px;background:#d1d1d6;border-radius:2px"></div>
+<div style="width:44px;height:44px;border-radius:50%;background:#e7ead8;display:flex;align-items:center;justify-content:center;color:#5c6b2c;margin-top:8px"><span class="msr" style="font-size:22px">check_circle</span></div>
+<span style="font-size:15px;font-weight:800;color:#121210">We'll let you know</span>
+<span style="font-size:11px;color:#9c9a92;text-align:center">You'll get a notification once your note is ready</span>
+<button class="card" style="border:1px solid #e4e2dc;border-radius:12px;padding:9px 24px;font-size:13px;color:#121210;font-weight:600;margin-top:6px" onClick="{{ closeAdd }}">Got it</button>
+</div>
+</sc-if>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    tab: 'home', detail: null, domainName: '', noteTopic: 'Nash Equilibrium', noteTag: 'Math & Logic',
+    topicsSubTab: 'categorical', addOpen: false, addStep: 'form', addDomain: 'History & Civilization',
+    pickerOpen: false, tomorrowPick: 'Bronze Age Collapse', toast: false, editing: false, tocOpen: false,
+    notif1: true, notif2: true,
+  };
+
+  domainDefs = [
+    { name: 'Science & Nature', count: 14, main: '#2e9e5b', light: '#8FD1AC', notes: ['Photosynthesis Deep Dive', 'Plate Tectonics'] },
+    { name: 'History & Civilization', count: 11, main: '#d97635', light: '#F3BE8B', notes: ['Byzantine Empire', 'Ottoman Empire'] },
+    { name: 'Math & Logic', count: 9, main: '#3b5fc4', light: '#A9BBEF', notes: ['Nash Equilibrium', "Bayes' Theorem"] },
+    { name: 'Technology', count: 8, main: '#7a5fc4', light: '#C9BCEF', notes: ['Illustrated Transformer'] },
+    { name: 'Mind & Psychology', count: 7, main: '#c45f8a', light: '#EFB9CE', notes: ['Loss Aversion & Anchoring'] },
+    { name: 'Health & Medicine', count: 6, main: '#2f9e93', light: '#93D9D1', notes: ['mRNA Vaccines'] },
+  ];
+
+  allListDefs = [
+    { title: 'Nash Equilibrium', tagName: 'Math & Logic', bg: '#e3eaf9', fg: '#2c468e' },
+    { title: 'mRNA Vaccines', tagName: 'Health & Medicine', bg: '#dff2ef', fg: '#1f6e64' },
+    { title: 'Byzantine Empire', tagName: 'History', bg: '#fbeadf', fg: '#a85623' },
+    { title: 'Illustrated Transformer', tagName: 'Technology', bg: '#ece5fa', fg: '#5a3d99' },
+    { title: 'Loss Aversion & Anchoring', tagName: 'Mind & Psych', bg: '#fbe6ee', fg: '#a3406a' },
+    { title: 'Silk Road Trade Networks', tagName: 'Geopolitics', bg: '#eee9d3', fg: '#6b5f1f' },
+    { title: 'CIA Tradecraft History', tagName: 'Espionage', bg: '#e6e8eb', fg: '#3f4a58' },
+    { title: "Bayes' Theorem", tagName: 'Math & Logic', bg: '#e3eaf9', fg: '#2c468e' },
+    { title: 'Boxing Fundamentals', tagName: 'Physical Cond.', bg: '#fbe8e6', fg: '#a3392f' },
+  ];
+
+  goHome = () => this.setState({ tab: 'home', detail: null });
+  goTopics = () => this.setState({ tab: 'topics', detail: null });
+  goSettings = () => this.setState({ tab: 'settings', detail: null });
+  setCategorical = () => this.setState({ topicsSubTab: 'categorical' });
+  setAll = () => this.setState({ topicsSubTab: 'all' });
+  openMainNote = () => this.setState({ detail: 'note', noteTopic: 'Nash Equilibrium', noteTag: 'Math & Logic', editing: false, tocOpen: false });
+  openYesterdayNote = () => this.setState({ detail: 'note', noteTopic: 'mRNA Vaccines', noteTag: 'Health & Medicine', editing: false, tocOpen: false });
+  closeDetail = () => this.setState({ detail: null, editing: false, tocOpen: false });
+  toggleEdit = () => this.setState(s => ({ editing: !s.editing }));
+  toggleToc = () => this.setState(s => ({ tocOpen: !s.tocOpen }));
+  toggleNotif1 = () => this.setState(s => ({ notif1: !s.notif1 }));
+  toggleNotif2 = () => this.setState(s => ({ notif2: !s.notif2 }));
+  openAdd = () => this.setState({ addOpen: true, addStep: 'form', pickerOpen: false });
+  closeAdd = () => this.setState({ addOpen: false, pickerOpen: false, addStep: 'form' });
+  submitAdd = () => this.setState({ addStep: 'confirm' });
+  openPicker = () => this.setState({ pickerOpen: true });
+  closePicker = () => this.setState({ pickerOpen: false });
+
+  pickTomorrow(name) {
+    this.setState({ tomorrowPick: name, toast: true });
+    setTimeout(() => this.setState({ toast: false }), 1800);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const opts = ['Bronze Age Collapse', 'CIA Tradecraft History', 'CRISPR Gene Editing', 'Boxing Fundamentals'];
+    const tomorrowOptions = opts.map(name => {
+      const picked = s.tomorrowPick === name;
+      return {
+        name, pick: () => this.pickTomorrow(name),
+        bg: picked ? '#e7ead8' : '#fff', border: picked ? '1.5px solid #5c6b2c' : '1px solid #e4e2dc',
+        color: picked ? '#46531f' : '#121210', weight: picked ? 700 : 400,
+      };
+    });
+
+    const domains = this.domainDefs.map(d => ({
+      ...d, open: () => this.setState({ detail: 'domain', domainName: d.name }),
+    }));
+
+    const allList = this.allListDefs;
+
+    const domainNotes = (this.domainDefs.find(d => d.name === s.domainName)?.notes || []).map(title => ({
+      title, open: () => this.setState({ detail: 'note', noteTopic: title, noteTag: s.domainName, editing: false, tocOpen: false }),
+    }));
+
+    const pickerNames = ['Geography', 'History & Civilization', 'Geopolitics'];
+    const pickerOptions = pickerNames.map(name => {
+      const on = s.addDomain === name;
+      return { name, pick: () => this.setState({ addDomain: name }), size: on ? '12px' : '10px', color: on ? '#121210' : '#c7c5bf', weight: on ? 800 : 400 };
+    });
+
+    return {
+      showTabBar: s.detail === null,
+      showHome: s.tab === 'home' && s.detail === null,
+      showTopics: s.tab === 'topics' && s.detail === null,
+      showSettings: s.tab === 'settings' && s.detail === null,
+      showNote: s.detail === 'note',
+      showDomain: s.detail === 'domain',
+      isCategorical: s.topicsSubTab === 'categorical',
+      isAll: s.topicsSubTab === 'all',
+      catBg: s.topicsSubTab === 'categorical' ? '#fff' : 'transparent',
+      catShadow: s.topicsSubTab === 'categorical' ? '0 1px 2px rgba(0,0,0,.15)' : 'none',
+      allBg: s.topicsSubTab === 'all' ? '#fff' : 'transparent',
+      allShadow: s.topicsSubTab === 'all' ? '0 1px 2px rgba(0,0,0,.15)' : 'none',
+      homeColor: s.tab === 'home' ? '#5c6b2c' : '#9c9a92',
+      topicsColor: s.tab === 'topics' ? '#5c6b2c' : '#9c9a92',
+      settingsColor: s.tab === 'settings' ? '#5c6b2c' : '#9c9a92',
+      homeWeight: s.tab === 'home' ? 700 : 400,
+      topicsWeight: s.tab === 'topics' ? 700 : 400,
+      settingsWeight: s.tab === 'settings' ? 700 : 400,
+      tocColor: s.tocOpen ? '#5c6b2c' : '#121210',
+      notif1Bg: s.notif1 ? '#5c6b2c' : '#e4e2dc', notif1Pos: s.notif1 ? '14px' : '2px',
+      notif2Bg: s.notif2 ? '#5c6b2c' : '#e4e2dc', notif2Pos: s.notif2 ? '14px' : '2px',
+      addStepForm: s.addStep === 'form', addStepConfirm: s.addStep === 'confirm',
+      noteTopic: s.noteTopic, noteTag: s.noteTag, domainName: s.domainName,
+      editing: s.editing, tocOpen: s.tocOpen, toast: s.toast, addOpen: s.addOpen,
+      pickerOpen: s.pickerOpen, addDomain: s.addDomain,
+      tomorrowOptions, domains, allList, domainNotes, pickerOptions,
+      goHome: this.goHome, goTopics: this.goTopics, goSettings: this.goSettings,
+      setCategorical: this.setCategorical, setAll: this.setAll,
+      openMainNote: this.openMainNote, openYesterdayNote: this.openYesterdayNote,
+      closeDetail: this.closeDetail, toggleEdit: this.toggleEdit, toggleToc: this.toggleToc,
+      toggleNotif1: this.toggleNotif1, toggleNotif2: this.toggleNotif2,
+      openAdd: this.openAdd, closeAdd: this.closeAdd, submitAdd: this.submitAdd,
+      openPicker: this.openPicker, closePicker: this.closePicker,
+    };
+  }
+}
+</script>
+</body>
+</html>

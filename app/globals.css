@@ -1,13 +1,204 @@
+/* ============================================================
+   Daily Learning Companion — design tokens
+   Dark is default; data-theme="light" swaps the palette.
+   data-accent selects the accent theme (neutral/terracotta/olive/blue).
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  /* -- surfaces -- */
+  --bg: #0a0a0b;
+  --frame: #16171a;
+  --surface: #212227;
+  --well: #101113;
+  --line: #2a2b30;
+  --skeleton: #26272c;
+
+  /* -- text -- */
+  --text: #f2f0ec;
+  --text-body: #c9c7c1;
+  --text-2: #9c9a92;
+  --text-3: #5c5d61;
+
+  /* -- misc -- */
+  --overlay: #2c2d31;
+  --danger: #ff6b60;
+  --danger-bg: #3a1f1e;
+  --dashed: #3a3b40;
+  --handle: #4a4b4f;
+  --track-off: #2a2b30;
+
+  /* -- accent: neutral (default) -- */
+  --accent: #f2f0ec;
+  --on-accent: #16171a;
+  --accent-rgb: 242, 240, 236;
+  --accent-border: rgba(var(--accent-rgb), 0.35);
+  --accent-fill: rgba(var(--accent-rgb), 0.12);
+  --accent-key-tint: rgba(var(--accent-rgb), 0.15);
+  --accent-glow: rgba(var(--accent-rgb), 0.35);
+
+  /* -- note content (fixed, theme independent) -- */
+  --highlight-bg: #fde68a;
+  --highlight-text: #2b2408;
+  --resource-link: #8fb0f2;
+
+  /* -- category identity colours -- */
+  --cat-science-body: #2e9e5b;
+  --cat-science-tab: #8fd1ac;
+  --cat-history-body: #d97635;
+  --cat-history-tab: #f3be8b;
+  --cat-math-body: #3b5fc4;
+  --cat-math-tab: #a9bbef;
+  --cat-tech-body: #7a5fc4;
+  --cat-tech-tab: #c9bcef;
+  --cat-mind-body: #c45f8a;
+  --cat-mind-tab: #efb9ce;
+  --cat-health-body: #2f9e93;
+  --cat-health-tab: #93d9d1;
+
+  /* -- category tag pills (bg / text) -- */
+  --tag-math-bg: #202b47;
+  --tag-math-text: #93b4f0;
+  --tag-health-bg: #173430;
+  --tag-health-text: #7fe0d0;
+  --tag-history-bg: #3a2617;
+  --tag-history-text: #f0a877;
+  --tag-tech-bg: #2b2140;
+  --tag-tech-text: #c3a8f0;
+  --tag-mind-bg: #3a1f2a;
+  --tag-mind-text: #f0a0c4;
+  --tag-geo-bg: #332e17;
+  --tag-geo-text: #e0d17f;
+  --tag-espionage-bg: #25272b;
+  --tag-espionage-text: #b7c0cc;
+  --tag-physical-bg: #3a201d;
+  --tag-physical-text: #f0a89c;
+  --tag-science-bg: #173a26;
+  --tag-science-text: #7fe0a3;
+
+  /* -- geometry -- */
+  --r-device: 55px;
+  --r-nav: 27px;
+  --r-card: 20px;
+  --r-active-nav: 16px;
+  --r-field: 14px;
+  --r-tile: 12px;
+  --r-tag: 10px;
+  --r-skeleton: 6px;
+  --r-round: 50%;
+
+  /* -- elevation -- */
+  --shadow-card: 0 4px 16px -4px rgba(0, 0, 0, 0.3);
+  --shadow-nav: 0 4px 14px rgba(0, 0, 0, 0.3);
+  --shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-toolbar: 0 12px 30px -8px rgba(0, 0, 0, 0.4);
+  --shadow-toast: 0 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-tooltip: 0 8px 20px rgba(0, 0, 0, 0.5);
+  --shadow-thumb: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --scrim: rgba(0, 0, 0, 0.45);
+
+  --font-sans: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #e8e5dd;
+  --frame: #faf8f4;
+  --surface: #ffffff;
+  --well: #f1eee7;
+  --line: #e4e0d6;
+  --skeleton: #eae7e0;
+
+  --text: #16171a;
+  --text-body: #3d3c39;
+  --text-2: #6f6d65;
+  --text-3: #a5a29a;
+
+  --overlay: #2c2d31;
+  --danger: #b4342a;
+  --danger-bg: #fbe8e6;
+  --dashed: #d5d1c7;
+  --handle: #d0ccc2;
+  --track-off: #dcd8ce;
+
+  --accent: #16171a;
+  --on-accent: #ffffff;
+  --accent-rgb: 22, 23, 26;
+  --accent-border: rgba(var(--accent-rgb), 0.28);
+  --accent-fill: rgba(var(--accent-rgb), 0.08);
+  --accent-key-tint: rgba(var(--accent-rgb), 0.1);
+  --accent-glow: rgba(var(--accent-rgb), 0.22);
+
+  --resource-link: #2f5cb8;
+
+  --tag-math-bg: #e4ebfa;
+  --tag-math-text: #2f4d8f;
+  --tag-health-bg: #dff3ef;
+  --tag-health-text: #1e6b60;
+  --tag-history-bg: #fbeade;
+  --tag-history-text: #8a4a1c;
+  --tag-tech-bg: #eee7fb;
+  --tag-tech-text: #5b3d99;
+  --tag-mind-bg: #fbe6ef;
+  --tag-mind-text: #8f3a63;
+  --tag-geo-bg: #f6f1da;
+  --tag-geo-text: #7a6a1e;
+  --tag-espionage-bg: #eceef1;
+  --tag-espionage-text: #4c5560;
+  --tag-physical-bg: #fbe7e4;
+  --tag-physical-text: #8f3b30;
+  --tag-science-bg: #e2f4e9;
+  --tag-science-text: #1f6b3f;
+
+  --shadow-card: 0 4px 16px -4px rgba(0, 0, 0, 0.09);
+  --shadow-nav: 0 4px 14px rgba(0, 0, 0, 0.1);
+  --shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.13);
+  --shadow-toolbar: 0 12px 30px -8px rgba(0, 0, 0, 0.13);
+  --shadow-toast: 0 8px 20px rgba(0, 0, 0, 0.18);
+  --shadow-tooltip: 0 8px 20px rgba(0, 0, 0, 0.22);
+  --shadow-thumb: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --scrim: rgba(0, 0, 0, 0.4);
+}
+
+/* -- accent: terracotta -- */
+:root[data-accent="terracotta"] {
+  --accent: #d97635;
+  --on-accent: #ffffff;
+  --accent-rgb: 217, 118, 53;
+}
+
+/* -- accent: olive -- */
+:root[data-accent="olive"] {
+  --accent: #5c6b2c;
+  --on-accent: #ffffff;
+  --accent-rgb: 92, 107, 44;
+}
+
+/* -- accent: blue -- */
+:root[data-accent="blue"] {
+  --accent: #3b5fc4;
+  --on-accent: #ffffff;
+  --accent-rgb: 59, 95, 196;
+}
+
+:root[data-accent="terracotta"],
+:root[data-accent="olive"],
+:root[data-accent="blue"] {
+  --accent-border: rgba(var(--accent-rgb), 0.35);
+  --accent-fill: rgba(var(--accent-rgb), 0.12);
+  --accent-key-tint: rgba(var(--accent-rgb), 0.15);
+  --accent-glow: rgba(var(--accent-rgb), 0.35);
+}
+
+:root[data-theme="light"][data-accent="terracotta"],
+:root[data-theme="light"][data-accent="olive"],
+:root[data-theme="light"][data-accent="blue"] {
+  --accent-border: rgba(var(--accent-rgb), 0.28);
+  --accent-fill: rgba(var(--accent-rgb), 0.08);
+  --accent-key-tint: rgba(var(--accent-rgb), 0.1);
+  --accent-glow: rgba(var(--accent-rgb), 0.22);
 }
 
 * {
@@ -20,8 +211,162 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  background: var(--bg);
+}
+
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Shared tap-feedback utility: a quick, springy scale-down on press.
+   Applied to buttons/links/cards that need touch feedback beyond their
+   own state transition (selected, active, etc). */
+.press {
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.press:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* App shell: centers the mobile frame on wide viewports */
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: var(--frame);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-bar {
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.screen-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 16px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
 }

@@ -15,39 +15,70 @@ A personal, single-user Progressive Web App that serves as the primary interface
 
 Every session — a Cowork run, or this app's backend — is stateless. Nothing is assumed to be "remembered." Notion is the only thing that persists across interactions, for both the automation and the app. The app never keeps its own local copy as a source of truth; it always reads from and writes to Notion directly.
 
+## Design status (August 2026)
+
+The UI is designed and finalised as HTML design references in this project. Design files, in the order to read them:
+
+| File | What it holds |
+| --- | --- |
+| `Design System.dc.html` | Tokens, accent themes, category palette, type, radius, spacing, elevation, component pairs, rules |
+| `UI Designs v2 Dark White.dc.html` | **Reference build.** All 20 screens/states, dark mode, neutral accent |
+| `UI Designs v2 Light.dc.html` | Light mode, derived from the dark build token for token |
+| `UI Designs v2 Dark.dc.html` | Earlier dark iteration with the olive accent (kept for reference) |
+| `Interactive Prototype.dc.html` | Clickable flow of the core path |
+| `Wireframes.dc.html`, `UI Design Exploration.dc.html` | Earlier structure and visual exploration |
+
+Fidelity: high. Colours, type, spacing, radii, and states are final; they are documented in `Design System.dc.html` and repeated in the handoff README.
+
+### Visual system in one paragraph
+
+Manrope throughout, Material Symbols Rounded for icons. Neutral surfaces only — no gradients behind copy. The accent is monochrome by default: off-white `#F2F0EC` on dark, ink `#16171A` on light, with the opposite value as the on-accent colour. A filled accent element marks the one primary action on a screen; everything else is outline or text. Category colours (green, terracotta, blue, purple, pink, teal) are identity only — folders, tags, and the domain colour picker — and never follow the accent.
+
+### Theme & mode support (build requirement)
+
+- Two modes: dark and light, both fully specified. Dark is the reference.
+- Four accents, chosen in Settings → Appearance → Theme colour: **Neutral** (default), **Terracotta `#D97635`**, **Olive `#5C6B2C`**, **Blue `#3B5FC4`**. Coloured accents keep `#FFFFFF` as the on-accent colour in both modes.
+- Implement mode and accent as CSS custom properties (`--frame`, `--surface`, `--well`, `--line`, `--text`, `--text-2`, `--text-3`, `--skeleton`, `--accent`, `--on-accent`, `--danger`, `--danger-bg`), swapped at the root. No component should hardcode a colour.
+- Mode and accent are the only client-side persisted preferences (localStorage is acceptable for these two); everything else still lives in Notion.
+
 ## Screens & features
 
 ### 1. Home
 - Header: greeting + a quick-note icon (top right) — a lightweight, separate capture flow for jotting a topic to remember later, distinct from the main daily flow
-- Today's topic card: topic name, category, "Read now" → opens Note View
-- "For tomorrow, select" section: the same 3-4 option cards the Cowork task already generates each run — tapping one writes that topic into the `Selected Topic` field in Notion
-- Yesterday's topic: smaller preview below
-- Bottom nav: Home / Topics / Settings / Add (+)
+- Today's topic card: image, topic name, category tag, "Read now" → opens Note View
+- "For tomorrow, select" section: the same 3-4 option cards the Cowork task already generates each run — tapping one writes that topic into the `Selected Topic` field in Notion and shows a transient confirmation toast
+- Yesterday's topic: smaller preview below, with a read affordance
+- Bottom nav: Home / Topics / Settings, plus a separate (+) FAB
+- States designed: core, quick-note capture, loading, first-ever-launch empty, tap-confirmation toast
 
 ### 2. Add (+) — custom topic request
-- Bottom sheet: topic name (text input), domain/category (dropdown, sourced from the Domains list)
+- Bottom sheet: topic name (text input), domain/category (wheel picker, sourced from the Domains list)
 - Submit → writes into the same `Selected Topic` field used by the "pick tomorrow" flow on Home — this is the same underlying operation, not a separate system
 - Confirmation state ("we'll let you know"), then a notification once the next Cowork run has produced the note
 - **Queued, not immediate** — the note appears after the next scheduled run, not instantly. This must be clear in the UI copy.
 
 ### 3. Topics / Directory
-- Toggle: **All** / **Categorical**
-  - All → flat list of every note across domains
-  - Categorical → grid of domains (existing behavior) → tap a domain → notes filtered to that domain
-- Add a new domain directly — writes to the same Domains list, which Cowork reads at the start of each run
+- Toggle: **Categorical** / **All**
+  - Categorical → two-column grid of domain cards (folder icon in the domain colour, name, note count) → tap a domain → notes filtered to that domain
+  - All → flat list of every note across domains, each row with its category tag
+- "+ Domain" lives in the screen header; it opens a bottom sheet with a name field and a six-swatch colour picker, writing to the same Domains list Cowork reads at the start of each run
+- States designed: categorical, all, new-domain sheet, filtered domain, empty domain, loading
 
 ### 4. Note View
-- Heading + category tag
-- Index icon: shows a jump-to-section outline
-- Body: tap anywhere to enter edit mode
-- Edit tools: add/remove text, highlight (wraps the selection in `<span color="yellow_bg">...</span>`), add images, add links for extra resources
-- All edits write back to the real Notion page via the markdown API — there is no separate local copy; Notion is the single source of truth
+- Heading + category tag in the header; index (toc) icon opens a jump-to-section sheet
+- Body: read state by default; tapping enters edit mode
+- Edit tools in a floating toolbar: text, highlight (active tool shown as a filled accent circle), image, link. A text-selection callout offers Highlight / Copy / Link
+- Detailed notes support tables and diagram blocks; a resources list closes the note
+- All edits write back to the real Notion page via the markdown API — Notion is the single source of truth
+- States designed: reading/editing, scrolled detail with table + diagram, TOC sheet, loading, save-failed error
 
 ### 5. Settings
-- The prompt — reference/view only
-- Timing — **display only**. The real schedule lives in Cowork's own UI; this app must not attempt to change it
-- Notifications — on/off, which events trigger one
-- Stats — topic counts by domain, pulled from the Learnings database
+- The prompt — reference/view only, with a lock note ("edit this prompt in Cowork")
+- Timing — display only, with the same in-UI note. The real schedule lives in Cowork's own UI
+- Notifications — today's note ready, custom topic ready
+- Appearance — dark mode switch and the four-swatch theme colour picker
+- Stats — total notes, domain count, most active domain
+- States designed: core, prompt detail, loading
 
 ## Architecture
 
@@ -66,7 +97,7 @@ Every session — a Cowork run, or this app's backend — is stateless. Nothing 
 - Database columns: `Topic Name`, `Date`, `Area`
 - Each row's page body: the 5-section note format — Topic / Brief / Concept Index / Detailed Notes / Resources
 - `Selected Topic` field (on the parent page): holds either a picked "tomorrow" option or a queued custom-topic request — same field, same consumption logic, cleared by the next Cowork run
-- `Domains` list (**new** — previously hardcoded inside the Cowork prompt text, now a real Notion list both the app and Cowork read): the pool of categories used for topic selection and the Add flow's dropdown
+- `Domains` list (**new** — previously hardcoded inside the Cowork prompt text, now a real Notion list both the app and Cowork read): the pool of categories used for topic selection and the Add flow's dropdown. Each domain carries a name and a colour from the six-swatch palette.
 
 ## Confirmed technical facts — don't re-derive these
 
@@ -77,6 +108,7 @@ Every session — a Cowork run, or this app's backend — is stateless. Nothing 
 ## Open items — resolve during build, not before
 
 - Whether the Note View index uses Notion's native `<table_of_contents/>` block or is derived client-side from headings. Decide once a real note is in front of you.
+- Where topic card imagery comes from. The designs use a drop-in image slot for the Home hero; if no image source exists, fall back to a neutral well surface with the tag and title.
 - Exact contents of the Settings stats view — counts by domain is the v1 minimum, anything more is a later add.
 
 ## Explicitly out of scope
@@ -84,3 +116,14 @@ Every session — a Cowork run, or this app's backend — is stateless. Nothing 
 - Real-time/on-demand note generation (would require the app to call the Claude API directly — deliberately not building this; see the separate independent-agent roadmap if that's ever revisited)
 - Multi-user support, auth, or publishing anywhere
 - Changing the Cowork schedule/timing from inside the app
+- Onboarding, search, and multi-note comparison
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

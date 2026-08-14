@@ -1,4 +1,4 @@
-const CACHE_NAME = "daily-learning-v1";
+const CACHE_NAME = "daily-learning-v2";
 const PRECACHE_URLS = ["/", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
@@ -22,7 +22,26 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  const { request } = event;
+
+  // Network-first for pages: a stale cached document referencing chunk
+  // hashes from an old deploy must never be what the user gets while online.
+  if (request.mode === "navigate" || request.destination === "document") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("/")))
+    );
+    return;
+  }
+
+  // Cache-first for static assets (JS/CSS/images) — safe because their
+  // filenames are content-hashed and change whenever their content does.
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(request).then((cached) => cached || fetch(request))
   );
 });

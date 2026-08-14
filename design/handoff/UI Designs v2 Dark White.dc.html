@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+<script src="./image-slot.js"></script>
+<style>
+/* Spacing scale: all padding/margin/gap use multiples of 4px */
+:root{--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:28px;--space-8:32px;--space-safe-top:64px}
+body{margin:0;background:#0a0a0b;font-family:'Manrope',sans-serif;padding:48px 40px} .cap{font-size:11px;font-weight:700;color:#98979c;margin:0 0 8px} .row{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.frame{width:393px;height:852px;background:#16171a;border-radius:55px;position:relative;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 8px 20px rgba(0,0,0,.4)}
+.status{display:flex;justify-content:space-between;align-items:flex-start;height:60px;box-sizing:border-box;padding:20px 24px 0;font-size:14px;font-weight:700;color:#f2f0ec}
+.batt{width:10px;height:6px;border:1px solid #f2f0ec;border-radius:1px}
+.title{font-size:16px;font-weight:800;color:#f2f0ec}
+.navbar{position:absolute;left:28px;right:28px;bottom:28px;display:flex;gap:12px;align-items:center}
+.pill{flex:1;height:54px;border-radius:27px;background:#212227;border:1px solid #2a2b30;box-shadow:0 4px 14px rgba(0,0,0,.3);display:flex;justify-content:space-around;align-items:center}
+.navitem{display:flex;flex-direction:column;align-items:center;gap:2px} .fab{width:54px;height:54px;border-radius:50%;background:#f2f0ec;display:flex;align-items:center;justify-content:center;color:#16171a;font-size:22px;box-shadow:0 4px 12px rgba(242,240,236,.35)}
+.msr{font-family:'Material Symbols Rounded';line-height:1}
+.skel{background:#26272c;border-radius:6px}
+.tag{font-size:9px;font-weight:700;border-radius:10px;padding:4px 8px;display:inline-flex;align-self:flex-start;white-space:nowrap}
+.tag-math{background:#202b47;color:#93b4f0}
+.tag-health{background:#173430;color:#7fe0d0}
+.tag-hist{background:#3a2617;color:#f0a877}
+.tag-tech{background:#2b2140;color:#c3a8f0}
+.tag-mind{background:#3a1f2a;color:#f0a0c4}
+.tag-geo{background:#332e17;color:#e0d17f}
+.tag-esp{background:#25272b;color:#b7c0cc}
+.tag-phys{background:#3a201d;color:#f0a89c}
+.tag-sci{background:#173a26;color:#7fe0a3}
+.listrow{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #2a2b30;font-size:11px;color:#f2f0ec;gap:8px} .backhd{display:flex;align-items:center;gap:4px;color:#f2f0ec}
+.flowh{font-size:15px;font-weight:800;color:#f2f0ec;margin:52px 0 16px} .navhome .navitem:nth-child(1){color:#16171a;background:#f2f0ec;padding:8px 16px;border-radius:16px}.navhome .navitem:nth-child(1) span:last-child{font-weight:700}
+.navtopics .navitem:nth-child(2){color:#16171a;background:#f2f0ec;padding:8px 16px;border-radius:16px}.navtopics .navitem:nth-child(2) span:last-child{font-weight:700}
+.navsettings .navitem:nth-child(3){color:#16171a;background:#f2f0ec;padding:8px 16px;border-radius:16px}.navsettings .navitem:nth-child(3) span:last-child{font-weight:700}
+.navitem span:last-child{display:none}
+.navitem{transition:transform .15s ease}
+.pill,.fab{transition:box-shadow .2s ease,transform .2s ease}
+.frame::before{content:'';position:absolute;top:13px;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#000;border-radius:20px;z-index:20}
+</style>
+</helmet>
+
+<p class="flowh" style="margin-top:0">1 · Home</p>
+<div class="row">
+<div><p class="cap">1.1 Core</p>
+<div class="frame" data-screen-label="1.1">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 8px"><span style="font-size:16px;font-weight:800;color:#f2f0ec">Hi Kans</span><div style="width:30px;height:30px;border-radius:50%;border:1.5px solid #2a2b30;display:flex;align-items:center;justify-content:center;color:#f2f0ec"><span class="msr" style="font-size:16px">edit_note</span></div></div>
+<div style="padding:12px 16px 0"><span style="font-size:12px;font-weight:600;color:#9c9a92">Today's topic</span></div>
+<div style="margin:8px 16px 0;border-radius:20px;overflow:hidden;position:relative;height:180px;background:#101113">
+<image-slot id="today-topic-hero" shape="rect" placeholder="Drop an image for the featured topic" style="position:absolute;inset:0"></image-slot>
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.7) 100%);pointer-events:none"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;padding:16px;display:flex;flex-direction:column;gap:8px">
+<span class="tag tag-math">Math &amp; Logic</span>
+<span style="font-size:16px;font-weight:800;color:#f2f0ec;line-height:1.15">Nash Equilibrium</span>
+<div style="background:#f2f0ec;color:#16171a;text-align:center;padding:12px;border-radius:14px;font-size:12px;font-weight:700;margin-top:4px">Read now →</div>
+</div>
+</div>
+<div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:12px;color:#9c9a92;font-weight:600">For tomorrow, select</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:#f2f0ec;border:none;border-radius:14px;padding:8px 8px;font-size:10px;font-weight:700;color:#16171a;text-align:center">Bronze Age Collapse</div>
+<div style="background:#212227;border:1px solid #2a2b30;border-radius:14px;padding:8px 8px;font-size:10px;color:#f2f0ec;text-align:center">CIA Tradecraft History</div>
+<div style="background:#212227;border:1px solid #2a2b30;border-radius:14px;padding:8px 8px;font-size:10px;color:#f2f0ec;text-align:center">CRISPR Gene Editing</div>
+<div style="background:#212227;border:1px solid #2a2b30;border-radius:14px;padding:8px 8px;font-size:10px;color:#f2f0ec;text-align:center">Boxing Fundamentals</div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 16px 0">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:9px;color:#9c9a92;font-weight:700">YESTERDAY</span><span style="font-size:11px;color:#9c9a92">mRNA Vaccines</span></div>
+<div style="border:1px solid rgba(242,240,236,.35);background:rgba(242,240,236,.12);border-radius:14px;padding:4px 12px;font-size:10px;font-weight:700;color:#f2f0ec">Read</div>
+</div>
+<div class="navbar"><div class="pill navhome">
+<div class="navitem"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">1.2 Write a note</p>
+<div class="frame" data-screen-label="1.2">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 8px"><span style="font-size:12px;color:#9c9a92">Cancel</span><span style="font-size:12px;font-weight:800;color:#f2f0ec">Done</span></div>
+<div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:16px;font-weight:800;color:#f2f0ec">Reading list ideas</span>
+<span style="font-size:9px;font-weight:700;color:#5c5d61;letter-spacing:.04em">SAVED 9:41 AM</span>
+<div style="height:1px;background:#2a2b30"></div>
+<span style="font-size:11px;line-height:1.7;color:#c9c7c1">Ask for a note on how central banks actually set rates — the mechanics, not the theory.<span style="display:inline-block;width:2px;height:12px;background:#f2f0ec;vertical-align:-2px;margin-left:4px"></span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><p class="cap">1.3 Loading</p>
+<div class="frame" data-screen-label="1.3">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:16px">
+<div class="skel" style="height:18px;width:55%"></div>
+<div class="skel" style="height:150px;border-radius:20px"></div>
+<div class="skel" style="height:14px;width:35%"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="skel" style="height:38px;border-radius:14px"></div><div class="skel" style="height:38px;border-radius:14px"></div><div class="skel" style="height:38px;border-radius:14px"></div><div class="skel" style="height:38px;border-radius:14px"></div></div>
+</div>
+<div class="navbar"><div class="pill navhome">
+<div class="navitem"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">1.4 Empty — first-ever launch</p>
+<div class="frame" data-screen-label="1.4">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:16px">
+<span style="font-size:16px;font-weight:800;color:#f2f0ec">Hi Kans</span>
+<div style="background:#101113;border-radius:20px;padding:20px;text-align:center;color:#9c9a92;font-size:11px">No topic yet — first run hasn't happened</div>
+<span style="font-size:12px;color:#9c9a92;font-weight:600">For tomorrow, select</span>
+<div style="border:1.5px dashed #3a3b40;border-radius:14px;padding:16px;text-align:center;color:#9c9a92;font-size:10px">Options appear after tonight's run</div>
+<span style="font-size:9px;color:#5c5d61;text-align:center">— no history yet —</span>
+</div>
+<div class="navbar"><div class="pill navhome">
+<div class="navitem"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">1.5 Tap confirmation toast</p>
+<div class="frame" data-screen-label="1.5">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 8px"><span style="font-size:16px;font-weight:800;color:#f2f0ec">Hi Kans</span><div style="width:30px;height:30px;border-radius:50%;border:1.5px solid #2a2b30;display:flex;align-items:center;justify-content:center;color:#f2f0ec"><span class="msr" style="font-size:16px">edit_note</span></div></div>
+<div style="padding:12px 16px 0"><span style="font-size:12px;font-weight:600;color:#9c9a92">Today's topic</span></div>
+<div style="margin:8px 16px 0;border-radius:20px;height:150px;background:#101113"></div>
+<div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:12px;color:#9c9a92;font-weight:600">For tomorrow, select</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:#f2f0ec;border:none;border-radius:14px;padding:8px 8px;font-size:10px;font-weight:700;color:#16171a;text-align:center">Bronze Age Collapse</div>
+<div style="background:#212227;border:1px solid #2a2b30;border-radius:14px;padding:8px 8px;font-size:10px;color:#f2f0ec;text-align:center">CIA Tradecraft History</div>
+</div>
+</div>
+<div style="position: absolute; left: 24px; background: #2c2d31; color: #f2f0ec; border-radius: 57px; padding: 12px 16px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; box-shadow: 0 8px 20px rgba(0,0,0,.4); z-index: 28; width: 313px; top: 718px"><span class="msr" style="font-size:16px;color:#f2f0ec">check_circle</span>Saved as tomorrow's pick</div>
+<div class="navbar"><div class="pill navhome">
+<div class="navitem"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+</div>
+
+<p class="flowh">2 · Topics</p>
+<div class="row">
+<div><p class="cap">2.1 Categorical (core)</p>
+<div class="frame" data-screen-label="2.1">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px"><span class="title">Topics</span><div style="display:flex;align-items:center;gap:4px;color:#f2f0ec;font-size:12px;font-weight:700"><span class="msr" style="font-size:16px">add</span>Domain</div></div>
+<div style="padding:0 16px 12px"><div style="display: flex; background: #101113; border-radius: 32px; padding: 4px; height: 32px"><div style="flex: 1; background: #212227; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.3); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #f2f0ec">Categorical</div><div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:11px;color:#9c9a92">All</div></div></div>
+<div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="background:#212227;border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:#8FD1AC;border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:#2e9e5b;border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div><span class="msr" style="font-size:16px;color:#5c5d61">more_vert</span></div>
+<div><span style="font-size:12px;font-weight:700;color:#f2f0ec">Science &amp; Nature</span><br><span style="font-size:9px;color:#9c9a92">14 notes</span></div>
+</div>
+<div style="background:#212227;border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:#F3BE8B;border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:#d97635;border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div><span class="msr" style="font-size:16px;color:#5c5d61">more_vert</span></div>
+<div><span style="font-size:12px;font-weight:700;color:#f2f0ec">History &amp; Civilization</span><br><span style="font-size:9px;color:#9c9a92">11 notes</span></div>
+</div>
+<div style="background:#212227;border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:#A9BBEF;border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:#3b5fc4;border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div><span class="msr" style="font-size:16px;color:#5c5d61">more_vert</span></div>
+<div><span style="font-size:12px;font-weight:700;color:#f2f0ec">Math &amp; Logic</span><br><span style="font-size:9px;color:#9c9a92">9 notes</span></div>
+</div>
+<div style="background:#212227;border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:#C9BCEF;border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:#7a5fc4;border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div><span class="msr" style="font-size:16px;color:#5c5d61">more_vert</span></div>
+<div><span style="font-size:12px;font-weight:700;color:#f2f0ec">Technology</span><br><span style="font-size:9px;color:#9c9a92">8 notes</span></div>
+</div>
+<div style="background:#212227;border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:#EFB9CE;border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:#c45f8a;border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div><span class="msr" style="font-size:16px;color:#5c5d61">more_vert</span></div>
+<div><span style="font-size:12px;font-weight:700;color:#f2f0ec">Mind &amp; Psychology</span><br><span style="font-size:9px;color:#9c9a92">7 notes</span></div>
+</div>
+<div style="background:#212227;border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="width:40px;height:34px;position:relative"><div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:#93D9D1;border-radius:6px 6px 0 0"></div><div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:#2f9e93;border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div></div><span class="msr" style="font-size:16px;color:#5c5d61">more_vert</span></div>
+<div><span style="font-size:12px;font-weight:700;color:#f2f0ec">Health &amp; Medicine</span><br><span style="font-size:9px;color:#9c9a92">6 notes</span></div>
+</div>
+</div>
+<div class="navbar"><div class="pill navtopics">
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">2.2 All — flat list</p>
+<div class="frame" data-screen-label="2.2">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px"><span class="title">Topics</span><div style="display:flex;align-items:center;gap:4px;color:#f2f0ec;font-size:12px;font-weight:700"><span class="msr" style="font-size:16px">add</span>Domain</div></div>
+<div style="padding:0 16px 12px"><div style="display: flex; background: #101113; border-radius: 32px; padding: 4px; height: 32px"><div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:11px;color:#9c9a92">Categorical</div><div style="flex: 1; background: #212227; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.3); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #f2f0ec">All</div></div></div>
+<div style="padding:0 16px"><div style="background:#212227;border:none;border-radius:20px;overflow:hidden;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div class="listrow"><span>Nash Equilibrium</span><span class="tag tag-math">Math &amp; Logic</span></div>
+<div class="listrow"><span>mRNA Vaccines</span><span class="tag tag-health">Health &amp; Medicine</span></div>
+<div class="listrow"><span>Byzantine Empire</span><span class="tag tag-hist">History</span></div>
+<div class="listrow"><span>Illustrated Transformer</span><span class="tag tag-tech">Technology</span></div>
+<div class="listrow"><span>Loss Aversion &amp; Anchoring</span><span class="tag tag-mind">Mind &amp; Psych</span></div>
+<div class="listrow"><span>Silk Road Trade Networks</span><span class="tag tag-geo">Geopolitics</span></div>
+<div class="listrow"><span>CIA Tradecraft History</span><span class="tag tag-esp">Espionage</span></div>
+<div class="listrow"><span>Bayes' Theorem</span><span class="tag tag-math">Math &amp; Logic</span></div>
+<div class="listrow" style="border-bottom:none"><span>Boxing Fundamentals</span><span class="tag tag-phys">Physical Cond.</span></div>
+</div></div>
+<div class="navbar"><div class="pill navtopics">
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">2.3 New domain — bottom sheet</p>
+<div class="frame" data-screen-label="2.3">
+<div style="opacity:.3">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px"><span class="title">Topics</span><div style="display:flex;align-items:center;gap:4px;color:#f2f0ec;font-size:12px;font-weight:700"><span class="msr" style="font-size:16px">add</span>Domain</div></div>
+<div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="skel" style="height:88px;border-radius:20px"></div><div class="skel" style="height:88px;border-radius:20px"></div></div>
+</div>
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.5)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#212227;border-radius:20px 20px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.4);padding:12px 16px 32px;display:flex;flex-direction:column;gap:16px">
+<div style="width:36px;height:4px;background:#4a4b4f;border-radius:2px;align-self:center"></div>
+<span style="font-size:15px;font-weight:800;color:#f2f0ec;text-align:center">New domain</span>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:9px;font-weight:700;color:#9c9a92;letter-spacing:.04em">NAME</span>
+<div style="background:#101113;border-radius:14px;padding:12px;font-size:12px;color:#f2f0ec">Astrophysics<span style="display:inline-block;width:2px;height:12px;background:#f2f0ec;vertical-align:-2px;margin-left:4px"></span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:9px;font-weight:700;color:#9c9a92;letter-spacing:.04em">COLOUR</span>
+<div style="display:flex;gap:12px">
+<div style="width:32px;height:32px;border-radius:50%;background:#3b5fc4;box-shadow:0 0 0 2px #212227,0 0 0 4px #f2f0ec"></div>
+<div style="width:32px;height:32px;border-radius:50%;background:#2e9e5b"></div>
+<div style="width:32px;height:32px;border-radius:50%;background:#d97635"></div>
+<div style="width:32px;height:32px;border-radius:50%;background:#7a5fc4"></div>
+<div style="width:32px;height:32px;border-radius:50%;background:#c45f8a"></div>
+<div style="width:32px;height:32px;border-radius:50%;background:#2f9e93"></div>
+</div>
+</div>
+<div style="display:flex;gap:12px;margin-top:4px">
+<div style="flex:1;border:1px solid #2a2b30;border-radius:14px;padding:12px;text-align:center;font-size:12px;font-weight:600;color:#f2f0ec">Cancel</div>
+<div style="flex:1;background:#f2f0ec;border-radius:14px;padding:12px;text-align:center;font-size:12px;font-weight:700;color:#16171a">Create domain</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><p class="cap">2.4 Domain filtered — Math &amp; Logic</p>
+<div class="frame" data-screen-label="2.4">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div class="backhd" style="padding:8px 16px 0"><span class="msr" style="font-size:18px">arrow_back_ios</span><span style="font-size:12px">Topics</span></div>
+<div style="padding:8px 16px 12px;display:flex;align-items:center;gap:8px"><span class="title">Math &amp; Logic</span><span style="font-size:11px;color:#9c9a92">9 notes</span></div>
+<div style="padding:0 16px"><div style="background:#212227;border:none;border-radius:20px;overflow:hidden;box-shadow:0 4px 16px -4px rgba(0,0,0,.3)">
+<div class="listrow"><span>Nash Equilibrium</span><span style="color:#9c9a92;font-size:10px">Aug 14</span></div>
+<div class="listrow" style="border-bottom:none"><span>Bayes' Theorem</span><span style="color:#9c9a92;font-size:10px">Aug 7</span></div>
+</div></div>
+</div>
+</div>
+<div><p class="cap">2.5 Empty domain — newly added</p>
+<div class="frame" data-screen-label="2.5">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div class="backhd" style="padding:8px 16px 0"><span class="msr" style="font-size:18px">arrow_back_ios</span><span style="font-size:12px">Topics</span></div>
+<div style="padding:8px 16px 12px"><span class="title">Astrophysics</span></div>
+<div style="padding:0 16px"><div style="background:#101113;border-radius:20px;padding:24px;text-align:center;color:#9c9a92;font-size:11px">No notes yet in Astrophysics — will appear after next run</div></div>
+</div>
+</div>
+<div><p class="cap">2.6 Loading</p>
+<div class="frame" data-screen-label="2.6">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:16px">
+<div class="skel" style="height:20px;width:35%"></div>
+<div class="skel" style="height:32px;border-radius:10px"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="skel" style="height:88px;border-radius:16px"></div><div class="skel" style="height:88px;border-radius:16px"></div></div>
+</div>
+<div class="navbar"><div class="pill navtopics">
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+</div>
+
+<p class="flowh">3 · Note View</p>
+<div class="row">
+<div><p class="cap">3.1 Core — reading / editing</p>
+<div class="frame" data-screen-label="3.1">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 0">
+<span class="msr" style="font-size:20px;color:#f2f0ec">arrow_back_ios</span>
+<span class="msr" style="font-size:20px;color:#f2f0ec">toc</span>
+</div>
+<div style="padding:8px 16px 0;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:16px;font-weight:800;color:#f2f0ec">Nash Equilibrium</span>
+<span class="tag tag-math">Math &amp; Logic</span>
+</div>
+<div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:1.5;color:#c9c7c1">
+<span style="font-weight:700;color:#f2f0ec;font-size:9px;letter-spacing:.04em">BRIEF</span>
+<span>A Nash equilibrium is a state where no player can improve their outcome by changing strategy alone, given everyone else's strategy stays fixed — the foundational concept for predicting how self-interested parties behave when outcomes depend on each other.</span>
+<div style="position:relative;padding-bottom:40px">
+<span style="background:#fde68a;color:#2b2408;padding:4px 4px;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone">The Prisoner's Dilemma is the standard proof of this — the equilibrium is worse for both players than if they'd cooperated.</span>
+<div style="position:absolute;left:50%;transform:translateX(-50%);top:100%;margin-top:-32px;background:#2c2d31;color:#f2f0ec;border-radius:10px;padding:8px 12px;font-size:9px;font-weight:600;display:flex;gap:8px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.5)">Highlight&nbsp;·&nbsp;Copy&nbsp;·&nbsp;Link<div style="position:absolute;left:50%;top:-4px;width:8px;height:8px;background:#2c2d31;transform:translateX(-50%) rotate(45deg)"></div></div>
+</div>
+<div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;padding:12px;background:#212227;border:none;border-radius:20px;box-shadow:0 12px 30px -8px rgba(0,0,0,.4);align-items:center;justify-content:space-evenly">
+<span class="msr" style="font-size:18px;color:#9c9a92">text_fields</span>
+<span class="msr" style="font-size:18px;color:#16171a;background:#f2f0ec;border-radius:50%;padding:6px">highlight</span>
+<span class="msr" style="font-size:18px;color:#9c9a92">image</span>
+<span class="msr" style="font-size:18px;color:#9c9a92">link</span>
+</div>
+</div>
+</div>
+<div><p class="cap">3.2 Detailed notes — table + diagram (scrolled)</p>
+<div class="frame" data-screen-label="3.2">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:9px;font-weight:700;color:#f2f0ec;letter-spacing:.04em">DETAILED NOTES</span>
+<span style="font-size:11px;line-height:1.5;color:#c9c7c1">Both betraying is the Nash equilibrium — neither player can improve by unilaterally switching — even though mutual silence leaves both better off.</span>
+<table style="width:100%;border-collapse:collapse;font-size:9px;text-align:center;color:#f2f0ec">
+<tr><td></td><td style="padding:4px;font-weight:700;background:#101113">Stay Silent</td><td style="padding:4px;font-weight:700;background:#101113">Betray</td></tr>
+<tr><td style="padding:4px;font-weight:700;background:#101113">Silent</td><td style="padding:4px;border:1px solid #2a2b30">1yr, 1yr</td><td style="padding:4px;border:1px solid #2a2b30">10yr, 0yr</td></tr>
+<tr><td style="padding:4px;font-weight:700;background:#101113">Betray</td><td style="padding:4px;border:1px solid #2a2b30">0yr, 10yr</td><td style="padding:4px;border:1px solid #2a2b30;background:rgba(242,240,236,.15);font-weight:700">5yr, 5yr</td></tr>
+</table>
+<div style="border:1.5px dashed #3a3b40;border-radius:14px;padding:16px;text-align:center;color:#9c9a92;font-size:9px">Flowchart diagram — strategy/best-response loop</div>
+<span style="font-size:9px;font-weight:700;color:#f2f0ec;letter-spacing:.04em;margin-top:4px">RESOURCES</span>
+<div style="display:flex;flex-direction:column;gap:4px;font-size:10px;color:#8fb0f2">
+<span>Wikipedia — Nash Equilibrium</span>
+<span>3Blue1Brown — Bayes &amp; game theory</span>
+<span>Khan Academy — Prisoner's Dilemma</span>
+</div>
+</div>
+</div>
+</div>
+<div><p class="cap">3.3 Table of contents — sheet open</p>
+<div class="frame" data-screen-label="3.3">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div class="backhd" style="padding:8px 16px 0;justify-content:space-between"><span class="msr" style="font-size:18px">arrow_back_ios</span><span style="font-size:13px;font-weight:700;color:#f2f0ec">Nash Equilibrium</span><span class="msr" style="font-size:18px;color:#f2f0ec">toc</span></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:8px;opacity:.3">
+<div class="skel" style="height:7px;width:95%"></div><div class="skel" style="height:7px;width:80%"></div>
+</div>
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.4)"></div>
+<div style="position: absolute; inset: 0; top: auto; height: 226px; background: #212227; border-radius: 20px 20px 0 0; box-shadow: 0 -8px 24px rgba(0,0,0,.4); padding: 16px; display: flex; flex-direction: column; gap: 12px; width: 363px">
+<div style="width:36px;height:4px;background:#4a4b4f;border-radius:2px;align-self:center"></div>
+<span style="font-size:13px;font-weight:800;color:#f2f0ec">Sections</span>
+<div style="display:flex;flex-direction:column">
+<div class="listrow" style="color:#f2f0ec;font-weight:700">Brief</div>
+<div class="listrow" style="color:#9c9a92">Concept Index</div>
+<div class="listrow" style="color:#9c9a92">Detailed Notes</div>
+<div class="listrow" style="border-bottom:none;color:#9c9a92">Resources</div>
+</div>
+</div>
+</div>
+</div>
+<div><p class="cap">3.4 Loading</p>
+<div class="frame" data-screen-label="3.4">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:12px">
+<div class="skel" style="height:16px;width:65%"></div>
+<div class="skel" style="height:10px;width:24%"></div>
+<div class="skel" style="height:7px;width:95%;margin-top:8px"></div>
+<div class="skel" style="height:7px;width:88%"></div>
+<div class="skel" style="height:7px;width:70%"></div>
+</div>
+</div>
+</div>
+<div><p class="cap">3.5 Save failed</p>
+<div class="frame" data-screen-label="3.5">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:16px;font-weight:800;color:#f2f0ec">Nash Equilibrium</span>
+<div style="background:#3a1f1e;border-radius:14px;padding:12px 12px;font-size:10px;color:#ff6b60;font-weight:700;display:flex;align-items:center;gap:8px"><span class="msr" style="font-size:15px">error</span>Save failed — edits not synced. Tap to retry.</div>
+<div class="skel" style="height:7px;width:95%"></div>
+<div style="border:1.5px solid #ff6b60;border-radius:6px;padding:4px"><div class="skel" style="height:7px;width:85%"></div></div>
+<div class="skel" style="height:7px;width:70%"></div>
+</div>
+</div>
+</div>
+</div>
+
+<p class="flowh">4 · Settings</p>
+<div class="row">
+<div><p class="cap">4.1 Core</p>
+<div class="frame" data-screen-label="4.1">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 12px"><span class="title">Settings</span></div>
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:16px">
+<div style="background:#101113;border-radius:20px;overflow:hidden">
+<div style="padding:12px 12px;border-bottom:1px solid #2a2b30;font-size:11px;color:#f2f0ec;display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Prompt</span><span class="msr" style="font-size:16px;color:#9c9a92">chevron_right</span></div><span style="font-size:9px;color:#9c9a92">"Daily at 8:00 AM: deliver one new topic for a 1-hour session and log it to Notion…"</span></div>
+<div style="display:flex;flex-direction:column;gap:4px;padding:12px 12px"><div style="display:flex;justify-content:space-between;font-size:12px;color:#f2f0ec"><span>Timing</span><span style="color:#9c9a92">8:00 AM</span></div><span style="font-size:9px;color:#9c9a92">Change schedule in Cowork — view only here</span></div>
+</div>
+<div style="background:#101113;border-radius:20px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 12px;border-bottom:1px solid #2a2b30;font-size:12px;color:#f2f0ec"><span>Today's note ready</span><div style="width:28px;height:16px;background:#f2f0ec;border-radius:9px;position:relative"><div style="width:12px;height:12px;background:#16171a;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 12px;font-size:12px;color:#f2f0ec"><span>Custom topic ready</span><div style="width:28px;height:16px;background:#f2f0ec;border-radius:9px;position:relative"><div style="width:12px;height:12px;background:#16171a;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10px;font-weight:700;color:#9c9a92;padding-left:4px">APPEARANCE</span>
+<div style="background:#101113;border-radius:20px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 12px;font-size:12px;color:#f2f0ec"><span>Dark mode</span><div style="width:28px;height:16px;background:#f2f0ec;border-radius:9px;position:relative"><div style="width:12px;height:12px;background:#16171a;border-radius:50%;position:absolute;right:2px;top:2px"></div></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 12px;border-top:1px solid #2a2b30;font-size:12px;color:#f2f0ec">
+<span>Theme colour</span>
+<div style="display:flex;gap:10px">
+<div style="width:20px;height:20px;border-radius:50%;background:#f2f0ec;box-shadow:0 0 0 2px #101113,0 0 0 4px #f2f0ec"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#d97635"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#5c6b2c"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#3b5fc4"></div>
+</div>
+</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10px;font-weight:700;color:#9c9a92;padding-left:4px">STATS</span>
+<div style="background:#101113;border-radius:20px;padding:12px;display:flex;gap:12px">
+<div style="flex:1;text-align:center;display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800;color:#f2f0ec">90</span><span style="font-size:9px;color:#9c9a92">total notes</span></div>
+<div style="flex:1;text-align:center;display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800;color:#f2f0ec">15</span><span style="font-size:9px;color:#9c9a92">domains</span></div>
+</div>
+<div style="background:#101113;border-radius:20px;padding:12px 12px;font-size:10px;color:#f2f0ec">Most active: <span style="font-weight:700">Science &amp; Nature</span> (14)</div>
+</div>
+</div>
+<div class="navbar"><div class="pill navsettings">
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">4.2 Prompt — read only</p>
+<div class="frame" data-screen-label="4.2">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div class="backhd" style="padding:8px 16px 0"><span class="msr" style="font-size:18px">arrow_back_ios</span><span style="font-size:12px">Settings</span></div>
+<div style="padding:8px 16px 12px"><span class="title">Prompt</span></div>
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:16px">
+<div style="background:#101113;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:9px;font-weight:700;color:#9c9a92;letter-spacing:.04em">ACTIVE PROMPT</span>
+<span style="font-size:12px;line-height:1.7;color:#f2f0ec">"Daily at 8:00 AM: deliver one new topic for a 1-hour session and log it to Notion. Rotate across my saved domains, never repeat a topic within 90 days, and include a brief, detailed notes with a worked example, and three resources to go deeper."</span>
+</div>
+<div style="background:#101113;border-radius:20px;overflow:hidden">
+<div class="listrow"><span style="color:#9c9a92">Schedule</span><span>8:00 AM, daily</span></div>
+<div class="listrow"><span style="color:#9c9a92">Session length</span><span>1 hour</span></div>
+<div class="listrow"><span style="color:#9c9a92">Destination</span><span>Notion</span></div>
+<div class="listrow" style="border-bottom:none"><span style="color:#9c9a92">Rotation</span><span>15 domains</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:0 4px"><span class="msr" style="font-size:14px;color:#9c9a92">lock</span><span style="font-size:9px;color:#9c9a92">Read only — edit this prompt in Cowork</span></div>
+</div>
+<div class="navbar"><div class="pill navsettings">
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+<div><p class="cap">4.3 Loading</p>
+<div class="frame" data-screen-label="4.3">
+<div class="status"><span>9:41</span><div class="batt"></div></div>
+<div style="padding:8px 16px 16px;display:flex;flex-direction:column;gap:16px">
+<div class="skel" style="height:20px;width:35%"></div>
+<div class="skel" style="height:70px;border-radius:14px"></div>
+<div class="skel" style="height:70px;border-radius:14px"></div>
+</div>
+<div class="navbar"><div class="pill navsettings">
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">home</span><span style="font-size:8px">Home</span></div>
+<div class="navitem" style="color:#9c9a92"><span class="msr" style="font-size:18px">folder</span><span style="font-size:8px">Topics</span></div>
+<div class="navitem"><span class="msr" style="font-size:18px">settings</span><span style="font-size:8px">Settings</span></div>
+</div><div class="fab">+</div></div>
+</div>
+</div>
+</div>
+
+<p class="flowh">5 · Add custom topic</p>
+<div class="row">
+<div><p class="cap">5.1 Form — domain wheel picker</p>
+<div class="frame" data-screen-label="5.1">
+<div style="position:absolute;inset:0;padding:60px 16px 16px;display:flex;flex-direction:column;gap:12px;opacity:.3"><div class="skel" style="height:18px;width:50%"></div><div class="skel" style="height:90px;border-radius:14px"></div></div>
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.4)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#212227;border-radius:20px 20px 0 0;padding:12px 16px 248px;display:flex;flex-direction:column;gap:16px;opacity:.5">
+<div style="width:36px;height:4px;background:#4a4b4f;border-radius:2px;align-self:center"></div>
+<span style="font-size:15px;font-weight:800;color:#f2f0ec;text-align:center">New topic</span>
+<div style="background:#101113;border-radius:12px;overflow:hidden">
+<div style="padding:12px 12px;border-bottom:1px solid #2a2b30;font-size:11px;color:#f2f0ec">Ottoman Empire administrative structure</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 12px;font-size:12px;color:#f2f0ec;font-weight:700"><span>History &amp; Civilization</span><span class="msr" style="font-size:16px;color:#9c9a92">chevron_right</span></div>
+</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#212227;border-radius:20px 20px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.4)">
+<div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #2a2b30;font-size:12px"><span style="color:#9c9a92">Cancel</span><span style="color:#f2f0ec;font-weight:700">Domain</span><span style="color:#f2f0ec;font-weight:800">Done</span></div>
+<div style="padding:24px 0;display:flex;flex-direction:column;align-items:center;position:relative">
+<div style="position:absolute;left:16px;right:16px;top:50%;height:40px;transform:translateY(-50%);background:#101113;border-radius:14px"></div>
+<span style="font-size:10px;color:#3f4044;padding:8px 0;z-index:1">Espionage</span>
+<span style="font-size:10px;color:#5c5d61;padding:8px 0;z-index:1">Geography</span>
+<span style="font-size:12px;color:#f2f0ec;font-weight:800;padding:12px 0;z-index:1">History &amp; Civilization</span>
+<span style="font-size:10px;color:#5c5d61;padding:8px 0;z-index:1">Geopolitics</span>
+<span style="font-size:10px;color:#3f4044;padding:8px 0;z-index:1">Health &amp; Medicine</span>
+</div>
+</div>
+</div>
+</div>
+<div><p class="cap">5.2 Confirmation</p>
+<div class="frame" data-screen-label="5.2">
+<div style="position:absolute;inset:0;padding:60px 16px 16px;opacity:.2"><div class="skel" style="height:18px;width:50%"></div></div>
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.4)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#212227;border-radius:20px 20px 0 0;padding:24px 20px 32px;display:flex;flex-direction:column;gap:12px;align-items:center">
+<div style="width:36px;height:4px;background:#4a4b4f;border-radius:2px"></div>
+<div style="width:44px;height:44px;border-radius:50%;background:#f2f0ec;display:flex;align-items:center;justify-content:center;color:#16171a;margin-top:8px"><span class="msr" style="font-size:22px">check_circle</span></div>
+<span style="font-size:15px;font-weight:800;color:#f2f0ec">We'll let you know</span>
+<span style="font-size:11px;color:#9c9a92;text-align:center">You'll get a notification once your note is ready</span>
+<div style="border:1px solid #2a2b30;border-radius:12px;padding:8px 24px;font-size:13px;color:#f2f0ec;font-weight:600;margin-top:8px">Got it</div>
+</div>
+</div>
+</div>
+</div>
+
+</x-dc>
+</body>
+</html>
