@@ -170,14 +170,85 @@ export function DotsIcon(props: IconProps) {
   );
 }
 
-export function FolderMark({ size = 40, colorVar, tabVar }: { size?: number; colorVar: string; tabVar: string }) {
-  const width = size;
-  const height = Math.round(size * 0.85);
+export function FolderIcon(props: IconProps) {
   return (
-    <svg width={width} height={height} viewBox="0 0 40 34" fill="none" aria-hidden="true">
-      <rect x="0" y="10" width="40" height="24" rx="9" fill={`var(${colorVar})`} />
-      <path d="M2 12v-3a4 4 0 0 1 4-4h10l4 4h14a4 4 0 0 1 4 4v3H2Z" fill={`var(${tabVar})`} />
-      <rect x="6" y="17" width="15" height="3" rx="1.5" fill="rgba(255,255,255,.55)" />
+    <svg {...base(props)}>
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" />
+    </svg>
+  );
+}
+
+export function FolderOpenIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1H5.5a2 2 0 0 0-1.9 1.37L2 18V7Z" />
+      <path d="M2 18l2.2-6.6A2 2 0 0 1 6.1 10H21l-2.4 7.2a2 2 0 0 1-1.9 1.4H4a2 2 0 0 1-2-2.6Z" />
+    </svg>
+  );
+}
+
+// A 34x34 --frame chip with a centred folder glyph, coloured to the
+// domain's identity colour — matches Trove Prototype.dc.html's domain-card
+// icon exactly (a single Material Symbols "folder" glyph, not a two-tone shape).
+export function FolderChip({ size = 34, colorVar }: { size?: number; colorVar: string }) {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: 12,
+        background: "var(--frame)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: `var(${colorVar})`,
+        flexShrink: 0,
+      }}
+    >
+      <FolderIcon size={19} strokeWidth={2} />
+    </div>
+  );
+}
+
+export function BookmarkIcon({ filled, ...props }: IconProps & { filled?: boolean }) {
+  return (
+    <svg {...base(props)} fill={filled ? "currentColor" : "none"}>
+      <path d="M6 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17l-6-4-6 4V4Z" />
+    </svg>
+  );
+}
+
+export function EditNoteIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M4 6h10M4 12h6" />
+      <path d="M14 18l1-3.5L19.5 10a1.7 1.7 0 0 1 2.4 2.4L17.5 17 14 18Z" />
+    </svg>
+  );
+}
+
+export function TaskAltIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M9 11.5l2 2 6-6" />
+      <path d="M21 12a9 9 0 1 1-4.2-7.6" />
+    </svg>
+  );
+}
+
+export function LockIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="5" y="10" width="14" height="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </svg>
+  );
+}
+
+export function CheckCircleIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} fill="currentColor" stroke="none">
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1.2 14.6-4.4-4.4 1.7-1.7 2.7 2.7 6.3-6.3 1.7 1.7-8 8Z" />
     </svg>
   );
 }

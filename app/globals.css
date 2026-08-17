@@ -1,204 +1,172 @@
 /* ============================================================
-   Daily Learning Companion — design tokens
-   Dark is default; data-theme="light" swaps the palette.
-   data-accent selects the accent theme (neutral/terracotta/olive/blue).
+   Trove — design tokens
+   Light is the bare-:root default (design.md: "Mode — light
+   (default) / dark (reference build)"). [data-theme="dark"] overrides.
+   [data-accent] selects the theme colour (neutral/terracotta/green/blue).
+   Values transcribed from design_handoff_daily_learning_app/design.md
+   and Trove Prototype.dc.html's theme()/gradient() methods — treat
+   those as ground truth over this file if they ever disagree.
    ============================================================ */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* -- surfaces -- */
-  --bg: #0a0a0b;
-  --frame: #16171a;
-  --surface: #212227;
-  --well: #101113;
-  --line: #2a2b30;
-  --skeleton: #26272c;
+  --frame: #fdfcfa;
+  --surface: #f7f6f2;
+  --well: #f4f2ec;
+  --line: #efede7;
+  --skeleton: #edeae3;
 
   /* -- text -- */
-  --text: #f2f0ec;
-  --text-body: #c9c7c1;
-  --text-2: #9c9a92;
-  --text-3: #5c5d61;
+  --text: #16171a;
+  --text-2: #7d7a70;
+  --text-3: #9a968a;
 
-  /* -- misc -- */
-  --overlay: #2c2d31;
-  --danger: #ff6b60;
-  --danger-bg: #3a1f1e;
-  --dashed: #3a3b40;
-  --handle: #4a4b4f;
-  --track-off: #2a2b30;
+  /* -- note content -- */
+  --hl: #ffe8b8;
+  --tag-bg: #e4ebfa;
+  --tag-fg: #2f4d8f;
+
+  --shadow: rgba(0, 0, 0, 0.16);
 
   /* -- accent: neutral (default) -- */
-  --accent: #f2f0ec;
-  --on-accent: #16171a;
-  --accent-rgb: 242, 240, 236;
-  --accent-border: rgba(var(--accent-rgb), 0.35);
-  --accent-fill: rgba(var(--accent-rgb), 0.12);
-  --accent-key-tint: rgba(var(--accent-rgb), 0.15);
-  --accent-glow: rgba(var(--accent-rgb), 0.35);
+  --accent: #16171a;
+  --on-accent: #ffffff;
+  --pop-tint: #f8f7f5;
 
-  /* -- note content (fixed, theme independent) -- */
-  --highlight-bg: #fde68a;
-  --highlight-text: #2b2408;
-  --resource-link: #8fb0f2;
+  /* -- hero/note-header gradient (neutral, light) -- */
+  --grad: radial-gradient(circle at 22% 18%, #ffe8b8 0%, rgba(255, 232, 184, 0) 62%),
+    radial-gradient(circle at 82% 30%, #f5d9d9 0%, rgba(245, 217, 217, 0) 58%),
+    radial-gradient(circle at 55% 92%, #d6e8d3 0%, rgba(214, 232, 211, 0) 62%), #fbf9f4;
 
-  /* -- category identity colours -- */
-  --cat-science-body: #2e9e5b;
-  --cat-science-tab: #8fd1ac;
-  --cat-history-body: #d97635;
-  --cat-history-tab: #f3be8b;
-  --cat-math-body: #3b5fc4;
-  --cat-math-tab: #a9bbef;
-  --cat-tech-body: #7a5fc4;
-  --cat-tech-tab: #c9bcef;
-  --cat-mind-body: #c45f8a;
-  --cat-mind-tab: #efb9ce;
-  --cat-health-body: #2f9e93;
-  --cat-health-tab: #93d9d1;
-
-  /* -- category tag pills (bg / text) -- */
-  --tag-math-bg: #202b47;
-  --tag-math-text: #93b4f0;
-  --tag-health-bg: #173430;
-  --tag-health-text: #7fe0d0;
-  --tag-history-bg: #3a2617;
-  --tag-history-text: #f0a877;
-  --tag-tech-bg: #2b2140;
-  --tag-tech-text: #c3a8f0;
-  --tag-mind-bg: #3a1f2a;
-  --tag-mind-text: #f0a0c4;
-  --tag-geo-bg: #332e17;
-  --tag-geo-text: #e0d17f;
-  --tag-espionage-bg: #25272b;
-  --tag-espionage-text: #b7c0cc;
-  --tag-physical-bg: #3a201d;
-  --tag-physical-text: #f0a89c;
-  --tag-science-bg: #173a26;
-  --tag-science-text: #7fe0a3;
+  /* -- category identity colours (fixed — never follow the theme accent) -- */
+  --cat-science: #2e9e5b;
+  --cat-science-tint: #f4f6f1;
+  --cat-history: #d97635;
+  --cat-history-tint: #fbf3ec;
+  --cat-math: #3b5fc4;
+  --cat-math-tint: #f2f4f9;
+  --cat-tech: #7a5fc4;
+  --cat-tech-tint: #f5f2fa;
+  --cat-mind: #c45f8a;
+  --cat-mind-tint: #faf1f5;
+  --cat-health: #2f9e93;
+  --cat-health-tint: #f0f7f6;
+  /* Espionage & Craft — a legacy domain outside the six-swatch picker. */
+  --cat-other: #8a8577;
+  --cat-other-tint: #f5f4f0;
 
   /* -- geometry -- */
   --r-device: 55px;
-  --r-nav: 27px;
+  --r-sheet: 32px;
+  --r-hero: 26px;
   --r-card: 20px;
-  --r-active-nav: 16px;
-  --r-field: 14px;
-  --r-tile: 12px;
+  --r-row: 16px;
   --r-tag: 10px;
-  --r-skeleton: 6px;
-  --r-round: 50%;
+  --r-hl: 3px;
+  --r-pill: 999px;
 
-  /* -- elevation -- */
-  --shadow-card: 0 4px 16px -4px rgba(0, 0, 0, 0.3);
-  --shadow-nav: 0 4px 14px rgba(0, 0, 0, 0.3);
-  --shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-toolbar: 0 12px 30px -8px rgba(0, 0, 0, 0.4);
-  --shadow-toast: 0 8px 20px rgba(0, 0, 0, 0.4);
-  --shadow-tooltip: 0 8px 20px rgba(0, 0, 0, 0.5);
-  --shadow-thumb: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --scrim: rgba(0, 0, 0, 0.45);
+  /* -- motion (design.md "Motion") --
+     Presses: .96 (.9 round icon buttons) / 180ms. Cross-fades/toggles:
+     280ms. Screen transitions, sheet-in, segment slide: 380ms e-screen.
+     Nav pill travel: 440ms. Highlight sweep: 500ms via background-size.
+     Toggle thumbs/selection rings: e-spring. Sheet exit: 220ms e-exit
+     (faster than entry). Only transform/opacity/background-size animate. */
+  --d-press: 180ms;
+  --d-fade: 280ms;
+  --d-screen: 380ms;
+  --d-nav: 440ms;
+  --d-sweep: 500ms;
+  --d-exit: 220ms;
+  --e-screen: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --e-exit: cubic-bezier(0.55, 0, 1, 0.45);
 
   --font-sans: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-lora), Georgia, serif;
 }
 
-:root[data-theme="light"] {
-  color-scheme: light;
+:root[data-theme="dark"] {
+  color-scheme: dark;
 
-  --bg: #e8e5dd;
-  --frame: #faf8f4;
-  --surface: #ffffff;
-  --well: #f1eee7;
-  --line: #e4e0d6;
-  --skeleton: #eae7e0;
+  --frame: #131316;
+  --surface: #1c1d21;
+  --well: #232428;
+  --line: #2c2d33;
+  --skeleton: #1e1f24;
 
-  --text: #16171a;
-  --text-body: #3d3c39;
-  --text-2: #6f6d65;
-  --text-3: #a5a29a;
+  --text: #f2f0ec;
+  --text-2: #a9a69e;
+  --text-3: #7c7a74;
 
-  --overlay: #2c2d31;
-  --danger: #b4342a;
-  --danger-bg: #fbe8e6;
-  --dashed: #d5d1c7;
-  --handle: #d0ccc2;
-  --track-off: #dcd8ce;
+  --hl: rgba(255, 201, 139, 0.28);
+  --tag-bg: rgba(59, 95, 196, 0.22);
+  --tag-fg: #9db4f0;
 
-  --accent: #16171a;
-  --on-accent: #ffffff;
-  --accent-rgb: 22, 23, 26;
-  --accent-border: rgba(var(--accent-rgb), 0.28);
-  --accent-fill: rgba(var(--accent-rgb), 0.08);
-  --accent-key-tint: rgba(var(--accent-rgb), 0.1);
-  --accent-glow: rgba(var(--accent-rgb), 0.22);
+  --shadow: rgba(0, 0, 0, 0.55);
 
-  --resource-link: #2f5cb8;
+  --accent: #f2f0ec;
+  --on-accent: #16171a;
 
-  --tag-math-bg: #e4ebfa;
-  --tag-math-text: #2f4d8f;
-  --tag-health-bg: #dff3ef;
-  --tag-health-text: #1e6b60;
-  --tag-history-bg: #fbeade;
-  --tag-history-text: #8a4a1c;
-  --tag-tech-bg: #eee7fb;
-  --tag-tech-text: #5b3d99;
-  --tag-mind-bg: #fbe6ef;
-  --tag-mind-text: #8f3a63;
-  --tag-geo-bg: #f6f1da;
-  --tag-geo-text: #7a6a1e;
-  --tag-espionage-bg: #eceef1;
-  --tag-espionage-text: #4c5560;
-  --tag-physical-bg: #fbe7e4;
-  --tag-physical-text: #8f3b30;
-  --tag-science-bg: #e2f4e9;
-  --tag-science-text: #1f6b3f;
+  --grad: radial-gradient(circle at 22% 18%, rgba(255, 232, 184, 0.13) 0%, rgba(255, 232, 184, 0) 62%),
+    radial-gradient(circle at 82% 30%, rgba(245, 217, 217, 0.11) 0%, rgba(245, 217, 217, 0) 58%),
+    radial-gradient(circle at 55% 92%, rgba(214, 232, 211, 0.1) 0%, rgba(214, 232, 211, 0) 62%), #1b1c21;
 
-  --shadow-card: 0 4px 16px -4px rgba(0, 0, 0, 0.09);
-  --shadow-nav: 0 4px 14px rgba(0, 0, 0, 0.1);
-  --shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.13);
-  --shadow-toolbar: 0 12px 30px -8px rgba(0, 0, 0, 0.13);
-  --shadow-toast: 0 8px 20px rgba(0, 0, 0, 0.18);
-  --shadow-tooltip: 0 8px 20px rgba(0, 0, 0, 0.22);
-  --shadow-thumb: 0 1px 2px rgba(0, 0, 0, 0.12);
-  --scrim: rgba(0, 0, 0, 0.4);
+  /* Dark-mode category tints: the prototype appends hex alpha "26" (~15%)
+     directly to each identity colour rather than mixing over --well. */
+  --cat-science-tint: #2e9e5b26;
+  --cat-history-tint: #d9763526;
+  --cat-math-tint: #3b5fc426;
+  --cat-tech-tint: #7a5fc426;
+  --cat-mind-tint: #c45f8a26;
+  --cat-health-tint: #2f9e9326;
+  --cat-other-tint: #8a857726;
 }
 
-/* -- accent: terracotta -- */
+/* -- theme: terracotta -- */
 :root[data-accent="terracotta"] {
   --accent: #d97635;
   --on-accent: #ffffff;
-  --accent-rgb: 217, 118, 53;
+  --pop-tint: #eeb490;
+  --grad: radial-gradient(circle at 22% 18%, #f6e4d7 0%, rgba(246, 228, 215, 0) 62%),
+    radial-gradient(circle at 82% 30%, #f1cfb8 0%, rgba(241, 207, 184, 0) 58%),
+    radial-gradient(circle at 55% 92%, #faefe7 0%, rgba(250, 239, 231, 0) 62%), #fbf9f4;
+}
+:root[data-theme="dark"][data-accent="terracotta"] {
+  --grad: radial-gradient(circle at 22% 18%, rgba(217, 118, 53, 0.16) 0%, rgba(217, 118, 53, 0) 62%),
+    radial-gradient(circle at 82% 30%, rgba(217, 118, 53, 0.22) 0%, rgba(217, 118, 53, 0) 58%),
+    radial-gradient(circle at 55% 92%, rgba(217, 118, 53, 0.1) 0%, rgba(217, 118, 53, 0) 62%), #1b1c21;
 }
 
-/* -- accent: olive -- */
-:root[data-accent="olive"] {
+/* -- theme: green -- */
+:root[data-accent="green"] {
   --accent: #5c6b2c;
   --on-accent: #ffffff;
-  --accent-rgb: 92, 107, 44;
+  --pop-tint: #a5ae8b;
+  --grad: radial-gradient(circle at 22% 18%, #dee1d5 0%, rgba(222, 225, 213, 0) 62%),
+    radial-gradient(circle at 82% 30%, #c6cbb5 0%, rgba(198, 203, 181, 0) 58%),
+    radial-gradient(circle at 55% 92%, #ebede6 0%, rgba(235, 237, 230, 0) 62%), #fbf9f4;
+}
+:root[data-theme="dark"][data-accent="green"] {
+  --grad: radial-gradient(circle at 22% 18%, rgba(92, 107, 44, 0.16) 0%, rgba(92, 107, 44, 0) 62%),
+    radial-gradient(circle at 82% 30%, rgba(92, 107, 44, 0.22) 0%, rgba(92, 107, 44, 0) 58%),
+    radial-gradient(circle at 55% 92%, rgba(92, 107, 44, 0.1) 0%, rgba(92, 107, 44, 0) 62%), #1b1c21;
 }
 
-/* -- accent: blue -- */
+/* -- theme: blue -- */
 :root[data-accent="blue"] {
   --accent: #3b5fc4;
   --on-accent: #ffffff;
-  --accent-rgb: 59, 95, 196;
+  --pop-tint: #93a7df;
+  --grad: radial-gradient(circle at 22% 18%, #d8dff3 0%, rgba(216, 223, 243, 0) 62%),
+    radial-gradient(circle at 82% 30%, #bac7ea 0%, rgba(186, 199, 234, 0) 58%),
+    radial-gradient(circle at 55% 92%, #e7ecf8 0%, rgba(231, 236, 248, 0) 62%), #fbf9f4;
 }
-
-:root[data-accent="terracotta"],
-:root[data-accent="olive"],
-:root[data-accent="blue"] {
-  --accent-border: rgba(var(--accent-rgb), 0.35);
-  --accent-fill: rgba(var(--accent-rgb), 0.12);
-  --accent-key-tint: rgba(var(--accent-rgb), 0.15);
-  --accent-glow: rgba(var(--accent-rgb), 0.35);
-}
-
-:root[data-theme="light"][data-accent="terracotta"],
-:root[data-theme="light"][data-accent="olive"],
-:root[data-theme="light"][data-accent="blue"] {
-  --accent-border: rgba(var(--accent-rgb), 0.28);
-  --accent-fill: rgba(var(--accent-rgb), 0.08);
-  --accent-key-tint: rgba(var(--accent-rgb), 0.1);
-  --accent-glow: rgba(var(--accent-rgb), 0.22);
+:root[data-theme="dark"][data-accent="blue"] {
+  --grad: radial-gradient(circle at 22% 18%, rgba(59, 95, 196, 0.16) 0%, rgba(59, 95, 196, 0) 62%),
+    radial-gradient(circle at 82% 30%, rgba(59, 95, 196, 0.22) 0%, rgba(59, 95, 196, 0) 58%),
+    radial-gradient(circle at 55% 92%, rgba(59, 95, 196, 0.1) 0%, rgba(59, 95, 196, 0) 62%), #1b1c21;
 }
 
 * {
@@ -212,16 +180,17 @@ body {
 }
 
 html {
-  background: var(--bg);
+  background: var(--frame);
 }
 
 body {
   margin: 0;
   color: var(--text);
-  background: var(--bg);
+  background: var(--frame);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 button,
@@ -235,32 +204,13 @@ select {
 button {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 a {
   -webkit-tap-highlight-color: transparent;
-}
-
-/* Shared tap-feedback utility: a quick, springy scale-down on press.
-   Applied to buttons/links/cards that need touch feedback beyond their
-   own state transition (selected, active, etc). */
-.press {
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.press:active {
-  transform: scale(0.96);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
-a {
   color: inherit;
   text-decoration: none;
 }
@@ -278,6 +228,7 @@ a {
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.4s ease;
 }
 
 .status-bar {
@@ -288,7 +239,7 @@ a {
 .screen-scroll {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 
 .visually-hidden {
@@ -303,70 +254,94 @@ a {
   border: 0;
 }
 
-@keyframes skeleton-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
-  }
+/* -- shared tap-feedback utilities -- */
+.press {
+  transition: transform var(--d-press) ease;
+}
+.press:active {
+  transform: scale(0.96);
+}
+.press-icon:active {
+  transform: scale(0.9);
 }
 
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 8px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+/* Text field focus ring. */
+.field-focus {
+  transition: border-color var(--d-fade) ease;
+}
+.field-focus:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
-@keyframes sheet-up {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
+/* Domain-card / list-row hover (used across Topics, Settings rows). */
+.hover-row {
+  transition: background-color var(--d-press) ease;
+}
+.hover-row:hover {
+  background: var(--well);
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* Home hero (gradient "Today's topic" card). */
+.hero-card {
+  transition: transform var(--d-fade) var(--e-screen), box-shadow var(--d-fade) ease;
+}
+.hero-card:hover {
+  box-shadow: 0 10px 26px -12px var(--shadow);
+}
+.hero-card:active {
+  transform: scale(0.985);
 }
 
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+/* Home "for tomorrow" option chips. */
+.tomorrow-chip {
+  transition: transform var(--d-fade) var(--e-screen);
+}
+.tomorrow-chip:active {
+  transform: scale(0.96);
 }
 
-@keyframes sheet-down {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(100%);
-  }
+.read-now-pill {
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-@keyframes toast-out {
-  from {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, 8px);
+/* Colour-swatch press dip — selection ring/scale are declared inline since
+   the ring colour differs per picker (accent vs. category colour). */
+.swatch-btn {
+  transition: transform 0.3s var(--e-spring), box-shadow 0.3s ease;
+}
+.swatch-btn:active {
+  transform: scale(0.9) !important;
+}
+
+/* Topics -> Categorical domain card. */
+.domain-card {
+  transition: transform 0.2s var(--e-screen);
+}
+.domain-card:active {
+  transform: scale(0.96);
+}
+
+/* Highlight sweep (Note View) — background-size, never opacity, per
+   design.md's Motion section. */
+.hl-sweep {
+  background-image: linear-gradient(var(--hl), var(--hl));
+  background-repeat: no-repeat;
+  background-position: 0 50%;
+  border-radius: var(--r-hl);
+  padding: 1px 2px;
+  transition: background-size var(--d-sweep) var(--e-screen);
+  background-size: 0% 100%;
+}
+.hl-sweep.hl-sweep-active {
+  background-size: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

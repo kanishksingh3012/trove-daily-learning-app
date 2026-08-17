@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 export default function Switch({
   checked,
   onChange,
@@ -11,8 +9,6 @@ export default function Switch({
   onChange: (next: boolean) => void;
   label?: string;
 }) {
-  const [pressed, setPressed] = useState(false);
-
   return (
     <button
       type="button"
@@ -20,34 +16,32 @@ export default function Switch({
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      onPointerDown={() => setPressed(true)}
-      onPointerUp={() => setPressed(false)}
-      onPointerLeave={() => setPressed(false)}
       style={{
         position: "relative",
-        width: 28,
-        height: 16,
-        borderRadius: 9,
-        border: "none",
-        padding: 0,
+        width: 46,
+        height: 27,
+        borderRadius: 14,
         flexShrink: 0,
-        background: checked ? "var(--accent)" : "var(--track-off)",
-        transition: "background-color .2s ease",
+        transition: "background-color 0.34s ease",
+        // Track: accent when on, line when off.
+        background: checked ? "var(--accent)" : "var(--line)",
       }}
     >
       <span
         style={{
           position: "absolute",
-          top: 2,
-          left: 2,
-          width: pressed ? 14 : 12,
-          height: 12,
+          top: 3,
+          left: 3,
+          width: 21,
+          height: 21,
           borderRadius: "50%",
-          background: checked ? "var(--on-accent)" : "var(--surface)",
-          boxShadow: "var(--shadow-thumb)",
-          transform: `translateX(${checked ? 12 : 0}px)`,
-          transition:
-            "transform .2s cubic-bezier(.34,1.56,.64,1), background-color .2s ease, width .15s ease",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.25)",
+          transition: "transform 0.34s var(--e-spring), background-color 0.34s ease",
+          // Knob: on-accent when on, text-3 when off — never a hardcoded
+          // white, so contrast holds in the monochrome-dark-Neutral case
+          // where the track itself is off-white (design.md).
+          background: checked ? "var(--on-accent)" : "var(--text-3)",
+          transform: checked ? "translateX(19px)" : "translateX(0)",
         }}
       />
     </button>

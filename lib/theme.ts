@@ -2,21 +2,21 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-export type ThemeMode = "dark" | "light";
-export type AccentKey = "neutral" | "terracotta" | "olive" | "blue";
+export type ThemeMode = "light" | "dark";
+export type AccentKey = "neutral" | "terracotta" | "green" | "blue";
 
-const THEME_KEY = "dlc-theme";
-const ACCENT_KEY = "dlc-accent";
+const THEME_KEY = "trove-mode";
+const ACCENT_KEY = "trove-accent";
 // Fired whenever this tab changes the theme, so same-tab subscribers update
 // too (the native "storage" event only fires in *other* tabs).
-const CHANGE_EVENT = "dlc-theme-store-changed";
+const CHANGE_EVENT = "trove-theme-store-changed";
 
 // Swatch colours are fixed accent identities, not theme-derived — "neutral"
 // is the only one that flips with mode, so it alone points at --text.
 export const ACCENT_OPTIONS: { key: AccentKey; label: string; swatch: string }[] = [
   { key: "neutral", label: "Neutral", swatch: "var(--text)" },
   { key: "terracotta", label: "Terracotta", swatch: "#D97635" },
-  { key: "olive", label: "Olive", swatch: "#5C6B2C" },
+  { key: "green", label: "Green", swatch: "#5C6B2C" },
   { key: "blue", label: "Blue", swatch: "#3B5FC4" },
 ];
 
@@ -29,11 +29,13 @@ function subscribe(callback: () => void) {
   };
 }
 
+// design.md: "Mode — light (default) / dark (reference build)" — light is
+// the bare :root palette in app/globals.css; [data-theme="dark"] overrides.
 function getModeSnapshot(): ThemeMode {
-  return (localStorage.getItem(THEME_KEY) as ThemeMode | null) ?? "dark";
+  return (localStorage.getItem(THEME_KEY) as ThemeMode | null) ?? "light";
 }
 function getModeServerSnapshot(): ThemeMode {
-  return "dark";
+  return "light";
 }
 
 function getAccentSnapshot(): AccentKey {
@@ -45,7 +47,7 @@ function getAccentServerSnapshot(): AccentKey {
 
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement;
-  if (mode === "light") root.setAttribute("data-theme", "light");
+  if (mode === "dark") root.setAttribute("data-theme", "dark");
   else root.removeAttribute("data-theme");
 }
 

@@ -2,29 +2,30 @@
 
 import { PlusIcon } from "@/components/icons";
 
-export default function Fab({ onClick }: { onClick: () => void }) {
+export default function Fab({ open, onClick }: { open: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
-      aria-label="Add a custom topic"
+      aria-label={open ? "Close" : "Add a custom topic"}
       onClick={onClick}
-      className="press"
+      className="press-icon"
       style={{
-        width: 54,
-        height: 54,
+        width: 56,
+        height: 56,
         borderRadius: "50%",
         flexShrink: 0,
-        border: "none",
-        background: "var(--accent)",
-        color: "var(--on-accent)",
+        background:
+          "radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--on-accent) 20%, transparent) 0%, transparent 58%), var(--accent)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: `var(--shadow-nav), 0 0 0 8px var(--accent-glow)`,
-        transition: "transform .15s cubic-bezier(0.34,1.56,0.64,1), box-shadow .2s ease",
+        color: "var(--on-accent)",
+        boxShadow: "0 8px 18px color-mix(in srgb, var(--accent) 34%, transparent)",
+        transition: "transform var(--d-screen) var(--e-spring)",
+        transform: open ? "rotate(135deg)" : "rotate(0deg)",
       }}
     >
-      <PlusIcon size={22} strokeWidth={2.2} />
+      <PlusIcon size={24} strokeWidth={2.2} />
     </button>
   );
 }

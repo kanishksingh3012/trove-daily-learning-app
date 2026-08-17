@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { CheckIcon } from "@/components/icons";
 
-const ANIM_MS = 200;
+const ANIM_IN_MS = 420;
+const ANIM_OUT_MS = 240;
 
 export default function Toast({ message, visible }: { message: string; visible: boolean }) {
   const [mounted, setMounted] = useState(visible);
@@ -22,7 +23,7 @@ export default function Toast({ message, visible }: { message: string; visible: 
 
   useEffect(() => {
     if (!closing) return;
-    const t = setTimeout(() => setMounted(false), ANIM_MS);
+    const t = setTimeout(() => setMounted(false), ANIM_OUT_MS);
     return () => clearTimeout(t);
   }, [closing]);
 
@@ -31,29 +32,32 @@ export default function Toast({ message, visible }: { message: string; visible: 
   return (
     <div
       role="status"
+      aria-live="polite"
       style={{
         position: "fixed",
-        left: "50%",
-        bottom: 106,
-        transform: "translateX(-50%)",
-        zIndex: 70,
-        background: "var(--overlay)",
-        color: "#F2F0EC",
-        borderRadius: 57,
-        padding: "12px 16px",
+        left: 24,
+        right: 24,
+        bottom: 98,
+        maxWidth: 432,
+        margin: "0 auto",
+        background: "#16171A",
+        color: "#F7F6F2",
+        borderRadius: 24,
+        padding: "14px 18px",
         display: "flex",
         alignItems: "center",
-        gap: 8,
-        fontSize: 11,
+        gap: 10,
+        fontSize: 12,
         fontWeight: 600,
-        boxShadow: "var(--shadow-toast)",
-        animation: `${closing ? "toast-out" : "toast-in"} ${ANIM_MS}ms ease-out`,
+        boxShadow: "0 12px 28px rgba(0, 0, 0, 0.28)",
+        zIndex: 70,
+        animation: closing
+          ? `toastOut ${ANIM_OUT_MS}ms var(--e-exit)`
+          : `toastIn ${ANIM_IN_MS}ms var(--e-screen)`,
         animationFillMode: "forwards",
-        whiteSpace: "nowrap",
-        maxWidth: "calc(100% - 48px)",
       }}
     >
-      <CheckIcon size={14} />
+      <CheckIcon size={18} style={{ color: "var(--pop-tint)", flexShrink: 0 }} />
       <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{message}</span>
     </div>
   );

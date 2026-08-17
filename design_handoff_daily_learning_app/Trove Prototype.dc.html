@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+<style>
+body{margin:0;background:#EFEDE7;font-family:'Manrope',sans-serif;display:flex;justify-content:center;padding:40px 24px}
+a{color:#D97635}a:hover{color:#b25f27}
+:root{--frame:#FDFCFA;--surface:#F7F6F2;--well:#F4F2EC;--line:#EFEDE7;--text:#16171A;--text-2:#7D7A70;--text-3:#9A968A;--accent:#16171A;--on-accent:#fff;--pop-tint:#F8F7F5;--hl:#FFE8B8;--skeleton:#EDEAE3;--grad:#FBF9F4;--shadow:rgba(0,0,0,.16)}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes scr{from{opacity:0;transform:translateY(10px) scale(.994)}to{opacity:1;transform:none}}
+@keyframes sheetIn{from{transform:translateY(102%)}to{transform:none}}
+@keyframes sheetOut{from{transform:none}to{transform:translateY(102%)}}
+@keyframes toastIn{0%{opacity:0;transform:translateY(24px) scale(.94)}60%{transform:translateY(-3px) scale(1.01)}100%{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(14px) scale(.97)}}
+@keyframes listIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes shimmer{to{background-position:200% 0}}
+@keyframes pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes bar{to{transform:scaleX(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;align-items:center;gap:18px">
+<div style="text-align:center">
+<div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a8577">Trove · interactive prototype</div>
+<div style="font-size:12px;color:#6f6d65;margin-top:6px">Tap anything. Pick tomorrow's topic, queue a request, read and highlight a note, switch themes.</div>
+</div>
+
+<div style="{{ vars }}">
+<div style="width:393px;height:852px;background:var(--frame);border-radius:55px;position:relative;overflow:hidden;box-shadow:0 28px 60px -20px var(--shadow),0 6px 16px rgba(0,0,0,.06);font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;transition:background .4s ease">
+<div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#000;border-radius:20px;z-index:40"></div>
+<div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;height:60px;box-sizing:border-box;padding:24px 28px 0;font-size:13px;font-weight:700;color:var(--text);z-index:30;pointer-events:none;transition:color .4s ease"><span>9:41</span><span style="font-family:'Material Symbols Rounded';font-size:14px;letter-spacing:2px">network_cell wifi battery_full</span></div>
+
+<sc-if value="{{ booting }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;padding:70px 20px 0;box-sizing:border-box;display:flex;flex-direction:column;gap:14px">
+<div style="height:16px;width:120px;border-radius:8px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+<div style="height:26px;width:190px;border-radius:10px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+<div style="height:246px;border-radius:26px;margin-top:8px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+<div style="height:62px;border-radius:16px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+<div style="height:62px;border-radius:16px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+<div style="height:62px;border-radius:16px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+<div style="height:62px;border-radius:16px;background:linear-gradient(90deg,var(--skeleton) 25%,var(--well) 37%,var(--skeleton) 63%);background-size:200% 100%;animation:shimmer 1.3s linear infinite"></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;animation:scr .38s cubic-bezier(.16,1,.3,1) both">
+<div style="position:absolute;inset:60px 0 104px;overflow-y:auto;padding:0 0 12px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:12px 20px 0">
+<div>
+<div style="font-size:11px;color:var(--text-3)">Welcome back Kans!</div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text);margin-top:2px">17 August, 2026</div>
+</div>
+<div style="display:flex;gap:8px">
+<div onClick="{{ openQuick }}" style="width:40px;height:40px;border-radius:50%;background:var(--well);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .3s" style-hover="background:var(--line)" style-active="transform:scale(.9)"><span style="font-family:'Material Symbols Rounded';font-size:19px">edit_note</span></div>
+<div onClick="{{ openBookmarksSheet }}" style="width:40px;height:40px;border-radius:50%;background:var(--well);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .3s" style-hover="background:var(--line)" style-active="transform:scale(.9)"><span style="font-family:'Material Symbols Rounded';font-size:19px">bookmark</span></div>
+</div>
+</div>
+
+<div style="padding:20px 20px 0">
+<div style="display:flex;justify-content:space-between;align-items:baseline">
+<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3)">YOUR ACTIVITY</div>
+<div style="font-size:10px;color:var(--text-3)">{{ activityTotal }} reads all-time</div>
+</div>
+<div style="overflow-x: auto; margin-top: 8px; padding-bottom: 2px; width: 351px; height: 93px; display: block">
+<div style="display:inline-flex;flex-direction:column;gap:3px">
+<div style="display:flex;gap:2px">
+<sc-for list="{{ activityMonths }}" as="m" hint-placeholder-count="8">
+<div style="width:8px;flex:0 0 8px;font-size:7px;color:var(--text-3)">{{ m.label }}</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:2px">
+<sc-for list="{{ activityWeeks }}" as="w" hint-placeholder-count="33">
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ w.days }}" as="d" hint-placeholder-count="7">
+<div title="{{ d.title }}" style="width:8px;height:8px;border-radius:2px;background:{{ d.bg }}"></div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+
+<div onClick="{{ openNote }}" style="margin:16px 20px 0;border-radius:26px;padding:22px 18px 20px;text-align:center;background:var(--grad);cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s" style-hover="box-shadow:0 10px 26px -12px var(--shadow)" style-active="transform:scale(.985)">
+<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-2);text-transform:uppercase">Today's topic</div>
+<div style="display:inline-flex;background:var(--tag-bg);color:var(--tag-fg);font-size:9px;font-weight:700;border-radius:10px;padding:4px 10px;margin-top:10px">Math &amp; Logic</div>
+<div style="font-family:'Lora',serif;font-size:28px;color:var(--text);margin-top:8px;line-height:1.15">Nash Equilibrium</div>
+<div style="font-size:11px;color:var(--text-2);margin-top:8px;line-height:1.55">A 4-minute read on why no player gains by<br>changing strategy alone.</div>
+<div style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--on-accent);padding:13px 24px;border-radius:26px;font-size:12px;font-weight:700;margin-top:16px;transition:background .4s,color .4s"><span style="font-family:'Material Symbols Rounded';font-size:16px">auto_stories</span>Read now<span style="font-family:'Material Symbols Rounded';font-size:16px">chevron_right</span></div>
+</div>
+
+<div style="padding:20px 20px 0">
+<div style="display:flex;justify-content:space-between;align-items:baseline">
+<div style="font-size:12px;font-weight:700;color:var(--text)">For tomorrow, select</div>
+<div style="font-size:10px;color:var(--text-3)">{{ pickHint }}</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+<sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+<div onClick="{{ o.onTap }}" style="position:relative;overflow:hidden;background:var(--well);border-radius:16px;padding:12px;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1)" style-active="transform:scale(.96)">
+<div style="position:absolute;inset:0;background:var(--accent);transition:opacity .32s cubic-bezier(.16,1,.3,1);opacity:{{ o.sel }}"></div>
+<div style="position:relative;font-size:11px;font-weight:600;transition:color .3s;color:{{ o.fg }}">{{ o.t }}
+<div style="font-size:9px;margin-top:4px;font-weight:500;opacity:.62">{{ o.sub }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin:18px 20px 0;background:var(--surface);border-radius:18px;padding:12px 14px;transition:background .4s">
+<div><div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--text-3)">YESTERDAY</div><div style="font-size:12px;font-weight:600;color:var(--text);margin-top:3px">mRNA Vaccines</div></div>
+<div onClick="{{ openNote }}" style="border:1px solid var(--line);border-radius:16px;padding:8px 16px;font-size:11px;font-weight:700;color:var(--text);cursor:pointer;transition:transform .18s,background .25s" style-hover="background:var(--well)" style-active="transform:scale(.94)">Read</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTopics }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;animation:scr .38s cubic-bezier(.16,1,.3,1) both">
+<div style="position:absolute;inset:60px 0 104px;overflow-y:auto">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 0">
+<div style="font-family:'Lora',serif;font-size:26px;color:var(--text)">Topics</div>
+<div onClick="{{ openDomainSheet }}" style="display:flex;align-items:center;gap:6px;background:var(--well);border-radius:20px;padding:9px 14px;font-size:11px;font-weight:700;color:var(--text);cursor:pointer;transition:transform .18s" style-active="transform:scale(.94)"><span style="font-family:'Material Symbols Rounded';font-size:16px">add</span>Domain</div>
+</div>
+<div style="padding:16px 20px 0">
+<div style="position:relative;display:flex;background:var(--well);border-radius:22px;padding:4px;height:38px;box-sizing:border-box">
+<div style="position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:18px;background:var(--frame);box-shadow:0 2px 6px rgba(0,0,0,.08);transition:transform .38s cubic-bezier(.16,1,.3,1);transform:{{ tabX }}"></div>
+<div onClick="{{ showCat }}" style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:color .3s;color:{{ catFg }}">Categorical</div>
+<div onClick="{{ showAll }}" style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:color .3s;color:{{ allFg }}">All</div>
+</div>
+</div>
+
+<sc-if value="{{ isCat }}" hint-placeholder-val="{{ true }}">
+<div style="padding:16px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<sc-for list="{{ domains }}" as="d" hint-placeholder-count="6">
+<div onClick="{{ d.onTap }}" style-active="transform:scale(.96)" style="border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:24px;cursor:pointer;animation:listIn .42s cubic-bezier(.16,1,.3,1) both;transition:transform .2s cubic-bezier(.16,1,.3,1);background:{{ d.bg }};animation-delay:{{ d.delay }}">
+<div style="width:34px;height:34px;border-radius:12px;background:var(--frame);display:flex;align-items:center;justify-content:center;color:{{ d.c }}"><span style="font-family:'Material Symbols Rounded';font-size:19px">folder</span></div>
+<div><div style="font-size:12px;font-weight:700;color:var(--text)">{{ d.name }}</div><div style="font-size:10px;color:var(--text-3);margin-top:2px">{{ d.count }}</div></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAll }}" hint-placeholder-val="{{ true }}">
+<div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ notes }}" as="n" hint-placeholder-count="8">
+<div onClick="{{ openNote }}" style-active="transform:scale(.98)" style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:16px;padding:14px;cursor:pointer;animation:listIn .42s cubic-bezier(.16,1,.3,1) both;transition:transform .2s;animation-delay:{{ n.delay }}">
+<div><div style="font-size:12px;font-weight:600;color:var(--text)">{{ n.t }}</div><div style="font-size:10px;color:var(--text-3);margin-top:3px">{{ n.date }}</div></div>
+<div style="font-size:9px;font-weight:700;border-radius:10px;padding:4px 9px;background:{{ n.bg }};color:{{ n.c }}">{{ n.d }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDomain }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;animation:scr .38s cubic-bezier(.16,1,.3,1) both">
+<div style="position:absolute;inset:60px 0 104px;overflow-y:auto">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 20px 0">
+<div onClick="{{ backToTopics }}" style="width:38px;height:38px;border-radius:50%;background:var(--well);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;transition:transform .18s" style-active="transform:scale(.9)"><span style="font-family:'Material Symbols Rounded';font-size:20px">arrow_back</span></div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text)">{{ domainName }}</div>
+</div>
+<div style="padding:18px 20px 0;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ domainNotes }}" as="n" hint-placeholder-count="4">
+<div onClick="{{ openNote }}" style-active="transform:scale(.98)" style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:16px;padding:14px;cursor:pointer;animation:listIn .42s cubic-bezier(.16,1,.3,1) both;transition:transform .2s;animation-delay:{{ n.delay }}">
+<div><div style="font-size:12px;font-weight:600;color:var(--text)">{{ n.t }}</div><div style="font-size:10px;color:var(--text-3);margin-top:3px">{{ n.date }}</div></div>
+<span style="font-family:'Material Symbols Rounded';font-size:18px;color:var(--text-3)">chevron_right</span>
+</div>
+</sc-for>
+<sc-if value="{{ domainEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="text-align:center;padding:70px 20px;animation:scr .4s cubic-bezier(.16,1,.3,1) both">
+<div style="width:56px;height:56px;border-radius:20px;background:var(--well);display:flex;align-items:center;justify-content:center;margin:0 auto;color:var(--text-3)"><span style="font-family:'Material Symbols Rounded';font-size:26px">folder_open</span></div>
+<div style="font-family:'Lora',serif;font-size:20px;color:var(--text);margin-top:14px">Nothing here yet</div>
+<div style="font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.6">Queue a topic in this domain and the note<br>arrives with tomorrow morning's run.</div>
+<div onClick="{{ openAdd }}" style="display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:var(--on-accent);border-radius:24px;padding:12px 20px;font-size:12px;font-weight:700;margin-top:18px;cursor:pointer;transition:transform .18s" style-active="transform:scale(.95)"><span style="font-family:'Material Symbols Rounded';font-size:16px">add</span>Request a topic</div>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettings }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;animation:scr .38s cubic-bezier(.16,1,.3,1) both">
+<div style="position:absolute;inset:60px 0 104px;overflow-y:auto">
+<div style="padding:14px 20px 0"><div style="font-family:'Lora',serif;font-size:26px;color:var(--text)">Settings</div></div>
+<div style="margin:16px 20px 0;border-radius:26px;padding:18px;background:var(--grad);display:flex;justify-content:space-between">
+<div><div style="font-family:'Lora',serif;font-size:26px;color:var(--text)">128</div><div style="font-size:10px;color:var(--text-2);margin-top:2px">Notes</div></div>
+<div><div style="font-family:'Lora',serif;font-size:26px;color:var(--text)">12</div><div style="font-size:10px;color:var(--text-2);margin-top:2px">Domains</div></div>
+<div><div style="font-family:'Lora',serif;font-size:26px;color:var(--text)">Science</div><div style="font-size:10px;color:var(--text-2);margin-top:2px">Most active</div></div>
+</div>
+<div style="padding:20px 20px 0;display:flex;flex-direction:column;gap:12px">
+<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3)">APPEARANCE</div>
+<div style="background:var(--surface);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:16px;transition:background .4s">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="font-size:12px;font-weight:600;color:var(--text)">Dark mode</div>
+<div onClick="{{ toggleDark }}" style="width:46px;height:27px;border-radius:14px;position:relative;cursor:pointer;transition:background .34s ease;background:{{ switchBg }}">
+<div style="position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .34s cubic-bezier(.34,1.56,.64,1),background .34s;background:{{ switchThumb }};transform:{{ switchX }}"></div>
+</div>
+</div>
+<div style="height:1px;background:var(--line)"></div>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="font-size:12px;font-weight:600;color:var(--text)">Theme colour</div>
+<div style="display:flex;gap:12px">
+<sc-for list="{{ accents }}" as="a" hint-placeholder-count="4">
+<div onClick="{{ a.onTap }}" style="width:24px;height:24px;border-radius:50%;cursor:pointer;transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s;background:{{ a.c }};box-shadow:{{ a.ring }};transform:{{ a.scale }}"></div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3);margin-top:4px">NOTIFICATIONS</div>
+<div style="background:var(--surface);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:14px;transition:background .4s">
+<sc-for list="{{ notifs }}" as="n" hint-placeholder-count="2">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="font-size:12px;font-weight:600;color:var(--text)">{{ n.label }}</div>
+<div onClick="{{ n.onTap }}" style="width:46px;height:27px;border-radius:14px;position:relative;cursor:pointer;transition:background .34s ease;background:{{ n.bg }}">
+<div style="position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .34s cubic-bezier(.34,1.56,.64,1),background .34s;background:{{ n.thumb }};transform:{{ n.x }}"></div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3);margin-top:4px">AUTOMATION</div>
+<div style="background:var(--surface);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:14px;transition:background .4s">
+<div onClick="{{ openPrompt }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer"><div><div style="font-size:12px;font-weight:600;color:var(--text)">The prompt</div><div style="font-size:10px;color:var(--text-3);margin-top:2px">Edit this prompt in Cowork</div></div><span style="font-family:'Material Symbols Rounded';font-size:18px;color:var(--text-3)">lock</span></div>
+<div style="height:1px;background:var(--line)"></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;font-weight:600;color:var(--text)">Timing</div><div style="font-size:10px;color:var(--text-3);margin-top:2px">Daily, 7:00 AM</div></div><span style="font-family:'Material Symbols Rounded';font-size:18px;color:var(--text-3)">lock</span></div>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPrompt }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:var(--frame);z-index:25;animation:scr .34s cubic-bezier(.16,1,.3,1) both">
+<div style="position:absolute;inset:60px 0 0;overflow-y:auto">
+<div style="display:flex;align-items:center;gap:12px;padding:14px 20px 0">
+<div onClick="{{ backToSettings }}" style="width:38px;height:38px;border-radius:50%;background:var(--well);display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;transition:transform .18s" style-active="transform:scale(.9)"><span style="font-family:'Material Symbols Rounded';font-size:20px">arrow_back</span></div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text)">The prompt</div>
+</div>
+<div style="margin:18px 20px;display:flex;gap:10px;align-items:flex-start;background:var(--well);border-radius:16px;padding:12px 14px">
+<span style="font-family:'Material Symbols Rounded';font-size:17px;color:var(--text-3)">lock</span>
+<div style="font-size:11px;color:var(--text-2);line-height:1.5">Read only here. The schedule and the prompt itself are edited in Cowork.</div>
+</div>
+<div style="margin:0 20px 40px;background:var(--surface);border-radius:20px;padding:18px;font-size:11px;line-height:1.85;color:var(--text-2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace">Each morning, read the Domains list from Notion. Pick one topic that has not appeared in the last 60 days, weighting toward the least-covered domain. Write a note with five sections: Topic, Brief, Concept Index, Detailed Notes, Resources. If Selected Topic is set, use it instead and clear the field.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNote }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:var(--frame);z-index:20;animation:scr .36s cubic-bezier(.16,1,.3,1) both">
+<div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);transform-origin:0 50%;z-index:35;transition:transform .12s linear;transform:{{ progress }}"></div>
+<div style="position:absolute;top:0;left:0;right:0;height:104px;z-index:22;background:var(--frame);backdrop-filter:blur(12px);pointer-events:none;transition:opacity .3s ease;opacity:{{ compactOp }}"></div>
+<div style="position:absolute;top:64px;left:64px;right:64px;z-index:24;text-align:center;font-size:12px;font-weight:700;color:var(--text);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .3s ease,transform .3s ease;opacity:{{ compactOp }};transform:{{ compactY }}">Nash Equilibrium</div>
+<div style="position:absolute;top:56px;left:0;right:0;z-index:26;display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0;color:var(--text)">
+<div onClick="{{ closeNote }}" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .18s,background .25s" style-hover="background:var(--well)" style-active="transform:scale(.9)"><span style="font-family:'Material Symbols Rounded';font-size:22px">arrow_back</span></div>
+<div style="display:flex;gap:4px">
+<div onClick="{{ openToc }}" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .18s,background .25s" style-hover="background:var(--well)" style-active="transform:scale(.9)"><span style="font-family:'Material Symbols Rounded';font-size:22px">toc</span></div>
+<div onClick="{{ toggleBookmark }}" style-active="transform:scale(.85)" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .22s cubic-bezier(.34,1.56,.64,1);color:{{ bookmarkFg }};transform:{{ bookmarkScale }}"><span style="font-family:'Material Symbols Rounded';font-size:22px;font-variation-settings:{{ bookmarkFill }}">bookmark</span></div>
+</div>
+</div>
+<div ref="{{ noteRef }}" onScroll="{{ onNoteScroll }}" style="position:absolute;inset:60px 0 0;overflow-y:auto">
+<div style="background:var(--grad);padding:48px 20px 22px">
+<div style="display:inline-flex;background:var(--tag-bg);color:var(--tag-fg);font-size:9px;font-weight:700;border-radius:10px;padding:4px 10px">Math &amp; Logic</div>
+<div style="font-family:'Lora',serif;font-size:30px;color:var(--text);margin-top:10px;line-height:1.12">Nash Equilibrium</div>
+<div style="font-size:11px;color:var(--text-2);margin-top:8px">17 Aug 2026 · 4 min read</div>
+</div>
+<div style="padding:20px 20px 140px;display:flex;flex-direction:column;gap:14px">
+<div data-sec="brief" style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3)">BRIEF</div>
+<sc-for list="{{ paras }}" as="p" hint-placeholder-count="2">
+<div style="position:relative">
+<div onClick="{{ p.onTap }}" style="font-size:13px;line-height:1.78;color:var(--text-2);cursor:text">{{ p.pre }}<span style="background-image:linear-gradient(var(--hl),var(--hl));background-repeat:no-repeat;background-position:0 50%;border-radius:3px;padding:1px 2px;transition:background-size .5s cubic-bezier(.16,1,.3,1);background-size:{{ p.hl }}">{{ p.mid }}</span>{{ p.post }}</div>
+<sc-if value="{{ p.callout }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:50%;top:-14px;transform:translateX(-50%);display:flex;gap:2px;background:#16171A;border-radius:14px;padding:5px;z-index:12;box-shadow:0 10px 22px rgba(0,0,0,.28);animation:pop .26s cubic-bezier(.34,1.56,.64,1) both">
+<div onClick="{{ p.onHighlight }}" style="display:flex;align-items:center;gap:5px;color:#fff;font-size:11px;font-weight:600;padding:7px 11px;border-radius:10px;cursor:pointer" style-hover="background:rgba(255,255,255,.12)"><span style="font-family:'Material Symbols Rounded';font-size:15px;color:var(--pop-tint)">ink_highlighter</span>Highlight</div>
+<div onClick="{{ p.onCopy }}" style="color:#fff;font-size:11px;font-weight:600;padding:7px 11px;border-radius:10px;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">Copy</div>
+<div onClick="{{ p.onLink }}" style="color:#fff;font-size:11px;font-weight:600;padding:7px 11px;border-radius:10px;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">Link</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<div style="height:1px;background:var(--line)"></div>
+<div data-sec="index" style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3)">CONCEPT INDEX</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;gap:10px;font-size:12px;color:var(--text-2)"><span style="font-family:'Lora',serif;color:var(--accent)">01</span>Best response &amp; mutual optimality</div>
+<div style="display:flex;gap:10px;font-size:12px;color:var(--text-2)"><span style="font-family:'Lora',serif;color:var(--accent)">02</span>Prisoner's dilemma as the canonical case</div>
+<div style="display:flex;gap:10px;font-size:12px;color:var(--text-2)"><span style="font-family:'Lora',serif;color:var(--accent)">03</span>Mixed strategies and why they exist</div>
+</div>
+<div style="height:1px;background:var(--line)"></div>
+<div data-sec="detail" style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-3)">DETAILED NOTES</div>
+<div style="font-size:13px;line-height:1.78;color:var(--text-2)">In the prisoner's dilemma both players defect, because defecting is the best response to either choice the other can make. The equilibrium is stable and jointly worse than cooperation.</div>
+<div style="border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:11px">
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr;background:var(--well);font-weight:700;color:var(--text)"><div style="padding:10px">B \ A</div><div style="padding:10px">Cooperate</div><div style="padding:10px">Defect</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr;border-top:1px solid var(--line);color:var(--text-2)"><div style="padding:10px;font-weight:700;color:var(--text)">Cooperate</div><div style="padding:10px">−1, −1</div><div style="padding:10px">−3, 0</div></div>
+<div style="display:grid;grid-template-columns:1.1fr 1fr 1fr;border-top:1px solid var(--line);color:var(--text-2)"><div style="padding:10px;font-weight:700;color:var(--text)">Defect</div><div style="padding:10px">0, −3</div><div style="padding:10px;background:var(--hl);color:var(--text);font-weight:700">−2, −2</div></div>
+</div>
+<div style="background:var(--surface);border-radius:20px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="border:1px dashed var(--line);border-radius:12px;padding:10px 14px;font-size:11px;font-weight:600;color:var(--text)">Player A</div>
+<div style="width:34px;height:1px;background:var(--line);position:relative"><div style="position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--accent)"></div></div>
+<div style="border:1px dashed var(--line);border-radius:12px;padding:10px 14px;font-size:11px;font-weight:600;color:var(--text)">Player B</div>
+</div>
+<div style="font-size:10px;color:var(--text-3)">Neither arrow points away — that is the equilibrium.</div>
+</div>
+<div data-sec="res" style="background:var(--surface);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;margin-top:4px">
+<div style="font-size:11px;font-weight:700;color:var(--text)">Resources</div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:10px;background:var(--frame);display:flex;align-items:center;justify-content:center;color:var(--accent)"><span style="font-family:'Material Symbols Rounded';font-size:17px">picture_as_pdf</span></div><div><div style="font-size:11px;font-weight:600;color:var(--text)">Game Theory 101 — Lecture 3</div><div style="font-size:9px;color:var(--text-3)">PDF · 2.1 MB</div></div></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:10px;background:var(--frame);display:flex;align-items:center;justify-content:center;color:#3b5fc4"><span style="font-family:'Material Symbols Rounded';font-size:17px">link</span></div><div><div style="font-size:11px;font-weight:600;color:var(--text)">Stanford Encyclopedia entry</div><div style="font-size:9px;color:var(--text-3)">plato.stanford.edu</div></div></div>
+</div>
+<div onClick="{{ markRead }}" style-active="transform:scale(.97)" style="margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:26px;padding:14px;font-size:12px;font-weight:700;transition:transform .18s,background .3s,color .3s;cursor:{{ readCursor }};background:{{ readBg }};color:{{ readFg }}"><span style="font-family:'Material Symbols Rounded';font-size:16px">{{ readIcon }}</span>{{ readLabel }}</div>
+</div>
+</div>
+<div style="position:absolute;left:50%;transform:translateX(-50%);bottom:28px;z-index:28;display:flex;gap:6px;align-items:center;background:#16171A;border-radius:30px;padding:8px 10px;box-shadow:0 12px 28px rgba(0,0,0,.26)">
+<sc-for list="{{ tools }}" as="t" hint-placeholder-count="4">
+<div onClick="{{ t.onTap }}" style="position:relative;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:transform .2s cubic-bezier(.34,1.56,.64,1)" style-active="transform:scale(.88)">
+<div style="position:absolute;inset:0;background:var(--pop-tint);border-radius:50%;transition:opacity .28s,transform .28s cubic-bezier(.34,1.56,.64,1);opacity:{{ t.sel }};transform:{{ t.scale }}"></div>
+<span style="position:relative;font-family:'Material Symbols Rounded';font-size:19px;transition:color .28s;color:{{ t.fg }}">{{ t.icon }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:24px;right:24px;bottom:26px;display:flex;gap:12px;align-items:center;z-index:18">
+<div style="position:relative;flex:1;height:56px;border-radius:28px;background:var(--well);display:flex;padding:6px;box-sizing:border-box;transition:background .4s">
+<div style="position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/3);border-radius:22px;background:var(--accent);transition:transform .44s cubic-bezier(.16,1,.3,1),background .4s;transform:{{ navX }}"></div>
+<sc-for list="{{ navs }}" as="v" hint-placeholder-count="3">
+<div onClick="{{ v.onTap }}" style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:color .3s;color:{{ v.fg }}">
+<span style="font-family:'Material Symbols Rounded';font-size:20px;transition:transform .3s cubic-bezier(.34,1.56,.64,1);transform:{{ v.scale }}">{{ v.icon }}</span>
+</div>
+</sc-for>
+</div>
+<div onClick="{{ openAdd }}" style-active="transform:scale(.9)" style="width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 32% 28%,color-mix(in srgb,var(--on-accent) 20%,transparent) 0%,transparent 58%),var(--accent);display:flex;align-items:center;justify-content:center;color:var(--on-accent);box-shadow:0 8px 18px color-mix(in srgb,var(--accent) 34%,transparent);cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1);transform:{{ fabRot }}"><span style="font-family:'Material Symbols Rounded';font-size:24px">add</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasSheet }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:32">
+<div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(10,10,12,.46);transition:opacity .3s ease;opacity:{{ backdropOp }}"></div>
+
+<sc-if value="{{ isAdd }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--frame);border-radius:32px 32px 0 0;padding:14px 20px 30px;display:flex;flex-direction:column;gap:16px;box-shadow:0 -10px 34px rgba(0,0,0,.2);animation:{{ sheetAnim }}">
+<div style="width:38px;height:4px;background:var(--line);border-radius:2px;align-self:center"></div>
+<sc-if value="{{ addForm }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text);text-align:center">Request a topic</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text-3)">TOPIC</div>
+<input onChange="{{ onTopicInput }}" placeholder="Kolmogorov complexity" style="background:var(--well);border:1px solid transparent;border-radius:18px;padding:14px;font-size:13px;color:var(--text);font-family:'Manrope',sans-serif;outline:none;transition:border-color .25s,background .25s" style-focus="border-color:var(--accent)" value="{{ topicText }}">
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text-3)">DOMAIN</div>
+<div style="position:relative;background:var(--well);border-radius:18px;height:132px;overflow:hidden">
+<div style="position:absolute;left:12px;right:12px;top:44px;height:44px;background:var(--frame);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);pointer-events:none"></div>
+<div ref="{{ wheelRef }}" onScroll="{{ onWheelScroll }}" style="position:relative;height:100%;overflow-y:auto;scroll-snap-type:y mandatory;padding:44px 0">
+<sc-for list="{{ wheelItems }}" as="w" hint-placeholder-count="6">
+<div style="height:44px;display:flex;align-items:center;justify-content:center;scroll-snap-align:center;font-size:13px;transition:color .2s,font-weight .2s,transform .25s;color:{{ w.fg }};font-weight:{{ w.weight }};transform:{{ w.scale }}">{{ w.name }}</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:10px;align-items:flex-start;background:var(--well);border-radius:16px;padding:12px 14px">
+<span style="font-family:'Material Symbols Rounded';font-size:17px;color:var(--accent)">schedule</span>
+<div style="font-size:11px;color:var(--text-2);line-height:1.5">Queued, not instant. Your note arrives with tomorrow morning's run.</div>
+</div>
+<div style="display:flex;gap:12px">
+<div onClick="{{ closeSheet }}" style="flex:1;border:1px solid var(--line);border-radius:26px;padding:14px;text-align:center;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;transition:transform .18s" style-active="transform:scale(.96)">Cancel</div>
+<div onClick="{{ submitTopic }}" style-active="transform:scale(.97)" style="flex:1.4;background:var(--accent);border-radius:26px;padding:14px;text-align:center;font-size:12px;font-weight:700;color:var(--on-accent);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .18s,opacity .25s;opacity:{{ submitOp }}">
+<sc-if value="{{ submitting }}" hint-placeholder-val="{{ false }}">
+<div style="width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:currentColor;animation:spin .7s linear infinite"></div>
+</sc-if>
+{{ submitLabel }}</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ addDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:14px 10px 8px;animation:scr .34s cubic-bezier(.16,1,.3,1) both">
+<div style="width:58px;height:58px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;color:var(--accent);animation:pop .42s cubic-bezier(.34,1.56,.64,1) both"><span style="font-family:'Material Symbols Rounded';font-size:30px">schedule_send</span></div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text);margin-top:14px">Queued</div>
+<div style="font-size:11px;color:var(--text-2);margin-top:8px;line-height:1.6">{{ queuedLine }}<br>We'll notify you when the note is ready.</div>
+<div onClick="{{ closeSheet }}" style="align-self:stretch;background:var(--accent);color:var(--on-accent);border-radius:26px;padding:14px;text-align:center;font-size:12px;font-weight:700;margin-top:20px;cursor:pointer;transition:transform .18s" style-active="transform:scale(.97)">Done</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isQuick }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--frame);border-radius:32px 32px 0 0;padding:14px 20px 30px;display:flex;flex-direction:column;gap:16px;box-shadow:0 -10px 34px rgba(0,0,0,.2);animation:{{ sheetAnim }}">
+<div style="width:38px;height:4px;background:var(--line);border-radius:2px;align-self:center"></div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text);text-align:center">Quick note</div>
+<textarea onChange="{{ onQuickInput }}" placeholder="Something to look into later…" style="background:var(--well);border:1px solid transparent;border-radius:18px;padding:14px;font-size:13px;line-height:1.6;color:var(--text);font-family:'Manrope',sans-serif;outline:none;height:104px;resize:none;transition:border-color .25s" style-focus="border-color:var(--accent)" value="{{ quickText }}"></textarea>
+<div onClick="{{ saveQuick }}" style="background:var(--accent);color:var(--on-accent);border-radius:26px;padding:14px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;transition:transform .18s" style-active="transform:scale(.97)">Save to Trove</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNewDomain }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--frame);border-radius:32px 32px 0 0;padding:14px 20px 30px;display:flex;flex-direction:column;gap:16px;box-shadow:0 -10px 34px rgba(0,0,0,.2);animation:{{ sheetAnim }}">
+<div style="width:38px;height:4px;background:var(--line);border-radius:2px;align-self:center"></div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text);text-align:center">New domain</div>
+<input onChange="{{ onDomainInput }}" placeholder="Name it" style="background:var(--well);border:1px solid transparent;border-radius:18px;padding:14px;font-size:13px;color:var(--text);font-family:'Manrope',sans-serif;outline:none;transition:border-color .25s" style-focus="border-color:var(--accent)" value="{{ newDomainName }}">
+<div style="display:flex;justify-content:space-between;padding:0 6px">
+<sc-for list="{{ swatches }}" as="s" hint-placeholder-count="6">
+<div onClick="{{ s.onTap }}" style="width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;background:{{ s.c }};box-shadow:{{ s.ring }};transform:{{ s.scale }}"></div>
+</sc-for>
+</div>
+<div onClick="{{ saveDomain }}" style-active="transform:scale(.97)" style="background:var(--accent);color:var(--on-accent);border-radius:26px;padding:14px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;transition:transform .18s,opacity .25s;opacity:{{ domainOp }}">Create domain</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isToc }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--frame);border-radius:32px 32px 0 0;padding:14px 20px 30px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -10px 34px rgba(0,0,0,.2);animation:{{ sheetAnim }}">
+<div style="width:38px;height:4px;background:var(--line);border-radius:2px;align-self:center"></div>
+<div style="font-family:'Lora',serif;font-size:20px;color:var(--text)">Jump to</div>
+<sc-for list="{{ tocItems }}" as="s" hint-placeholder-count="4">
+<div onClick="{{ s.onTap }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border-radius:16px;cursor:pointer;transition:transform .18s,background .25s" style-active="transform:scale(.98)">
+<span style="font-family:'Lora',serif;font-size:14px;color:var(--accent)">{{ s.n }}</span>
+<span style="font-size:12px;font-weight:600;color:var(--text)">{{ s.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBookmarks }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--frame);border-radius:32px 32px 0 0;padding:14px 20px 30px;display:flex;flex-direction:column;gap:14px;box-shadow:0 -10px 34px rgba(0,0,0,.2);animation:{{ sheetAnim }}">
+<div style="width:38px;height:4px;background:var(--line);border-radius:2px;align-self:center"></div>
+<div style="font-family:'Lora',serif;font-size:22px;color:var(--text);text-align:center">Bookmarks</div>
+<div style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto">
+<sc-for list="{{ bookmarkedNotes }}" as="b" hint-placeholder-count="2">
+<div onClick="{{ b.onTap }}" style-active="transform:scale(.98)" style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:16px;padding:14px;cursor:pointer;transition:transform .18s">
+<div><div style="font-size:12px;font-weight:600;color:var(--text)">{{ b.t }}</div><div style="font-size:10px;color:var(--text-3);margin-top:3px">{{ b.date }}</div></div>
+<span style="font-family:'Material Symbols Rounded';font-size:18px;color:var(--accent);font-variation-settings:'FILL' 1">bookmark</span>
+</div>
+</sc-for>
+<sc-if value="{{ bookmarksEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="text-align:center;padding:30px 10px;font-size:11px;color:var(--text-3);line-height:1.6">No bookmarks yet. Tap the bookmark icon in a note to save it here.</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div role="status" aria-live="polite" style="position:absolute;left:24px;right:24px;bottom:98px;background:#16171A;color:#F7F6F2;border-radius:24px;padding:14px 18px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;box-shadow:0 12px 28px rgba(0,0,0,.28);z-index:36;animation:{{ toastAnim }}"><span style="font-family:'Material Symbols Rounded';font-size:18px;color:var(--pop-tint)">{{ toastIcon }}</span>{{ toastMsg }}</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:560,&quot;height&quot;:1000},&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Light&quot;,&quot;Dark&quot;],&quot;default&quot;:&quot;Light&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Neutral&quot;,&quot;Terracotta&quot;,&quot;Green&quot;,&quot;Blue&quot;],&quot;default&quot;:&quot;Neutral&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const DOMAINS = [
+  {name:'Science & Nature', c:'#2e9e5b', tint:'#F4F6F1', n:14},
+  {name:'History & Civilization', c:'#d97635', tint:'#FBF3EC', n:11},
+  {name:'Math & Logic', c:'#3b5fc4', tint:'#F2F4F9', n:9},
+  {name:'Technology', c:'#7a5fc4', tint:'#F5F2FA', n:8},
+  {name:'Mind & Psychology', c:'#c45f8a', tint:'#FAF1F5', n:7},
+  {name:'Health & Medicine', c:'#2f9e93', tint:'#F0F7F6', n:6},
+  {name:'Espionage & Craft', c:'#8a8577', tint:'#F5F4F0', n:0}
+];
+const OPTIONS = [
+  {t:'Bronze Age Collapse', sub:'History'},
+  {t:'CRISPR Gene Editing', sub:'Science'},
+  {t:'CIA Tradecraft History', sub:'Espionage'},
+  {t:'Boxing Fundamentals', sub:'Physical Cond.'}
+];
+const NOTES = [
+  {t:'Nash Equilibrium', d:2, date:'17 Aug 2026'},
+  {t:'mRNA Vaccines', d:5, date:'16 Aug 2026'},
+  {t:'The Antikythera Mechanism', d:1, date:'15 Aug 2026'},
+  {t:'Attention in Transformers', d:3, date:'14 Aug 2026'},
+  {t:'Mycorrhizal Networks', d:0, date:'13 Aug 2026'},
+  {t:'Cognitive Dissonance', d:4, date:'12 Aug 2026'},
+  {t:'Gödel Incompleteness', d:2, date:'11 Aug 2026'},
+  {t:'The Bronze Age Collapse', d:1, date:'10 Aug 2026'}
+];
+const PARAS = [
+  {pre:'A Nash equilibrium is a set of strategies where ', mid:'no player can improve their outcome by changing strategy alone', post:'. It explains stable outcomes in competition without anyone needing to cooperate.'},
+  {pre:'It is an equilibrium of belief as much as action: ', mid:'each player is playing a best response to what everyone else is doing', post:', so nobody has a private reason to move first.'}
+];
+const ACCENTS = [
+  {k:'Neutral', c:null}, {k:'Terracotta', c:'#D97635'}, {k:'Green', c:'#5C6B2C'}, {k:'Blue', c:'#3B5FC4'}
+];
+const SWATCHES = ['#2e9e5b','#d97635','#3b5fc4','#7a5fc4','#c45f8a','#2f9e93'];
+const TOOLS = [
+  {k:'text', icon:'text_fields'}, {k:'highlight', icon:'ink_highlighter'},
+  {k:'image', icon:'image'}, {k:'link', icon:'link'}
+];
+const TOC = [
+  {n:'01', label:'Brief', sec:'brief'}, {n:'02', label:'Concept index', sec:'index'},
+  {n:'03', label:'Detailed notes', sec:'detail'}, {n:'04', label:'Resources', sec:'res'}
+];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const READLOG_SEED = {
+  '2026-04-14': 1, '2026-05-05': 1, '2026-06-02': 2, '2026-06-03': 4, '2026-06-04': 1, '2026-06-05': 3,
+  '2026-08-03': 2, '2026-08-04': 1, '2026-08-05': 3, '2026-08-10': 5, '2026-08-11': 2, '2026-08-12': 3, '2026-08-13': 1
+};
+
+class Component extends DCLogic {
+  state = {
+    booting: true, screen: 'home', tab: 'cat', domain: null,
+    picked: null, sheet: null, sheetOut: false,
+    toast: null, toastOut: false,
+    topicText: '', wheel: 2, submitting: false, addDone: false, queuedName: '',
+    quickText: '', newDomainName: '', swatch: 0,
+    tool: 'highlight', hl: {0: true}, callout: null, bookmarks: {1: true}, bookmarkPulse: false,
+    noteRead: false, readLog: {},
+    scroll: 0, dark: false, accent: 'Neutral', notif: [true, true]
+  };
+
+  componentDidMount() {
+    this.noteRef = React.createRef();
+    this.wheelRef = React.createRef();
+    this.timers = [];
+    let dark = this.props.mode === 'Dark';
+    let accent = this.props.accent || 'Neutral';
+    try {
+      const m = localStorage.getItem('trove-mode'); if (m) dark = m === 'dark';
+      const a = localStorage.getItem('trove-accent'); if (a) accent = a;
+    } catch (e) {}
+    this.setState({dark, accent});
+    this.timers.push(setTimeout(() => this.setState({booting: false}), 1300));
+  }
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); }
+  later(fn, ms) { const t = setTimeout(fn, ms); this.timers.push(t); return t; }
+
+  toast(msg, icon) {
+    clearTimeout(this._t1); clearTimeout(this._t2);
+    this.setState({toast: {msg, icon: icon || 'check_circle'}, toastOut: false});
+    this._t1 = this.later(() => this.setState({toastOut: true}), 2300);
+    this._t2 = this.later(() => this.setState({toast: null, toastOut: false}), 2560);
+  }
+  openSheet(name) { this.setState({sheet: name, sheetOut: false, addDone: false, submitting: false}); }
+  closeSheet = () => {
+    if (!this.state.sheet) return;
+    this.setState({sheetOut: true});
+    this.later(() => this.setState({sheet: null, sheetOut: false, addDone: false, topicText: '', newDomainName: ''}), 230);
+  };
+  go = (s) => { if (this.state.screen !== s) this.setState({screen: s, callout: null}); };
+
+  onNoteScroll = (e) => {
+    const el = e.currentTarget;
+    const max = Math.max(1, el.scrollHeight - el.clientHeight);
+    this.setState({scroll: el.scrollTop / max, top: el.scrollTop});
+  };
+  onWheelScroll = (e) => {
+    const i = Math.max(0, Math.min(DOMAINS.length - 1, Math.round(e.currentTarget.scrollTop / 44)));
+    if (i !== this.state.wheel) this.setState({wheel: i});
+  };
+  jump = (sec) => {
+    const c = this.noteRef.current; if (!c) return;
+    const el = c.querySelector('[data-sec="' + sec + '"]');
+    if (el) c.scrollTo({top: el.offsetTop - 84, behavior: 'smooth'});
+    this.closeSheet();
+  };
+
+  bucket(n) {
+    if (!n) return 'var(--well)';
+    const pct = n >= 6 ? 100 : n >= 4 ? 80 : n >= 2 ? 55 : 28;
+    return 'color-mix(in srgb,var(--accent) ' + pct + '%,var(--well))';
+  }
+  /* Local Y-M-D key — never toISOString(), which converts to UTC and shifts
+     the date by the viewer's timezone offset. */
+  dkey(date) {
+    return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  }
+  buildActivity() {
+    const log = Object.assign({}, READLOG_SEED, this.state.readLog);
+    const today = new Date(2026, 7, 17);
+    const start = new Date(2026, 0, 1);
+    start.setDate(start.getDate() - start.getDay());
+    const weeks = [], months = []; let cur = new Date(start), lastMonth = -1, total = 0;
+    while (cur <= today) {
+      const days = []; let weekMonth = -1;
+      for (let i = 0; i < 7; i++) {
+        if (i === 0) weekMonth = cur.getMonth();
+        const isFuture = cur > today;
+        const key = this.dkey(cur);
+        const count = isFuture ? 0 : (log[key] || 0);
+        if (!isFuture) total += count;
+        days.push({
+          bg: isFuture ? 'transparent' : this.bucket(count),
+          title: isFuture ? '' : (count ? count + ' read \u00b7 ' + key : 'No activity \u00b7 ' + key)
+        });
+        cur.setDate(cur.getDate() + 1);
+      }
+      months.push({label: weekMonth !== lastMonth ? MONTHS[weekMonth] : ''});
+      lastMonth = weekMonth;
+      weeks.push({days});
+    }
+    return {weeks, months, total};
+  }
+
+  theme() {
+    const d = this.state.dark;
+    const a = (ACCENTS.find(x => x.k === this.state.accent) || {}).c;
+    return {
+      '--frame': d ? '#131316' : '#FDFCFA',
+      '--surface': d ? '#1C1D21' : '#F7F6F2',
+      '--well': d ? '#232428' : '#F4F2EC',
+      '--line': d ? '#2C2D33' : '#EFEDE7',
+      '--text': d ? '#F2F0EC' : '#16171A',
+      '--text-2': d ? '#A9A69E' : '#7D7A70',
+      '--text-3': d ? '#7C7A74' : '#9A968A',
+      '--skeleton': d ? '#1E1F24' : '#EDEAE3',
+      '--accent': a || (d ? '#F2F0EC' : '#16171A'),
+      '--on-accent': a ? '#FFFFFF' : (d ? '#16171A' : '#FFFFFF'),
+      '--pop-tint': {Terracotta: '#EEB490', Green: '#A5AE8B', Blue: '#93A7DF'}[this.state.accent] || '#F8F7F5',
+      '--hl': d ? 'rgba(255,201,139,.28)' : '#FFE8B8',
+      '--tag-bg': d ? 'rgba(59,95,196,.22)' : '#E4EBFA',
+      '--tag-fg': d ? '#9DB4F0' : '#2f4d8f',
+      '--shadow': d ? 'rgba(0,0,0,.55)' : 'rgba(0,0,0,.16)',
+      '--grad': this.gradient(d)
+    };
+  }
+
+  /* Same 3-radial structure in every theme. Neutral keeps the original
+     unbranded warm wash; the three coloured themes retint it to their hue. */
+  gradient(d) {
+    const TINTS = {
+      Terracotta: [['#F6E4D7', '246,228,215'], ['#F1CFB8', '241,207,184'], ['#FAEFE7', '250,239,231'], '217,118,53'],
+      Green: [['#DEE1D5', '222,225,213'], ['#C6CBB5', '198,203,181'], ['#EBEDE6', '235,237,230'], '92,107,44'],
+      Blue: [['#D8DFF3', '216,223,243'], ['#BAC7EA', '186,199,234'], ['#E7ECF8', '231,236,248'], '59,95,196']
+    };
+    const at = ['22% 18%', '82% 30%', '55% 92%'];
+    const stop = ['62%', '58%', '62%'];
+    const t = TINTS[this.state.accent];
+    if (!t) {
+      const n = [['#FFE8B8', '255,232,184', '.13'], ['#F5D9D9', '245,217,217', '.11'], ['#D6E8D3', '214,232,211', '.1']];
+      return n.map((c, i) => 'radial-gradient(circle at ' + at[i] + ',' +
+        (d ? 'rgba(' + c[1] + ',' + c[2] + ')' : c[0]) + ' 0%,rgba(' + c[1] + ',0) ' + stop[i] + ')').join(',') +
+        ',' + (d ? '#1B1C21' : '#FBF9F4');
+    }
+    const alpha = ['.16', '.22', '.1'];
+    return at.map((pos, i) => 'radial-gradient(circle at ' + pos + ',' +
+      (d ? 'rgba(' + t[3] + ',' + alpha[i] + ')' : t[i][0]) + ' 0%,rgba(' +
+      (d ? t[3] : t[i][1]) + ',0) ' + stop[i] + ')').join(',') +
+      ',' + (d ? '#1B1C21' : '#FBF9F4');
+  }
+
+  renderVals() {
+    const s = this.state, d = s.dark;
+    const scr = s.screen;
+    const navOrder = ['home', 'topics', 'settings'];
+    const navIdx = Math.max(0, navOrder.indexOf(scr === 'domain' ? 'topics' : scr));
+    const domainTint = (i) => d ? DOMAINS[i].c + '26' : DOMAINS[i].tint;
+    const filtered = s.domain === null ? [] : NOTES.filter(n => n.d === s.domain);
+    const activity = this.buildActivity();
+    const openNoteNow = () => {
+      this.setState({screen: 'note', scroll: 0, top: 0, callout: null});
+      this.later(() => { if (this.noteRef.current) this.noteRef.current.scrollTop = 0; }, 20);
+    };
+    const bookmarkedNotes = NOTES.map((n, i) => ({t: n.t, date: n.date, on: !!s.bookmarks[i]}))
+      .filter(x => x.on)
+      .map(x => ({t: x.t, date: x.date, onTap: () => { this.closeSheet(); this.later(openNoteNow, 200); }}));
+
+    return {
+      vars: this.theme(),
+      booting: s.booting,
+      isHome: !s.booting && scr === 'home',
+      isTopics: !s.booting && scr === 'topics',
+      isSettings: !s.booting && scr === 'settings',
+      isDomain: !s.booting && scr === 'domain',
+      isPrompt: !s.booting && scr === 'prompt',
+      isNote: !s.booting && scr === 'note',
+      showNav: !s.booting && ['home', 'topics', 'settings', 'domain'].indexOf(scr) >= 0,
+
+      openNote: openNoteNow,
+      closeNote: () => this.setState({screen: 'home', scroll: 0, top: 0, callout: null}),
+      openQuick: () => this.openSheet('quick'),
+      openAdd: () => this.openSheet('add'),
+      openDomainSheet: () => this.openSheet('domain'),
+      openBookmarksSheet: () => this.openSheet('bookmarks'),
+
+      activityWeeks: activity.weeks,
+      activityMonths: activity.months,
+      activityTotal: activity.total,
+      bookmarkedNotes,
+      bookmarksEmpty: bookmarkedNotes.length === 0,
+      readCursor: s.noteRead ? 'default' : 'pointer',
+      readIcon: s.noteRead ? 'check_circle' : 'task_alt',
+      readLabel: s.noteRead ? 'Marked as read' : 'I have read this',
+      readBg: s.noteRead ? 'color-mix(in srgb,var(--accent) 16%,var(--well))' : 'var(--well)',
+      readFg: s.noteRead ? 'var(--accent)' : 'var(--text)',
+      markRead: () => {
+        if (s.noteRead) return;
+        const log = Object.assign({}, s.readLog);
+        log['2026-08-17'] = (log['2026-08-17'] || 0) + 1;
+        this.setState({noteRead: true, readLog: log});
+        this.toast('Marked as read for today', 'task_alt');
+      },
+      openToc: () => this.openSheet('toc'),
+      openPrompt: () => this.setState({screen: 'prompt'}),
+      backToSettings: () => this.setState({screen: 'settings'}),
+      backToTopics: () => this.setState({screen: 'topics', domain: null}),
+      closeSheet: this.closeSheet,
+
+      pickHint: s.picked === null ? 'Tap one' : 'Change any time',
+      options: OPTIONS.map((o, i) => ({
+        t: o.t, sub: s.picked === i ? 'Selected for tomorrow' : o.sub,
+        sel: s.picked === i ? 1 : 0,
+        fg: s.picked === i ? 'var(--on-accent)' : 'var(--text)',
+        onTap: () => {
+          this.setState({picked: i});
+          this.toast(s.picked === i ? 'Still tomorrow\u2019s pick' : 'Saved as tomorrow\u2019s pick');
+        }
+      })),
+
+      navs: navOrder.map((k, i) => ({
+        icon: k === 'home' ? 'home' : k === 'topics' ? 'folder' : 'settings',
+        fg: navIdx === i ? 'var(--on-accent)' : 'var(--text-3)',
+        scale: navIdx === i ? 'scale(1.06)' : 'scale(1)',
+        onTap: () => this.go(k)
+      })),
+      navX: 'translateX(' + navIdx * 100 + '%)',
+      fabRot: s.sheet === 'add' && !s.sheetOut ? 'rotate(135deg)' : 'rotate(0deg)',
+
+      tabX: s.tab === 'cat' ? 'translateX(0%)' : 'translateX(100%)',
+      catFg: s.tab === 'cat' ? 'var(--text)' : 'var(--text-3)',
+      allFg: s.tab === 'all' ? 'var(--text)' : 'var(--text-3)',
+      isCat: s.tab === 'cat', isAll: s.tab === 'all',
+      showCat: () => this.setState({tab: 'cat'}),
+      showAll: () => this.setState({tab: 'all'}),
+      domains: DOMAINS.map((x, i) => ({
+        name: x.name, c: x.c, bg: domainTint(i), count: x.n + ' notes',
+        delay: (i * 45) + 'ms',
+        onTap: () => this.setState({screen: 'domain', domain: i})
+      })),
+      notes: NOTES.map((n, i) => ({
+        t: n.t, date: n.date, d: DOMAINS[n.d].name.split(' ')[0],
+        c: d ? DOMAINS[n.d].c : DOMAINS[n.d].c, bg: domainTint(n.d), delay: (i * 40) + 'ms'
+      })),
+      domainName: s.domain === null ? '' : DOMAINS[s.domain].name,
+      domainNotes: filtered.map((n, i) => ({t: n.t, date: n.date, delay: (i * 50) + 'ms'})),
+      domainEmpty: s.domain !== null && filtered.length === 0,
+
+      progress: 'scaleX(' + (scr === 'note' ? Math.max(0.02, s.scroll) : 0) + ')',
+      compactOp: (s.top || 0) > 110 ? 1 : 0,
+      compactY: (s.top || 0) > 110 ? 'translateY(0)' : 'translateY(6px)',
+      onNoteScroll: this.onNoteScroll,
+      noteRef: (el) => { if (this.noteRef) this.noteRef.current = el; },
+      paras: PARAS.map((p, i) => ({
+        pre: p.pre, mid: p.mid, post: p.post,
+        hl: s.hl[i] ? '100% 100%' : '0% 100%',
+        callout: s.callout === i,
+        onTap: () => {
+          if (s.tool === 'highlight') {
+            const hl = Object.assign({}, s.hl); hl[i] = !hl[i];
+            this.setState({hl, callout: null});
+            this.toast(hl[i] ? 'Highlight saved to Notion' : 'Highlight removed', hl[i] ? 'ink_highlighter' : 'undo');
+          } else {
+            this.setState({callout: s.callout === i ? null : i});
+          }
+        },
+        onHighlight: () => {
+          const hl = Object.assign({}, s.hl); hl[i] = true;
+          this.setState({hl, callout: null}); this.toast('Highlight saved to Notion', 'ink_highlighter');
+        },
+        onCopy: () => { this.setState({callout: null}); this.toast('Copied', 'content_copy'); },
+        onLink: () => { this.setState({callout: null}); this.toast('Link added', 'link'); }
+      })),
+      tools: TOOLS.map(t => ({
+        icon: t.icon,
+        sel: s.tool === t.k ? 1 : 0,
+        scale: s.tool === t.k ? 'scale(1)' : 'scale(.4)',
+        fg: s.tool === t.k ? '#16171A' : '#8B8880',
+        onTap: () => this.setState({tool: t.k, callout: null})
+      })),
+      bookmarkFg: s.bookmarks[0] ? 'var(--accent)' : 'var(--text)',
+      bookmarkScale: s.bookmarkPulse ? 'scale(1.18)' : 'scale(1)',
+      bookmarkFill: s.bookmarks[0] ? "'FILL' 1" : "'FILL' 0",
+      toggleBookmark: () => {
+        const on = !s.bookmarks[0];
+        const bookmarks = Object.assign({}, s.bookmarks, {0: on});
+        this.setState({bookmarks, bookmarkPulse: true});
+        this.later(() => this.setState({bookmarkPulse: false}), 200);
+        this.toast(on ? 'Saved to your shelf' : 'Removed from shelf', on ? 'bookmark' : 'bookmark_remove');
+      },
+      tocItems: TOC.map(t => ({n: t.n, label: t.label, onTap: () => this.jump(t.sec)})),
+
+      hasSheet: !!s.sheet,
+      isAdd: s.sheet === 'add', isQuick: s.sheet === 'quick',
+      isNewDomain: s.sheet === 'domain', isToc: s.sheet === 'toc', isBookmarks: s.sheet === 'bookmarks',
+      sheetAnim: s.sheetOut ? 'sheetOut .22s cubic-bezier(.55,0,1,.45) both' : 'sheetIn .38s cubic-bezier(.16,1,.3,1) both',
+      backdropOp: s.sheetOut ? 0 : 1,
+      addForm: !s.addDone, addDone: s.addDone,
+      topicText: s.topicText,
+      onTopicInput: (e) => this.setState({topicText: e.target.value}),
+      wheelRef: (el) => { if (this.wheelRef) this.wheelRef.current = el; },
+      onWheelScroll: this.onWheelScroll,
+      wheelItems: DOMAINS.map((x, i) => ({
+        name: x.name,
+        fg: s.wheel === i ? 'var(--text)' : 'var(--text-3)',
+        weight: s.wheel === i ? 700 : 500,
+        scale: s.wheel === i ? 'scale(1.04)' : 'scale(.94)'
+      })),
+      submitting: s.submitting,
+      submitLabel: s.submitting ? 'Queueing' : 'Queue topic',
+      submitOp: s.topicText.trim() ? 1 : .45,
+      queuedLine: '\u201C' + (s.queuedName || 'Your topic') + '\u201D \u00B7 ' + DOMAINS[s.wheel].name,
+      submitTopic: () => {
+        if (!s.topicText.trim() || s.submitting) return;
+        this.setState({submitting: true, queuedName: s.topicText.trim()});
+        this.later(() => this.setState({submitting: false, addDone: true}), 850);
+      },
+
+      quickText: s.quickText,
+      onQuickInput: (e) => this.setState({quickText: e.target.value}),
+      saveQuick: () => { this.closeSheet(); this.later(() => this.toast('Note kept for later', 'edit_note'), 160); },
+
+      newDomainName: s.newDomainName,
+      onDomainInput: (e) => this.setState({newDomainName: e.target.value}),
+      domainOp: s.newDomainName.trim() ? 1 : .45,
+      swatches: SWATCHES.map((c, i) => ({
+        c, scale: s.swatch === i ? 'scale(1.12)' : 'scale(1)',
+        ring: s.swatch === i ? '0 0 0 2px var(--frame),0 0 0 4px var(--text)' : 'none',
+        onTap: () => this.setState({swatch: i})
+      })),
+      saveDomain: () => {
+        if (!s.newDomainName.trim()) return;
+        this.closeSheet();
+        this.later(() => this.toast('Domain added to the pool', 'folder'), 160);
+      },
+
+      switchBg: d ? 'var(--accent)' : 'var(--line)',
+      switchThumb: d ? 'var(--on-accent)' : 'var(--text-3)',
+      switchX: d ? 'translateX(19px)' : 'translateX(0)',
+      toggleDark: () => {
+        const dark = !d;
+        this.setState({dark});
+        try { localStorage.setItem('trove-mode', dark ? 'dark' : 'light'); } catch (e) {}
+      },
+      accents: ACCENTS.map(a => ({
+        c: a.c || (d ? '#F2F0EC' : '#16171A'),
+        scale: s.accent === a.k ? 'scale(1.14)' : 'scale(1)',
+        ring: s.accent === a.k ? '0 0 0 2px var(--surface),0 0 0 4px var(--text)' : 'none',
+        onTap: () => {
+          this.setState({accent: a.k});
+          try { localStorage.setItem('trove-accent', a.k); } catch (e) {}
+        }
+      })),
+      notifs: [
+        {label: "Today's note is ready", i: 0},
+        {label: 'Custom topic ready', i: 1}
+      ].map(n => ({
+        label: n.label,
+        bg: s.notif[n.i] ? 'var(--accent)' : 'var(--line)',
+        thumb: s.notif[n.i] ? 'var(--on-accent)' : 'var(--text-3)',
+        x: s.notif[n.i] ? 'translateX(19px)' : 'translateX(0)',
+        onTap: () => { const v = s.notif.slice(); v[n.i] = !v[n.i]; this.setState({notif: v}); }
+      })),
+
+      hasToast: !!s.toast,
+      toastMsg: s.toast ? s.toast.msg : '',
+      toastIcon: s.toast ? s.toast.icon : 'check_circle',
+      toastAnim: s.toastOut ? 'toastOut .24s cubic-bezier(.55,0,1,.45) both' : 'toastIn .42s cubic-bezier(.16,1,.3,1) both'
+    };
+  }
+}
+
+</script>
+</body>
+</html>

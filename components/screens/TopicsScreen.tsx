@@ -1,46 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import SegmentedControl from "@/components/ui/SegmentedControl";
 import Skeleton from "@/components/ui/Skeleton";
-import Tag from "@/components/ui/Tag";
 import Sheet from "@/components/ui/Sheet";
-import { FolderMark, PlusIcon, DotsIcon } from "@/components/icons";
+import Toast from "@/components/ui/Toast";
+import { FolderChip, PlusIcon } from "@/components/icons";
 import { CATEGORY_META, DOMAIN_SWATCHES } from "@/lib/category";
 import { DOMAINS, getAllNoteSummaries, getDomain } from "@/lib/mock-data";
 import { createDomain } from "@/lib/mock-api";
+import { useSkeleton } from "@/lib/use-skeleton";
 import type { CategoryKey, Domain } from "@/lib/types";
 
 type View = "categorical" | "all";
 
 export default function TopicsScreen() {
-  const [loading, setLoading] = useState(true);
+  const loading = useSkeleton("topics", 650);
   const [view, setView] = useState<View>("categorical");
   const [domains, setDomains] = useState<Domain[]>(DOMAINS);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
   const notes = getAllNoteSummaries();
 
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(t);
-  }, []);
-
   function handleCreated(domain: Domain) {
-    setDomains((prev) => [...prev, domain]);
+    setDomains((prev) => [domain, ...prev]);
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 2400);
   }
 
   return (
-    <div style={{ paddingTop: 4 }}>
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
-      >
-        <h1 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>Topics</h1>
+    <div style={{ paddingTop: 14, paddingBottom: 12, animation: "scr 380ms var(--e-screen) both" }}>
+      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px" }}>
+        <h1 style={{ fontFamily: "var(--font-serif)", fontSize: 26, color: "var(--text)", margin: 0 }}>Topics</h1>
         <button
           type="button"
           onClick={() => setSheetOpen(true)}
@@ -48,15 +40,16 @@ export default function TopicsScreen() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 4,
-            background: "none",
-            border: "none",
-            color: "var(--accent)",
-            fontSize: 12,
+            gap: 6,
+            background: "var(--well)",
+            borderRadius: 20,
+            padding: "9px 14px",
+            fontSize: 11,
             fontWeight: 700,
+            color: "var(--text)",
           }}
         >
-          <PlusIcon size={14} strokeWidth={2.4} />
+          <PlusIcon size={16} strokeWidth={2.4} />
           Domain
         </button>
       </header>
@@ -65,7 +58,7 @@ export default function TopicsScreen() {
         <TopicsLoading />
       ) : (
         <>
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ padding: "16px 20px 0" }}>
             <SegmentedControl
               value={view}
               onChange={setView}
@@ -77,22 +70,16 @@ export default function TopicsScreen() {
           </div>
 
           {view === "categorical" ? (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, paddingBottom: 24 }}>
-              {domains.map((domain) => (
-                <DomainCard key={domain.id} domain={domain} />
+            <div style={{ padding: "16px 20px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              {domains.map((domain, i) => (
+                <DomainCard key={domain.id} domain={domain} index={i} />
               ))}
             </div>
           ) : (
-            <div
-              style={{
-                background: "var(--surface)",
-                borderRadius: "var(--r-card)",
-                boxShadow: "var(--shadow-card)",
-                marginBottom: 24,
-              }}
-            >
+            <div style={{ padding: "16px 20px 0", display: "flex", flexDirection: "column", gap: 8 }}>
               {notes.map((note, i) => {
                 const domain = getDomain(note.domainId);
+                const meta = domain ? CATEGORY_META[domain.category] : undefined;
                 return (
                   <Link
                     key={note.id}
@@ -100,15 +87,34 @@ export default function TopicsScreen() {
                     className="press"
                     style={{
                       display: "flex",
-                      alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "8px 12px",
-                      borderBottom: i < notes.length - 1 ? "1px solid var(--line)" : "none",
-                      transition: "background-color .2s ease",
+                      alignItems: "center",
+                      background: "var(--surface)",
+                      borderRadius: 16,
+                      padding: 14,
+                      animation: `listIn 420ms var(--e-screen) ${i * 40}ms both`,
                     }}
                   >
-                    <span style={{ fontSize: 11, color: "var(--text)", paddingRight: 8 }}>{note.topicName}</span>
-                    {domain && <Tag category={domain.category} />}
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text)" }}>{note.topicName}</div>
+                      <div style={{ fontSize: 10, color: "var(--text-3)", marginTop: 3 }}>
+                        {new Date(note.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                      </div>
+                    </div>
+                    {meta && (
+                      <span
+                        style={{
+                          fontSize: 9,
+                          fontWeight: 700,
+                          borderRadius: 10,
+                          padding: "4px 9px",
+                          background: `var(${meta.tintVar})`,
+                          color: `var(${meta.colorVar})`,
+                        }}
+                      >
+                        {domain!.name.split(" ")[0]}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
@@ -118,43 +124,43 @@ export default function TopicsScreen() {
       )}
 
       <NewDomainSheet open={sheetOpen} onClose={() => setSheetOpen(false)} onCreated={handleCreated} />
+      <Toast message="Domain added to the pool" visible={toastVisible} />
     </div>
   );
 }
 
-function DomainCard({ domain }: { domain: Domain }) {
+function DomainCard({ domain, index }: { domain: Domain; index: number }) {
   const meta = CATEGORY_META[domain.category];
   return (
     <Link
       href={`/topics/${domain.id}`}
-      className="press"
+      className="domain-card"
       style={{
-        display: "block",
-        background: "var(--surface)",
-        borderRadius: "var(--r-card)",
-        boxShadow: "var(--shadow-card)",
-        padding: 12,
+        display: "flex",
+        flexDirection: "column",
+        gap: 24,
+        borderRadius: 20,
+        padding: 14,
+        background: `var(${meta.tintVar})`,
+        animation: `listIn 420ms var(--e-screen) ${index * 45}ms both`,
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12 }}>
-        <FolderMark colorVar={meta.bodyVar} tabVar={meta.tabVar} />
-        <span style={{ color: "var(--text-3)" }}>
-          <DotsIcon size={14} />
-        </span>
+      <FolderChip colorVar={meta.colorVar} />
+      <div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>{domain.name}</div>
+        <div style={{ fontSize: 10, color: "var(--text-3)", marginTop: 2 }}>{domain.noteCount} notes</div>
       </div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{domain.name}</div>
-      <div style={{ fontSize: 9, color: "var(--text-2)" }}>{domain.noteCount} notes</div>
     </Link>
   );
 }
 
 function TopicsLoading() {
   return (
-    <div>
-      <Skeleton width={160} height={32} radius={16} style={{ marginBottom: 16 }} />
+    <div style={{ padding: "16px 20px 0" }}>
+      <Skeleton width={160} height={38} radius={22} style={{ marginBottom: 16 }} />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} height={88} radius={20} />
+          <Skeleton key={i} height={110} radius={20} />
         ))}
       </div>
     </div>
@@ -182,11 +188,11 @@ function NewDomainSheet({
 
   function handleClose() {
     onClose();
-    setTimeout(reset, 200);
+    setTimeout(reset, 220);
   }
 
   async function handleCreate() {
-    if (!name.trim()) return;
+    if (!name.trim() || submitting) return;
     setSubmitting(true);
     try {
       const result = await createDomain({ name: name.trim(), category });
@@ -197,53 +203,29 @@ function NewDomainSheet({
     }
   }
 
+  const filled = name.trim().length > 0;
+
   return (
     <Sheet open={open} onClose={handleClose}>
-      <h2 style={{ fontSize: 15, fontWeight: 800, textAlign: "center", margin: "0 0 16px" }}>New domain</h2>
-
-      <label
-        style={{
-          display: "block",
-          fontSize: 9,
-          fontWeight: 700,
-          letterSpacing: ".04em",
-          textTransform: "uppercase",
-          color: "var(--text-2)",
-          marginBottom: 6,
-        }}
-      >
-        Name
-      </label>
+      <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 22, color: "var(--text)", textAlign: "center", margin: 0 }}>
+        New domain
+      </h2>
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="e.g. Linguistics"
+        placeholder="Name it"
+        className="field-focus"
         style={{
-          width: "100%",
           background: "var(--well)",
-          border: "none",
-          borderRadius: "var(--r-field)",
-          padding: "12px 14px",
-          fontSize: 12,
+          border: "1px solid transparent",
+          borderRadius: 18,
+          padding: 14,
+          fontSize: 13,
           color: "var(--text)",
-          marginBottom: 16,
+          outline: "none",
         }}
       />
-
-      <label
-        style={{
-          display: "block",
-          fontSize: 9,
-          fontWeight: 700,
-          letterSpacing: ".04em",
-          textTransform: "uppercase",
-          color: "var(--text-2)",
-          marginBottom: 8,
-        }}
-      >
-        Colour
-      </label>
-      <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", padding: "0 6px" }}>
         {DOMAIN_SWATCHES.map((swatch) => {
           const selected = swatch.key === category;
           return (
@@ -252,63 +234,37 @@ function NewDomainSheet({
               type="button"
               aria-label={CATEGORY_META[swatch.key].label}
               onClick={() => setCategory(swatch.key)}
+              className="swatch-btn"
               style={{
-                width: 32,
-                height: 32,
+                width: 34,
+                height: 34,
                 borderRadius: "50%",
-                border: "none",
                 background: `var(${swatch.var})`,
-                boxShadow: selected
-                  ? "0 0 0 2px var(--surface), 0 0 0 4px var(--accent)"
-                  : "0 0 0 2px var(--surface), 0 0 0 4px transparent",
-                transform: selected ? "scale(1.08)" : "scale(1)",
-                transition: "box-shadow .2s ease, transform .2s cubic-bezier(0.34,1.56,0.64,1)",
+                boxShadow: selected ? "0 0 0 2px var(--frame), 0 0 0 4px var(--text)" : "none",
+                transform: selected ? "scale(1.12)" : "scale(1)",
               }}
             />
           );
         })}
       </div>
-
-      <div style={{ display: "flex", gap: 8 }}>
-        <button
-          type="button"
-          onClick={handleClose}
-          className="press"
-          style={{
-            flex: 1,
-            border: "1px solid var(--line)",
-            background: "transparent",
-            color: "var(--text)",
-            borderRadius: "var(--r-field)",
-            padding: "12px",
-            fontSize: 12,
-            fontWeight: 700,
-            transition: "background-color .2s ease, transform .15s cubic-bezier(0.34,1.56,0.64,1)",
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleCreate}
-          disabled={!name.trim() || submitting}
-          className="press"
-          style={{
-            flex: 1,
-            border: "none",
-            background: "var(--accent)",
-            color: "var(--on-accent)",
-            borderRadius: "var(--r-field)",
-            padding: "12px",
-            fontSize: 12,
-            fontWeight: 700,
-            opacity: !name.trim() ? 0.5 : 1,
-            transition: "opacity .2s ease, transform .15s cubic-bezier(0.34,1.56,0.64,1)",
-          }}
-        >
-          {submitting ? "Creating…" : "Create domain"}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={handleCreate}
+        disabled={!filled || submitting}
+        className="press"
+        style={{
+          background: "var(--accent)",
+          color: "var(--on-accent)",
+          borderRadius: 26,
+          padding: 14,
+          fontSize: 12,
+          fontWeight: 700,
+          opacity: filled ? 1 : 0.45,
+          transition: "opacity 250ms ease",
+        }}
+      >
+        {submitting ? "Creating…" : "Create domain"}
+      </button>
     </Sheet>
   );
 }

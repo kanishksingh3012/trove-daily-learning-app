@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Lora } from "next/font/google";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
+import "./motion.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -10,19 +11,27 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-lora",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Daily Learning",
+  title: "Trove",
   description: "Personal daily learning companion",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Daily Learning",
+    title: "Trove",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#16171a",
+  themeColor: "#FDFCFA",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -30,13 +39,15 @@ export const viewport: Viewport = {
 
 // Applies the persisted theme/accent before first paint, so there's no
 // flash of the wrong palette. Kept tiny and dependency-free on purpose.
+// Light is the bare-:root default (design.md) — only "dark" needs an
+// attribute; same for accent, where "neutral" needs none.
 const THEME_BOOTSTRAP = `
 (function () {
   try {
-    var theme = localStorage.getItem("dlc-theme") || "dark";
-    var accent = localStorage.getItem("dlc-accent") || "neutral";
+    var theme = localStorage.getItem("trove-mode") || "light";
+    var accent = localStorage.getItem("trove-accent") || "neutral";
     var root = document.documentElement;
-    if (theme === "light") root.setAttribute("data-theme", "light");
+    if (theme === "dark") root.setAttribute("data-theme", "dark");
     else root.removeAttribute("data-theme");
     if (accent && accent !== "neutral") root.setAttribute("data-accent", accent);
   } catch (e) {}
@@ -49,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={manrope.variable}>
+    <html lang="en" className={`${manrope.variable} ${lora.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
       </head>

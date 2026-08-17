@@ -1,0 +1,125 @@
+/* Motion tokens — Daily Learning Companion
+   Same values as motion.ts, for stylesheets and inline styles.
+   See MOTION-SPEC.md for which interaction uses which token. */
+
+:root {
+  /* Easing */
+  --e-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --e-slide: cubic-bezier(0.2, 0.85, 0.2, 1);
+  --e-spring: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --e-wipe: cubic-bezier(0.3, 0.9, 0.2, 1);
+  --e-fade: ease;
+  --e-linear: linear;
+
+  /* Duration */
+  --d-press: 160ms;
+  --d-quick: 180ms;
+  --d-base: 220ms;
+  --d-mode-text: 250ms;
+  --d-mode-surface: 350ms;
+  --d-move: 280ms;
+  --d-push: 300ms;
+  --d-sheet: 340ms;
+  --d-sheet-out: 260ms;
+  --d-toast: 360ms;
+  --d-toast-out: 200ms;
+  --d-row: 300ms;
+  --d-card: 380ms;
+  --d-pop: 220ms;
+  --d-pop-large: 400ms;
+  --d-wipe: 450ms;
+  --d-shake: 450ms;
+  --d-shimmer: 1150ms;
+  --d-spin: 1000ms;
+  --d-caret: 1000ms;
+
+  /* Stagger — multiply by item index */
+  --stagger-domain-cards: 45ms;
+  --stagger-note-list: 30ms;
+  --stagger-domain-notes: 45ms;
+  --stagger-toc-rows: 40ms;
+}
+
+/* Keyframes, as built in the prototype */
+
+@keyframes shimmer {
+  from { background-position: -160px 0; }
+  to { background-position: calc(160px + 100%) 0; }
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scrim-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Toast, and the Note View editing toolbar */
+@keyframes toast-in {
+  0% { transform: translateY(24px) scale(0.96); opacity: 0; }
+  60% { transform: translateY(-2px) scale(1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Selection callout, confirmation check */
+@keyframes pop-in {
+  0% { transform: scale(0.7); opacity: 0; }
+  70% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* List item entry — always with `forwards` fill */
+@keyframes row-in {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Screen push */
+@keyframes push-in {
+  from { transform: translateX(28px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Failed save */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+@keyframes caret-blink {
+  0%, 45% { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Reduced motion — drop movement, keep colour and opacity.
+   Per-interaction detail is in MOTION-SPEC.md § Accessibility. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  /* Colour transitions are not motion — let these keep their timing. */
+  .allow-motion-color {
+    transition-duration: var(--d-base) !important;
+  }
+}

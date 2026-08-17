@@ -68,3 +68,17 @@ export async function saveNoteEdit(input: {
 export async function saveQuickNote(input: { title: string; body: string }): Promise<{ savedAt: string }> {
   return mockMutation({ savedAt: new Date().toISOString() }, 600);
 }
+
+// --- Bookmarks + read-tracking ---------------------------------------------
+// See the schema note atop lib/types.ts — these two are inferred from
+// design.md, not yet confirmed against a real Notion property. The actual
+// local state lives in lib/activity.ts; these just simulate the network
+// round-trip the way every other mutation here does.
+
+export async function toggleBookmarkRemote(noteId: string): Promise<{ noteId: string }> {
+  return mockMutation({ noteId }, 500);
+}
+
+export async function markNoteReadRemote(noteId: string): Promise<{ noteId: string }> {
+  return mockMutation({ noteId }, 500);
+}

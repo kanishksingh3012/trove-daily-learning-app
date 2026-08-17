@@ -1,571 +1,609 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Sheet from "@/components/ui/Sheet";
 import Skeleton from "@/components/ui/Skeleton";
-import Tag from "@/components/ui/Tag";
+import Sheet from "@/components/ui/Sheet";
+import Toast from "@/components/ui/Toast";
 import {
   ChevronLeftIcon,
   ListIndexIcon,
+  BookmarkIcon,
   TextIcon,
   HighlighterIcon,
   ImageIcon,
   LinkIcon,
-  CopyIcon,
+  TaskAltIcon,
+  CheckCircleIcon,
   AlertIcon,
 } from "@/components/icons";
-import { getDomain, getNoteDetail } from "@/lib/mock-data";
-import { saveNoteEdit } from "@/lib/mock-api";
+import { getDomain, getNoteDetail, getNoteSections } from "@/lib/mock-data";
+import { CATEGORY_META } from "@/lib/category";
+import { isNoteRead, markNoteRead, toggleBookmark, useIsBookmarked, useIsNoteRead } from "@/lib/activity";
+import { markNoteReadRemote, mockMutation } from "@/lib/mock-api";
+import { useSkeleton } from "@/lib/use-skeleton";
 
-type SaveStatus = "idle" | "saving" | "saved" | "error";
 type Tool = "text" | "highlight" | "image" | "link";
+const TOOLS: { key: Tool; Icon: typeof TextIcon }[] = [
+  { key: "text", Icon: TextIcon },
+  { key: "highlight", Icon: HighlighterIcon },
+  { key: "image", Icon: ImageIcon },
+  { key: "link", Icon: LinkIcon },
+];
+
+type SyncStatus = "idle" | "saving" | "saved" | "error";
 
 export default function NoteViewScreen({ noteId }: { noteId: string }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
-  const [tocOpen, setTocOpen] = useState(false);
-  const [activeTool, setActiveTool] = useState<Tool>("text");
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
-  const [selectionCallout, setSelectionCallout] = useState<{ x: number; y: number } | null>(null);
-  const [activeSection, setActiveSection] = useState<string>("brief");
-
-  const briefRef = useRef<HTMLDivElement>(null);
-  const detailRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
+  const loading = useSkeleton(`note:${noteId}`, 600);
   const note = getNoteDetail(noteId);
   const domain = note ? getDomain(note.domainId) : undefined;
+  const sections = note ? getNoteSections(note) : [];
 
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(t);
-  }, []);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [progress, setProgress] = useState(0.02);
+  const [tocOpen, setTocOpen] = useState(false);
+  const [tool, setTool] = useState<Tool>("highlight");
+  const [highlighted, setHighlighted] = useState<Record<number, boolean>>(() => {
+    const initial: Record<number, boolean> = {};
+    note?.briefParagraphs.forEach((p, i) => {
+      if (p.highlightedByDefault) initial[i] = true;
+    });
+    return initial;
+  });
+  const [calloutIndex, setCalloutIndex] = useState<number | null>(null);
+  const [sync, setSync] = useState<SyncStatus>("idle");
+  const [toast, setToast] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (loading || !note) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.find((e) => e.isIntersecting);
-        if (visible) setActiveSection(visible.target.id);
-      },
-      { rootMargin: "-20% 0px -70% 0px" }
-    );
-    Object.values(sectionRefs.current).forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [loading, note]);
+  const isRead = useIsNoteRead(noteId);
+  const isBookmarked = useIsBookmarked(noteId);
+  const [bookmarkPulse, setBookmarkPulse] = useState(false);
+  const [reading, setReading] = useState(false);
 
-  useEffect(() => {
-    function handleSelectionChange() {
-      const sel = window.getSelection();
-      if (!sel || sel.isCollapsed || !sel.toString().trim()) {
-        setSelectionCallout(null);
-        return;
+  function showToast(message: string) {
+    setToast(message);
+    setTimeout(() => setToast(null), 2400);
+  }
+
+  function onScroll() {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = Math.max(1, el.scrollHeight - el.clientHeight);
+    setScrollTop(el.scrollTop);
+    setProgress(Math.max(0.02, el.scrollTop / max));
+  }
+
+  async function handleParagraphTap(index: number) {
+    if (tool === "highlight") {
+      const nextOn = !highlighted[index];
+      setHighlighted((prev) => ({ ...prev, [index]: nextOn }));
+      setCalloutIndex(null);
+      showToast(nextOn ? "Highlight saved to Notion" : "Highlight removed");
+      setSync("saving");
+      try {
+        await mockMutation(null, 900);
+        setSync("saved");
+        setTimeout(() => setSync("idle"), 1600);
+      } catch {
+        setSync("error");
       }
-      const anchor = sel.anchorNode?.parentElement;
-      const withinNote =
-        anchor && (briefRef.current?.contains(anchor) || detailRef.current?.contains(anchor));
-      if (!withinNote) {
-        setSelectionCallout(null);
-        return;
-      }
-      const range = sel.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      setSelectionCallout({ x: rect.left + rect.width / 2, y: rect.top });
+    } else {
+      setCalloutIndex((prev) => (prev === index ? null : index));
     }
-    document.addEventListener("selectionchange", handleSelectionChange);
-    return () => document.removeEventListener("selectionchange", handleSelectionChange);
-  }, []);
-
-  if (!note || !domain) {
-    return (
-      <div style={{ padding: 16 }}>
-        <p style={{ fontSize: 12, color: "var(--text-2)" }}>Note not found.</p>
-        <Link href="/" style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>
-          Back to Home
-        </Link>
-      </div>
-    );
   }
 
-  function applyHighlight() {
-    document.execCommand("hiliteColor", false, "#FDE68A");
-    document.execCommand("foreColor", false, "#2B2408");
-    setSelectionCallout(null);
-  }
-
-  function applyLink() {
-    const url = window.prompt("Link URL");
-    if (url) document.execCommand("createLink", false, url);
-    setSelectionCallout(null);
-  }
-
-  function applyImage() {
-    const url = window.prompt("Image URL");
-    if (url) document.execCommand("insertImage", false, url);
-  }
-
-  function copySelection() {
-    const sel = window.getSelection()?.toString() ?? "";
-    if (sel) navigator.clipboard?.writeText(sel).catch(() => {});
-    setSelectionCallout(null);
-  }
-
-  function handleToolClick(tool: Tool) {
-    setActiveTool(tool);
-    if (tool === "highlight") applyHighlight();
-    if (tool === "link") applyLink();
-    if (tool === "image") applyImage();
-  }
-
-  async function handleExitEdit() {
-    setEditing(false);
-    setSelectionCallout(null);
-    setSaveStatus("saving");
-    const content = `${briefRef.current?.innerHTML ?? ""}\n${detailRef.current?.innerHTML ?? ""}`;
+  async function retrySync() {
+    setSync("saving");
     try {
-      await saveNoteEdit({ noteId, content });
-      setSaveStatus("saved");
-      setTimeout(() => setSaveStatus((s) => (s === "saved" ? "idle" : s)), 2000);
+      await mockMutation(null, 900);
+      setSync("saved");
+      setTimeout(() => setSync("idle"), 1600);
     } catch {
-      setSaveStatus("error");
+      setSync("error");
     }
   }
 
-  async function retrySave() {
-    setSaveStatus("saving");
-    const content = `${briefRef.current?.innerHTML ?? ""}\n${detailRef.current?.innerHTML ?? ""}`;
+  async function handleToggleBookmark() {
+    const nowOn = toggleBookmark(noteId);
+    setBookmarkPulse(true);
+    setTimeout(() => setBookmarkPulse(false), 200);
+    showToast(nowOn ? "Saved to your shelf" : "Removed from shelf");
+  }
+
+  async function handleMarkRead() {
+    if (isNoteRead(noteId) || reading) return;
+    setReading(true);
     try {
-      await saveNoteEdit({ noteId, content });
-      setSaveStatus("saved");
-      setTimeout(() => setSaveStatus((s) => (s === "saved" ? "idle" : s)), 2000);
-    } catch {
-      setSaveStatus("error");
+      await markNoteReadRemote(noteId);
+      markNoteRead(noteId);
+      showToast("Marked as read for today");
+    } finally {
+      setReading(false);
     }
   }
+
+  if (!note || !domain) return null;
+
+  const compact = scrollTop > 110;
+  const meta = CATEGORY_META[domain.category];
 
   return (
-    <div>
-      <div className="status-bar" />
-      <div className="screen-scroll" style={{ paddingBottom: editing ? 110 : 32 }}>
-        <header
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 16,
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => (editing ? handleExitEdit() : router.back())}
-            aria-label="Back"
-            className="press"
-            style={{ background: "none", border: "none", color: "var(--text)" }}
+    <div style={{ position: "fixed", inset: 0, background: "var(--frame)", zIndex: 20, animation: "scr 360ms var(--e-screen) both" }}>
+      {loading ? (
+        <NoteLoading />
+      ) : (
+        <>
+          {/* Scroll-progress bar */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 3,
+              background: "var(--accent)",
+              transformOrigin: "0 50%",
+              transition: "transform 120ms linear",
+              transform: `scaleX(${progress})`,
+              zIndex: 35,
+            }}
+          />
+
+          {/* Compact header overlay */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 104,
+              zIndex: 22,
+              background: "var(--frame)",
+              backdropFilter: "blur(12px)",
+              pointerEvents: "none",
+              transition: "opacity 300ms ease",
+              opacity: compact ? 1 : 0,
+            }}
+          />
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 64,
+              left: 64,
+              right: 64,
+              zIndex: 24,
+              textAlign: "center",
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--text)",
+              pointerEvents: "none",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              transition: "opacity 300ms ease, transform 300ms ease",
+              opacity: compact ? 1 : 0,
+              transform: compact ? "translateY(0)" : "translateY(6px)",
+            }}
           >
-            <ChevronLeftIcon size={20} />
-          </button>
-          {editing ? (
+            {note.topicName}
+          </div>
+
+          {/* Header buttons */}
+          <div
+            style={{
+              position: "absolute",
+              top: 56,
+              left: 0,
+              right: 0,
+              zIndex: 26,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "8px 20px 0",
+              color: "var(--text)",
+            }}
+          >
             <button
               type="button"
-              onClick={handleExitEdit}
-              className="press"
-              style={{ background: "none", border: "none", color: "var(--accent)", fontSize: 12, fontWeight: 800 }}
-            >
-              Done
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setTocOpen(true)}
-              aria-label="Sections"
-              className="press"
-              style={{ background: "none", border: "none", color: "var(--text)" }}
-            >
-              <ListIndexIcon size={20} />
-            </button>
-          )}
-        </header>
-
-        {loading ? (
-          <NoteLoading />
-        ) : (
-          <>
-            <h1 style={{ fontSize: 16, fontWeight: 800, margin: "0 0 8px" }}>{note.topicName}</h1>
-            <div style={{ marginBottom: 16 }}>
-              <Tag category={domain.category} />
-            </div>
-
-            {saveStatus === "saving" && <StatusPill label="Saving…" />}
-            {saveStatus === "saved" && <StatusPill label="Saved" tone="ok" />}
-            {saveStatus === "error" && (
-              <button
-                type="button"
-                onClick={retrySave}
-                className="press"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  width: "100%",
-                  textAlign: "left",
-                  background: "var(--danger-bg)",
-                  color: "var(--danger)",
-                  border: "none",
-                  borderRadius: "var(--r-field)",
-                  padding: "10px 12px",
-                  marginBottom: 16,
-                  fontSize: 10,
-                  fontWeight: 600,
-                  animation: "fade-in .2s ease-out",
-                }}
-              >
-                <AlertIcon size={16} />
-                Save failed — edits not synced. Tap to retry.
-              </button>
-            )}
-
-            <div
-              onClick={() => !editing && setEditing(true)}
+              aria-label="Back"
+              onClick={() => router.back()}
+              className="hover-row press-icon"
               style={{
-                outline: saveStatus === "error" ? "1.5px solid var(--danger)" : "none",
-                outlineOffset: 4,
-                borderRadius: 8,
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "transform var(--d-press) var(--e-spring), background-color var(--d-fade) ease",
               }}
             >
-              <Eyebrow>Brief</Eyebrow>
-              <div
-                id="brief"
-                ref={(el) => {
-                  briefRef.current = el;
-                  sectionRefs.current.brief = el;
-                }}
-                contentEditable={editing}
-                suppressContentEditableWarning
+              <ChevronLeftIcon size={22} />
+            </button>
+            <div style={{ display: "flex", gap: 4 }}>
+              <button
+                type="button"
+                aria-label="Sections"
+                onClick={() => setTocOpen(true)}
+                className="hover-row press-icon"
                 style={{
-                  fontSize: 11,
-                  lineHeight: 1.5,
-                  color: "var(--text-body)",
-                  marginBottom: 20,
-                  outline: "none",
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "transform var(--d-press) var(--e-spring), background-color var(--d-fade) ease",
                 }}
-                dangerouslySetInnerHTML={{ __html: withHighlightStyles(note.brief) }}
-              />
-
-              <Eyebrow>Detailed Notes</Eyebrow>
-              <div
-                id="detailed-notes"
-                ref={(el) => {
-                  detailRef.current = el;
-                  sectionRefs.current["detailed-notes"] = el;
-                }}
-                contentEditable={editing}
-                suppressContentEditableWarning
+              >
+                <ListIndexIcon size={22} />
+              </button>
+              <button
+                type="button"
+                aria-label={isBookmarked ? "Remove bookmark" : "Bookmark"}
+                onClick={handleToggleBookmark}
                 style={{
-                  fontSize: 11,
-                  lineHeight: 1.5,
-                  color: "var(--text-body)",
-                  marginBottom: 16,
-                  outline: "none",
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isBookmarked ? "var(--accent)" : "var(--text)",
+                  transform: bookmarkPulse ? "scale(1.18)" : "scale(1)",
+                  transition: "transform 220ms var(--e-spring), color 220ms ease",
                 }}
-                dangerouslySetInnerHTML={{ __html: withHighlightStyles(note.detailedNotes) }}
-              />
+              >
+                <BookmarkIcon size={22} filled={isBookmarked} />
+              </button>
+            </div>
+          </div>
 
-              <NoteTable headers={note.table.headers} rows={note.table.rows} />
+          {/* Scrollable content */}
+          <div
+            ref={scrollRef}
+            onScroll={onScroll}
+            style={{ position: "absolute", inset: "60px 0 0", overflowY: "auto" }}
+          >
+            <div style={{ background: "var(--grad)", padding: "48px 20px 22px" }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  background: "var(--tag-bg)",
+                  color: "var(--tag-fg)",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  borderRadius: 10,
+                  padding: "4px 10px",
+                }}
+              >
+                {domain.name}
+              </span>
+              <div style={{ fontFamily: "var(--font-serif)", fontSize: 30, color: "var(--text)", marginTop: 10, lineHeight: 1.12 }}>
+                {note.topicName}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--text-2)", marginTop: 8 }}>
+                {new Date(note.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} ·{" "}
+                {note.readMinutes} min read
+              </div>
+            </div>
+
+            <div style={{ padding: "20px 20px 140px", display: "flex", flexDirection: "column", gap: 14 }}>
+              <Eyebrow data-sec="brief">BRIEF</Eyebrow>
+              {note.briefParagraphs.map((p, i) => (
+                <div key={i} style={{ position: "relative" }}>
+                  <div
+                    onClick={() => handleParagraphTap(i)}
+                    style={{ fontSize: 13, lineHeight: 1.78, color: "var(--text-2)", cursor: "text" }}
+                  >
+                    {p.pre}
+                    <span className={`hl-sweep${highlighted[i] ? " hl-sweep-active" : ""}`} style={{ color: highlighted[i] ? "var(--text)" : "var(--text-2)" }}>
+                      {p.mid}
+                    </span>
+                    {p.post}
+                  </div>
+                  {calloutIndex === i && (
+                    <SelectionCallout
+                      onHighlight={() => {
+                        setTool("highlight");
+                        handleParagraphTap(i);
+                      }}
+                      onCopy={() => setCalloutIndex(null)}
+                      onLink={() => setCalloutIndex(null)}
+                    />
+                  )}
+                </div>
+              ))}
+
+              <Divider />
+              <Eyebrow data-sec="index">CONCEPT INDEX</Eyebrow>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                {note.conceptIndex.map((item, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, fontSize: 12, color: "var(--text-2)" }}>
+                    <span style={{ fontFamily: "var(--font-serif)", color: "var(--accent)" }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <Divider />
+              <Eyebrow data-sec="detail">DETAILED NOTES</Eyebrow>
+              <div style={{ fontSize: 13, lineHeight: 1.78, color: "var(--text-2)" }}>{note.detailedNotes}</div>
+
+              <div style={{ border: "1px solid var(--line)", borderRadius: 16, overflow: "hidden", fontSize: 11 }}>
+                <div style={{ display: "grid", gridTemplateColumns: `1.1fr repeat(${note.table.headers.length - 1}, 1fr)`, background: "var(--well)", fontWeight: 700, color: "var(--text)" }}>
+                  {note.table.headers.map((h, i) => (
+                    <div key={i} style={{ padding: 10 }}>
+                      {h}
+                    </div>
+                  ))}
+                </div>
+                {note.table.rows.map((row, ri) => (
+                  <div
+                    key={ri}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: `1.1fr repeat(${row.length - 1}, 1fr)`,
+                      borderTop: "1px solid var(--line)",
+                      color: "var(--text-2)",
+                    }}
+                  >
+                    {row.map((cell, ci) => (
+                      <div
+                        key={ci}
+                        style={{
+                          padding: 10,
+                          fontWeight: ci === 0 ? 700 : 400,
+                          color: ci === 0 ? "var(--text)" : "var(--text-2)",
+                        }}
+                      >
+                        {cell}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
 
               {note.hasDiagram && (
-                <div
-                  style={{
-                    border: "1.5px dashed var(--dashed)",
-                    borderRadius: "var(--r-tile)",
-                    height: 96,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 20,
-                    color: "var(--text-3)",
-                    fontSize: 10,
-                    fontWeight: 600,
-                  }}
-                >
-                  Diagram placeholder
+                <div style={{ background: "var(--surface)", borderRadius: 20, padding: 18, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ border: "1px dashed var(--line)", borderRadius: 12, padding: "10px 14px", fontSize: 11, fontWeight: 600, color: "var(--text)" }}>
+                      Node A
+                    </div>
+                    <div style={{ width: 34, height: 1, background: "var(--line)", position: "relative" }}>
+                      <div style={{ position: "absolute", left: "50%", top: -4, transform: "translateX(-50%)", width: 7, height: 7, borderRadius: "50%", background: "var(--accent)" }} />
+                    </div>
+                    <div style={{ border: "1px dashed var(--line)", borderRadius: 12, padding: "10px 14px", fontSize: 11, fontWeight: 600, color: "var(--text)" }}>
+                      Node B
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 10, color: "var(--text-3)" }}>How the two connect.</div>
                 </div>
               )}
 
-              <div id="resources" ref={(el) => { sectionRefs.current.resources = el; }}>
-                <Eyebrow>Resources</Eyebrow>
-                {note.resources.map((r) => (
-                  <a
-                    key={r.url}
-                    href={r.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 500,
-                      color: "var(--resource-link)",
-                      padding: "8px 0",
-                      borderBottom: "1px solid var(--line)",
-                    }}
-                  >
-                    {r.label}
-                  </a>
-                ))}
-              </div>
+              {note.resources.length > 0 && (
+                <div data-sec="res" style={{ background: "var(--surface)", borderRadius: 20, padding: 16, display: "flex", flexDirection: "column", gap: 12, marginTop: 4 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)" }}>Resources</div>
+                  {note.resources.map((r, i) => (
+                    <a key={i} href={r.url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 10, background: "var(--frame)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--accent)", flexShrink: 0 }}>
+                        <LinkIcon size={17} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text)" }}>{r.label}</div>
+                        <div style={{ fontSize: 9, color: "var(--text-3)" }}>{new URL(r.url).hostname}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {sync !== "idle" && <SyncPill status={sync} onRetry={retrySync} />}
+
+              <button
+                type="button"
+                onClick={handleMarkRead}
+                disabled={isRead}
+                className={isRead ? undefined : "press"}
+                style={{
+                  marginTop: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  borderRadius: 26,
+                  padding: 14,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: isRead ? "default" : "pointer",
+                  background: isRead ? "color-mix(in srgb, var(--accent) 16%, var(--well))" : "var(--well)",
+                  color: isRead ? "var(--accent)" : "var(--text)",
+                  transition: "background-color 300ms ease, color 300ms ease",
+                }}
+              >
+                {isRead ? <CheckCircleIcon size={16} /> : <TaskAltIcon size={16} />}
+                {isRead ? "Marked as read" : "I have read this"}
+              </button>
             </div>
-          </>
-        )}
-      </div>
+          </div>
 
-      {selectionCallout && (
-        <div
-          style={{
-            position: "fixed",
-            left: selectionCallout.x,
-            top: Math.max(selectionCallout.y - 44, 8),
-            transform: "translateX(-50%)",
-            background: "var(--overlay)",
-            color: "#F2F0EC",
-            borderRadius: 10,
-            padding: "6px 4px",
-            display: "flex",
-            boxShadow: "var(--shadow-tooltip)",
-            zIndex: 80,
-            animation: "fade-in .15s ease-out",
-            transformOrigin: "center bottom",
-          }}
-        >
-          <CalloutButton label="Highlight" onClick={applyHighlight} />
-          <CalloutButton label="Copy" onClick={copySelection} />
-          <CalloutButton label="Link" onClick={applyLink} />
-        </div>
+          {/* Floating toolbar */}
+          <div
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              bottom: 28,
+              zIndex: 28,
+              display: "flex",
+              gap: 6,
+              alignItems: "center",
+              background: "#16171A",
+              borderRadius: 30,
+              padding: "8px 10px",
+              boxShadow: "0 12px 28px rgba(0, 0, 0, 0.26)",
+            }}
+          >
+            {TOOLS.map(({ key, Icon }) => {
+              const active = tool === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  aria-label={key}
+                  onClick={() => setTool(key)}
+                  className="press-icon"
+                  style={{ position: "relative", width: 42, height: 42, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}
+                >
+                  <div
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "var(--pop-tint)",
+                      borderRadius: "50%",
+                      transition: "opacity 280ms ease, transform 280ms var(--e-spring)",
+                      opacity: active ? 1 : 0,
+                      transform: active ? "scale(1)" : "scale(0.4)",
+                    }}
+                  />
+                  <Icon size={19} style={{ position: "relative", color: active ? "#16171A" : "#8B8880", transition: "color 280ms ease" }} />
+                </button>
+              );
+            })}
+          </div>
+        </>
       )}
 
-      {editing && (
-        <div
-          style={{
-            position: "fixed",
-            left: "50%",
-            transform: "translateX(-50%)",
-            bottom: 28,
-            width: "calc(100% - 56px)",
-            maxWidth: 424,
-            background: "var(--surface)",
-            borderRadius: "var(--r-card)",
-            boxShadow: "var(--shadow-toolbar)",
-            padding: 12,
-            display: "flex",
-            justifyContent: "space-around",
-            zIndex: 55,
-          }}
-        >
-          <ToolButton icon={TextIcon} active={activeTool === "text"} onClick={() => handleToolClick("text")} />
-          <ToolButton
-            icon={HighlighterIcon}
-            active={activeTool === "highlight"}
-            onClick={() => handleToolClick("highlight")}
-          />
-          <ToolButton icon={ImageIcon} active={activeTool === "image"} onClick={() => handleToolClick("image")} />
-          <ToolButton icon={LinkIcon} active={activeTool === "link"} onClick={() => handleToolClick("link")} />
-        </div>
-      )}
-
-      <Sheet open={tocOpen} onClose={() => setTocOpen(false)} maxHeight={226}>
-        <h2 style={{ fontSize: 13, fontWeight: 800, margin: "0 0 12px" }}>Sections</h2>
-        {note.conceptIndex.map((section) => {
-          const id = section.toLowerCase().replace(/\s+/g, "-");
-          const isActive = id === activeSection || (id === "concept-index" && activeSection === "brief");
-          return (
-            <button
-              key={section}
-              type="button"
-              onClick={() => {
-                setTocOpen(false);
-                sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-              className="press"
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "left",
-                background: "none",
-                border: "none",
-                padding: "8px 0",
-                fontSize: 12,
-                fontWeight: isActive ? 700 : 500,
-                color: isActive ? "var(--text)" : "var(--text-2)",
-                transition: "color .2s ease",
-              }}
-            >
-              {section}
-            </button>
-          );
-        })}
+      <Sheet open={tocOpen} onClose={() => setTocOpen(false)} maxHeight={280}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontSize: 20, color: "var(--text)", margin: 0 }}>Jump to</h2>
+        {sections.map((s, i) => (
+          <button
+            key={s.sec}
+            type="button"
+            onClick={() => {
+              setTocOpen(false);
+              const el = scrollRef.current?.querySelector(`[data-sec="${s.sec}"]`);
+              if (el instanceof HTMLElement && scrollRef.current) {
+                scrollRef.current.scrollTo({ top: el.offsetTop - 84, behavior: "smooth" });
+              }
+            }}
+            className="press"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 14px",
+              background: "var(--surface)",
+              borderRadius: 16,
+              animation: `listIn 320ms var(--e-screen) ${i * 40}ms both`,
+            }}
+          >
+            <span style={{ fontFamily: "var(--font-serif)", fontSize: 14, color: "var(--accent)" }}>{s.n}</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text)" }}>{s.label}</span>
+          </button>
+        ))}
       </Sheet>
+
+      <Toast message={toast ?? ""} visible={!!toast} />
     </div>
   );
 }
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
+function Eyebrow({ children, "data-sec": dataSec }: { children: React.ReactNode; "data-sec"?: string }) {
   return (
-    <div
-      style={{
-        fontSize: 9,
-        fontWeight: 700,
-        letterSpacing: ".04em",
-        textTransform: "uppercase",
-        color: "var(--text-2)",
-        marginBottom: 8,
-      }}
-    >
+    <div data-sec={dataSec} style={{ fontSize: 10, fontWeight: 700, letterSpacing: ".1em", color: "var(--text-3)" }}>
       {children}
     </div>
   );
 }
 
-function StatusPill({ label, tone }: { label: string; tone?: "ok" }) {
+function Divider() {
+  return <div style={{ height: 1, background: "var(--line)" }} />;
+}
+
+function SelectionCallout({ onHighlight, onCopy, onLink }: { onHighlight: () => void; onCopy: () => void; onLink: () => void }) {
   return (
     <div
       style={{
-        display: "inline-block",
-        fontSize: 9,
-        fontWeight: 700,
-        color: tone === "ok" ? "var(--accent)" : "var(--text-2)",
-        marginBottom: 12,
+        position: "absolute",
+        left: "50%",
+        top: -14,
+        transform: "translateX(-50%)",
+        display: "flex",
+        gap: 2,
+        background: "#16171A",
+        borderRadius: 14,
+        padding: 5,
+        zIndex: 12,
+        boxShadow: "0 10px 22px rgba(0, 0, 0, 0.28)",
+        animation: "pop 260ms var(--e-spring) both",
       }}
     >
-      {label}
+      <CalloutButton onClick={onHighlight} icon={<HighlighterIcon size={15} style={{ color: "var(--pop-tint)" }} />} label="Highlight" />
+      <CalloutButton onClick={onCopy} label="Copy" />
+      <CalloutButton onClick={onLink} label="Link" />
     </div>
   );
 }
 
-function CalloutButton({ label, onClick }: { label: string; onClick: () => void }) {
+function CalloutButton({ onClick, icon, label }: { onClick: () => void; icon?: React.ReactNode; label: string }) {
   return (
     <button
       type="button"
-      onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
-      className="press"
-      style={{
-        background: "none",
-        border: "none",
-        color: "#F2F0EC",
-        fontSize: 9,
-        fontWeight: 600,
-        padding: "4px 10px",
-      }}
+      className="hover-row"
+      style={{ display: "flex", alignItems: "center", gap: 5, color: "#fff", fontSize: 11, fontWeight: 600, padding: "7px 11px", borderRadius: 10 }}
     >
+      {icon}
       {label}
     </button>
   );
 }
 
-function ToolButton({
-  icon: Icon,
-  active,
-  onClick,
-}: {
-  icon: typeof TextIcon;
-  active: boolean;
-  onClick: () => void;
-}) {
+function SyncPill({ status, onRetry }: { status: SyncStatus; onRetry: () => void }) {
+  const isError = status === "error";
   return (
     <button
       type="button"
-      onClick={onClick}
-      className="press"
+      onClick={isError ? onRetry : undefined}
       style={{
-        width: 36,
-        height: 36,
-        borderRadius: "50%",
-        border: "none",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        background: active ? "var(--accent)" : "transparent",
-        color: active ? "var(--on-accent)" : "var(--text-2)",
-        transition: "background-color .2s ease, color .2s ease",
+        gap: 8,
+        padding: "10px 14px",
+        borderRadius: 14,
+        fontSize: 11,
+        fontWeight: 600,
+        alignSelf: "flex-start",
+        cursor: isError ? "pointer" : "default",
+        background: isError ? "var(--danger-bg, #FBE8E6)" : "var(--well)",
+        color: isError ? "var(--danger, #B4342A)" : "var(--text-2)",
+        animation: isError ? "shake 450ms ease" : "listIn 250ms var(--e-screen) both",
       }}
     >
-      <Icon size={18} />
+      {status === "saving" && <span style={{ width: 12, height: 12, borderRadius: "50%", border: "2px solid rgba(0,0,0,.2)", borderTopColor: "currentColor", animation: "spin 1s linear infinite" }} />}
+      {status === "saved" && <TaskAltIcon size={14} />}
+      {isError && <AlertIcon size={14} />}
+      {status === "saving" ? "Saving…" : status === "saved" ? "Saved to Notion" : "Save failed — tap to retry"}
     </button>
-  );
-}
-
-function NoteTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
-  return (
-    <div
-      style={{
-        border: "1px solid var(--line)",
-        borderRadius: "var(--r-tile)",
-        overflow: "hidden",
-        marginBottom: 20,
-      }}
-    >
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 9 }}>
-        <thead>
-          <tr>
-            {headers.map((h) => (
-              <th
-                key={h}
-                style={{
-                  background: "var(--well)",
-                  color: "var(--text-2)",
-                  textAlign: "left",
-                  padding: "8px 10px",
-                  fontWeight: 700,
-                }}
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, ri) => (
-            <tr key={ri}>
-              {row.map((cell, ci) => (
-                <td
-                  key={ci}
-                  style={{
-                    padding: "8px 10px",
-                    borderTop: "1px solid var(--line)",
-                    color: "var(--text-body)",
-                    fontWeight: ci === 0 ? 700 : 500,
-                    background: ci === 0 ? "var(--accent-key-tint)" : "transparent",
-                  }}
-                >
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   );
 }
 
 function NoteLoading() {
   return (
-    <div>
-      <Skeleton width={180} height={16} style={{ marginBottom: 8 }} />
-      <Skeleton width={80} height={10} radius={10} style={{ marginBottom: 20 }} />
-      <Skeleton height={10} style={{ marginBottom: 8 }} />
-      <Skeleton height={10} style={{ marginBottom: 8 }} />
-      <Skeleton height={10} width="70%" />
+    <div style={{ position: "absolute", inset: 0, padding: "70px 20px 0", display: "flex", flexDirection: "column", gap: 14 }}>
+      <Skeleton height={10} width={80} radius={6} />
+      <Skeleton height={30} width="70%" radius={10} />
+      <Skeleton height={13} width="90%" />
+      <Skeleton height={13} width="85%" />
+      <Skeleton height={13} width="60%" />
     </div>
-  );
-}
-
-// Rewrites the mock <span color="yellow_bg"> markup (per CLAUDE.md's
-// confirmed Notion highlight syntax) into the fixed highlight token.
-function withHighlightStyles(html: string): string {
-  return html.replace(
-    /<span color="yellow_bg">/g,
-    '<span style="background:var(--highlight-bg);color:var(--highlight-text);box-decoration-break:clone;-webkit-box-decoration-break:clone;">'
   );
 }

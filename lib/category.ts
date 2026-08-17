@@ -1,61 +1,29 @@
 import type { CategoryKey } from "./types";
 
-// Category identity — folder-icon colours (fixed, never follows the accent)
-// and the matching tag-pill colour pair, keyed off the CSS custom
-// properties defined in globals.css.
-export const CATEGORY_META: Record<
-  CategoryKey,
-  { label: string; bodyVar: string; tabVar: string; tagBgVar: string; tagTextVar: string }
-> = {
-  science: {
-    label: "Science & Nature",
-    bodyVar: "--cat-science-body",
-    tabVar: "--cat-science-tab",
-    tagBgVar: "--tag-science-bg",
-    tagTextVar: "--tag-science-text",
-  },
-  history: {
-    label: "History & Civilization",
-    bodyVar: "--cat-history-body",
-    tabVar: "--cat-history-tab",
-    tagBgVar: "--tag-history-bg",
-    tagTextVar: "--tag-history-text",
-  },
-  math: {
-    label: "Math & Logic",
-    bodyVar: "--cat-math-body",
-    tabVar: "--cat-math-tab",
-    tagBgVar: "--tag-math-bg",
-    tagTextVar: "--tag-math-text",
-  },
-  tech: {
-    label: "Technology",
-    bodyVar: "--cat-tech-body",
-    tabVar: "--cat-tech-tab",
-    tagBgVar: "--tag-tech-bg",
-    tagTextVar: "--tag-tech-text",
-  },
-  mind: {
-    label: "Mind & Psychology",
-    bodyVar: "--cat-mind-body",
-    tabVar: "--cat-mind-tab",
-    tagBgVar: "--tag-mind-bg",
-    tagTextVar: "--tag-mind-text",
-  },
-  health: {
-    label: "Health & Medicine",
-    bodyVar: "--cat-health-body",
-    tabVar: "--cat-health-tab",
-    tagBgVar: "--tag-health-bg",
-    tagTextVar: "--tag-health-text",
-  },
+// Category identity — a single fixed colour + light-mode tint per category,
+// keyed off the CSS custom properties in globals.css (--cat-*/--cat-*-tint).
+// Never follows the theme accent. Tag pills, by contrast, are NOT
+// category-coloured in this design — design.md's token table specs a single
+// fixed "default blue tag" (--tag-bg/--tag-fg) used for every category tag,
+// confirmed in Trove Prototype.dc.html (every tag renders with the same
+// var(--tag-bg)/var(--tag-fg) regardless of which category it names).
+export const CATEGORY_META: Record<CategoryKey, { label: string; colorVar: string; tintVar: string }> = {
+  science: { label: "Science & Nature", colorVar: "--cat-science", tintVar: "--cat-science-tint" },
+  history: { label: "History & Civilization", colorVar: "--cat-history", tintVar: "--cat-history-tint" },
+  math: { label: "Math & Logic", colorVar: "--cat-math", tintVar: "--cat-math-tint" },
+  tech: { label: "Technology", colorVar: "--cat-tech", tintVar: "--cat-tech-tint" },
+  mind: { label: "Mind & Psychology", colorVar: "--cat-mind", tintVar: "--cat-mind-tint" },
+  health: { label: "Health & Medicine", colorVar: "--cat-health", tintVar: "--cat-health-tint" },
+  // Legacy/uncategorised domains outside the six-swatch picker (e.g. an
+  // existing "Espionage & Craft" domain) fall back to a muted identity.
+  other: { label: "Other", colorVar: "--cat-other", tintVar: "--cat-other-tint" },
 };
 
-export const CATEGORY_KEYS = Object.keys(CATEGORY_META) as CategoryKey[];
+// The six swatches offered in the "new domain" colour picker — "other" is
+// deliberately excluded, it's a fallback identity, not a pickable one.
+export const CATEGORY_KEYS = (Object.keys(CATEGORY_META) as CategoryKey[]).filter((k) => k !== "other");
 
-// Six swatches offered in the "new domain" colour picker — one per
-// category identity, referenced by CSS var so light/dark stay correct.
 export const DOMAIN_SWATCHES: { key: CategoryKey; var: string }[] = CATEGORY_KEYS.map((key) => ({
   key,
-  var: CATEGORY_META[key].bodyVar,
+  var: CATEGORY_META[key].colorVar,
 }));

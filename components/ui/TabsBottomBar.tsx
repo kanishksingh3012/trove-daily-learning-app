@@ -5,7 +5,7 @@ import Fab from "@/components/ui/Fab";
 import { useAddTopicSheet } from "@/components/AddTopicSheetProvider";
 
 export default function TabsBottomBar() {
-  const { openAddSheet } = useAddTopicSheet();
+  const { open, openAddSheet, closeAddSheet } = useAddTopicSheet();
 
   return (
     <div
@@ -13,18 +13,18 @@ export default function TabsBottomBar() {
         position: "fixed",
         left: "50%",
         transform: "translateX(-50%)",
-        bottom: 28,
+        bottom: 26,
         width: "100%",
         maxWidth: 480,
-        padding: "0 28px",
+        padding: "0 24px",
         display: "flex",
         alignItems: "center",
-        gap: 8,
+        gap: 12,
         zIndex: 50,
       }}
     >
       <BottomNav />
-      <Fab onClick={openAddSheet} />
+      <Fab open={open} onClick={() => (open ? closeAddSheet() : openAddSheet())} />
     </div>
   );
 }

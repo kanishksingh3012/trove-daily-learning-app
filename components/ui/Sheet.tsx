@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-const ANIM_MS = 220;
+const ANIM_IN_MS = 380;
+const ANIM_OUT_MS = 220;
 
 export default function Sheet({
   open,
@@ -32,7 +33,7 @@ export default function Sheet({
 
   useEffect(() => {
     if (!closing) return;
-    const t = setTimeout(() => setMounted(false), ANIM_MS);
+    const t = setTimeout(() => setMounted(false), ANIM_OUT_MS);
     return () => clearTimeout(t);
   }, [closing]);
 
@@ -64,10 +65,9 @@ export default function Sheet({
         style={{
           position: "absolute",
           inset: 0,
-          background: "var(--scrim)",
-          border: "none",
-          animation: `${closing ? "fade-out" : "fade-in"} ${ANIM_MS}ms ease`,
-          animationFillMode: "forwards",
+          background: "rgba(10, 10, 12, 0.46)",
+          transition: "opacity 0.3s ease",
+          opacity: closing ? 0 : 1,
         }}
       />
       <div
@@ -76,23 +76,28 @@ export default function Sheet({
           width: "100%",
           maxWidth: 480,
           maxHeight: maxHeight ?? "85vh",
-          background: "var(--surface)",
-          borderTopLeftRadius: "var(--r-card)",
-          borderTopRightRadius: "var(--r-card)",
-          boxShadow: "var(--shadow-sheet)",
-          padding: "12px 16px 24px",
-          animation: `${closing ? "sheet-down" : "sheet-up"} ${ANIM_MS}ms cubic-bezier(0.32, 0.72, 0, 1)`,
+          background: "var(--frame)",
+          borderRadius: "32px 32px 0 0",
+          boxShadow: "0 -10px 34px rgba(0, 0, 0, 0.2)",
+          padding: "14px 20px 30px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+          animation: closing
+            ? `sheetOut ${ANIM_OUT_MS}ms var(--e-exit)`
+            : `sheetIn ${ANIM_IN_MS}ms var(--e-screen)`,
           animationFillMode: "forwards",
           overflowY: "auto",
         }}
       >
         <div
           style={{
-            width: 36,
+            width: 38,
             height: 4,
+            background: "var(--line)",
             borderRadius: 2,
-            background: "var(--handle)",
-            margin: "0 auto 12px",
+            alignSelf: "center",
+            flexShrink: 0,
           }}
         />
         {children}

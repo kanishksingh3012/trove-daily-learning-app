@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+<style>
+body{margin:0;font-family:'Manrope',sans-serif;background:#0a0a0b}
+#app{min-height:100vh;box-sizing:border-box;padding:48px 40px;background:var(--bg);transition:background .4s ease;
+--bg:#0a0a0b;--frame:#16171a;--surface:#212227;--well:#101113;--line:#2a2b30;--skeleton:#26272c;--shine:#33343a;
+--text:#f2f0ec;--text-body:#c9c7c1;--text-2:#9c9a92;--text-3:#5c5d61;--overlay:#2c2d31;--handle:#4a4b4f;
+--accent:#f2f0ec;--on-accent:#16171a;--accent-soft:rgba(242,240,236,.12);--accent-line:rgba(242,240,236,.35);--accent-glow:rgba(242,240,236,.35);
+--danger:#ff6b60;--danger-bg:#3a1f1e;--dash:#3a3b40;--hl:#fde68a;--hl-text:#2b2408;--link:#8fb0f2;
+--card-shadow:0 4px 16px -4px rgba(0,0,0,.3);--pill-shadow:0 4px 14px rgba(0,0,0,.3);--sheet-shadow:0 -8px 24px rgba(0,0,0,.4);--bar-shadow:0 12px 30px -8px rgba(0,0,0,.4);--toast-shadow:0 8px 20px rgba(0,0,0,.4);
+--tag-math-bg:#202b47;--tag-math-fg:#93b4f0;--tag-health-bg:#173430;--tag-health-fg:#7fe0d0;--tag-hist-bg:#3a2617;--tag-hist-fg:#f0a877;--tag-tech-bg:#2b2140;--tag-tech-fg:#c3a8f0;--tag-mind-bg:#3a1f2a;--tag-mind-fg:#f0a0c4;--tag-geo-bg:#332e17;--tag-geo-fg:#e0d17f;--tag-esp-bg:#25272b;--tag-esp-fg:#b7c0cc;--tag-phys-bg:#3a201d;--tag-phys-fg:#f0a89c;--tag-sci-bg:#173a26;--tag-sci-fg:#7fe0a3}
+#app[data-mode="light"]{--bg:#e8e5dd;--frame:#faf8f4;--surface:#ffffff;--well:#f1eee7;--line:#e4e0d6;--skeleton:#eae7e0;--shine:#dfdbd0;
+--text:#16171a;--text-body:#3d3c39;--text-2:#6f6d65;--text-3:#a5a29a;--overlay:#2c2d31;--handle:#c8c4ba;
+--accent:#16171a;--on-accent:#f2f0ec;--accent-soft:rgba(22,23,26,.08);--accent-line:rgba(22,23,26,.25);--accent-glow:rgba(22,23,26,.25);
+--danger:#c0392b;--danger-bg:#fbe7e4;--dash:#cdc8bc;--link:#2f4d8f;
+--card-shadow:0 4px 16px -4px rgba(0,0,0,.09);--pill-shadow:0 4px 14px rgba(0,0,0,.1);--sheet-shadow:0 -8px 24px rgba(0,0,0,.13);--bar-shadow:0 12px 30px -8px rgba(0,0,0,.13);--toast-shadow:0 8px 20px rgba(0,0,0,.18);
+--tag-math-bg:#e4ebfa;--tag-math-fg:#2f4d8f;--tag-health-bg:#dff3ef;--tag-health-fg:#1e6b60;--tag-hist-bg:#fbeade;--tag-hist-fg:#8a4a1c;--tag-tech-bg:#eee7fb;--tag-tech-fg:#5b3d99;--tag-mind-bg:#fbe6ef;--tag-mind-fg:#8f3a63;--tag-geo-bg:#f6f1da;--tag-geo-fg:#7a6a1e;--tag-esp-bg:#eceef1;--tag-esp-fg:#4c5560;--tag-phys-bg:#fbe7e4;--tag-phys-fg:#8f3b30;--tag-sci-bg:#e2f4e9;--tag-sci-fg:#1f6b3f}
+#app[data-accent="terracotta"]{--accent:#d97635;--on-accent:#ffffff;--accent-soft:rgba(217,118,53,.16);--accent-line:rgba(217,118,53,.5);--accent-glow:rgba(217,118,53,.35)}
+#app[data-accent="olive"]{--accent:#5c6b2c;--on-accent:#ffffff;--accent-soft:rgba(92,107,44,.18);--accent-line:rgba(92,107,44,.5);--accent-glow:rgba(92,107,44,.35)}
+#app[data-accent="blue"]{--accent:#3b5fc4;--on-accent:#ffffff;--accent-soft:rgba(59,95,196,.16);--accent-line:rgba(59,95,196,.5);--accent-glow:rgba(59,95,196,.35)}
+.msr{font-family:'Material Symbols Rounded';line-height:1}
+@keyframes om-shimmer{0%{background-position:-160px 0}100%{background-position:calc(160px + 100%) 0}}
+@keyframes om-sheet{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes om-scrim{from{opacity:0}to{opacity:1}}
+@keyframes om-scrim-out{from{opacity:1}to{opacity:0}}
+@keyframes om-sheet-out{from{transform:translateY(0)}to{transform:translateY(100%)}}
+@keyframes om-toast-out{from{transform:translateY(0);opacity:1}to{transform:translateY(8px);opacity:0}}
+@keyframes om-toast{0%{transform:translateY(24px) scale(.96);opacity:0}60%{transform:translateY(-2px) scale(1);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes om-pop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes om-row{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes om-push{from{transform:translateX(28px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes om-fade{from{opacity:0}to{opacity:1}}
+@keyframes om-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes om-caret{0%,45%{opacity:1}55%,100%{opacity:0}}
+@keyframes om-spin{to{transform:rotate(360deg)}}
+@keyframes om-ring{from{box-shadow:0 0 0 2px var(--surface),0 0 0 2px var(--text)}to{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text)}}
+</style>
+</helmet>
+
+<div id="app" data-mode="{{ mode }}" data-accent="{{ accent }}">
+<div style="display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap">
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="width:393px;height:852px;background:var(--frame);border-radius:55px;position:relative;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 8px 20px rgba(0,0,0,.4);transition:background .4s ease">
+<div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#000;border-radius:20px;z-index:30"></div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;height:60px;box-sizing:border-box;padding:20px 24px 0;font-size:14px;font-weight:700;color:var(--text);position:relative;z-index:2"><span>9:41</span><div style="width:10px;height:6px;border:1px solid var(--text);border-radius:1px"></div></div>
+
+<sc-if value="{{ showLoading }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;padding:8px 16px 16px;display:flex;flex-direction:column;gap:16px;animation:om-fade .2s ease">
+<sc-for list="{{ skelBars }}" as="s" hint-placeholder-count="4">
+<div style="height:{{ s.h }};width:{{ s.w }};border-radius:{{ s.r }};background:linear-gradient(90deg,var(--skeleton) 0%,var(--shine) 45%,var(--skeleton) 90%);background-size:160px 100%;animation:om-shimmer 1.15s linear infinite"></div>
+</sc-for>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<sc-for list="{{ skelTiles }}" as="t" hint-placeholder-count="4">
+<div style="height:{{ t.h }};border-radius:16px;background:linear-gradient(90deg,var(--skeleton) 0%,var(--shine) 45%,var(--skeleton) 90%);background-size:160px 100%;animation:om-shimmer 1.15s linear infinite"></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showHome }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;overflow:auto;padding-bottom:110px;animation:om-fade .25s ease">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px">
+<span style="font-size:16px;font-weight:800;color:var(--text)">Hi Kans</span>
+<button style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:none;display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.2,1),background .18s ease" style-hover="background:var(--accent-soft)" style-active="transform:scale(.88)" onClick="{{ openQuick }}"><span class="msr" style="font-size:16px">edit_note</span></button>
+</div>
+
+<sc-if value="{{ homeHasToday }}" hint-placeholder-val="{{ true }}">
+<div style="padding:12px 16px 0"><span style="font-size:12px;font-weight:600;color:var(--text-2)">Today's topic</span></div>
+<div style="margin:8px 16px 0;border-radius:20px;overflow:hidden;position:relative;height:180px;background:var(--well)">
+<div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 20% 0%,var(--accent-soft) 0%,transparent 60%)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;padding:16px;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:9px;font-weight:700;border-radius:10px;padding:4px 8px;align-self:flex-start;background:var(--tag-math-bg);color:var(--tag-math-fg)">Math &amp; Logic</span>
+<span style="font-size:16px;font-weight:800;color:var(--text);line-height:1.15">Nash Equilibrium</span>
+<button style="background:var(--accent);color:var(--on-accent);text-align:center;padding:12px;border-radius:14px;font-size:12px;font-weight:700;margin-top:4px;border:none;font-family:inherit;cursor:pointer;transition:transform .16s cubic-bezier(.2,.8,.2,1),filter .16s ease" style-hover="filter:brightness(1.06)" style-active="transform:scale(.97)" onClick="{{ openNote }}">Read now →</button>
+</div>
+</div>
+<div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:12px;color:var(--text-2);font-weight:600">For tomorrow, select</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ tomorrow }}" as="o" hint-placeholder-count="4">
+<button style="border-radius:14px;padding:8px;font-size:10px;text-align:center;font-family:inherit;cursor:pointer;background:{{ o.bg }};border:{{ o.border }};color:{{ o.fg }};font-weight:{{ o.weight }};transform:{{ o.scale }};transition:background .22s ease,color .22s ease,border-color .22s ease,transform .22s cubic-bezier(.2,.8,.2,1)" style-active="transform:scale(.95)" onClick="{{ o.pick }}">{{ o.name }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 16px 0">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:9px;color:var(--text-2);font-weight:700">YESTERDAY</span><span style="font-size:11px;color:var(--text-2)">mRNA Vaccines</span></div>
+<button style="border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:14px;padding:6px 12px;font-size:10px;font-weight:700;color:var(--text);font-family:inherit;cursor:pointer;transition:transform .16s ease" style-active="transform:scale(.94)" onClick="{{ openYesterday }}">Read</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ homeEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 16px 0;display:flex;flex-direction:column;gap:16px">
+<div style="background:var(--well);border-radius:20px;padding:20px;text-align:center;color:var(--text-2);font-size:11px">No topic yet — first run hasn't happened</div>
+<span style="font-size:12px;color:var(--text-2);font-weight:600">For tomorrow, select</span>
+<div style="border:1.5px dashed var(--dash);border-radius:14px;padding:16px;text-align:center;color:var(--text-2);font-size:10px">Options appear after tonight's run</div>
+<span style="font-size:9px;color:var(--text-3);text-align:center">— no history yet —</span>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showTopics }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;overflow:auto;padding-bottom:110px;animation:om-fade .25s ease">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px">
+<span style="font-size:16px;font-weight:800;color:var(--text)">Topics</span>
+<button style="display:flex;align-items:center;gap:4px;color:var(--text);font-size:12px;font-weight:700;background:none;border:none;font-family:inherit;cursor:pointer;padding:4px 6px;border-radius:12px;transition:background .18s ease,transform .16s ease" style-hover="background:var(--accent-soft)" style-active="transform:scale(.94)" onClick="{{ openNewDomain }}"><span class="msr" style="font-size:16px">add</span>Domain</button>
+</div>
+<div style="padding:0 16px 12px">
+<div style="position:relative;display:flex;background:var(--well);border-radius:32px;padding:4px;height:32px;box-sizing:border-box">
+<div style="position:absolute;top:4px;left:4px;width:calc(50% - 4px);height:24px;background:var(--surface);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.3);transform:{{ segThumb }};transition:transform .3s cubic-bezier(.2,.85,.2,1)"></div>
+<button style="flex:1;background:none;border:none;font-family:inherit;z-index:1;cursor:pointer;font-size:11px;font-weight:{{ catWeight }};color:{{ catColor }};transition:color .2s ease" onClick="{{ setCat }}">Categorical</button>
+<button style="flex:1;background:none;border:none;font-family:inherit;z-index:1;cursor:pointer;font-size:11px;font-weight:{{ allWeight }};color:{{ allColor }};transition:color .2s ease" onClick="{{ setAll }}">All</button>
+</div>
+</div>
+
+<sc-if value="{{ isCat }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<sc-for list="{{ domains }}" as="d" hint-placeholder-count="6">
+<button style="background:var(--surface);border:none;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--card-shadow);font-family:inherit;text-align:left;cursor:pointer;opacity:0;animation:om-row .38s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:{{ d.delay }};transition:transform .18s cubic-bezier(.2,.8,.2,1)" style-hover="transform:translateY(-3px)" style-active="transform:scale(.97)" onClick="{{ d.open }}">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
+<div style="width:40px;height:34px;position:relative">
+<div style="position:absolute;top:2px;left:2px;width:24px;height:10px;background:{{ d.light }};border-radius:6px 6px 0 0"></div>
+<div style="position:absolute;top:6px;left:0;width:40px;height:28px;background:{{ d.main }};border-radius:9px;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:3px;background:#fff;border-radius:2px"></div></div>
+</div>
+<span class="msr" style="font-size:16px;color:var(--text-3)">more_vert</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:700;color:var(--text)">{{ d.name }}</span><span style="font-size:9px;color:var(--text-2)">{{ d.count }} notes</span></div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAll }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 16px">
+<div style="background:var(--surface);border-radius:20px;overflow:hidden;box-shadow:var(--card-shadow)">
+<sc-for list="{{ allNotes }}" as="n" hint-placeholder-count="9">
+<button style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:none;border-bottom:1px solid var(--line);font-size:11px;color:var(--text);gap:8px;width:100%;background:none;font-family:inherit;text-align:left;cursor:pointer;opacity:0;animation:om-row .3s ease forwards;animation-delay:{{ n.delay }};transition:background .16s ease" style-hover="background:var(--accent-soft)" onClick="{{ n.open }}">
+<span>{{ n.title }}</span>
+<span style="font-size:9px;font-weight:700;border-radius:10px;padding:4px 8px;white-space:nowrap;background:{{ n.tagBg }};color:{{ n.tagFg }}">{{ n.tag }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showDomain }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;overflow:auto;padding-bottom:110px;animation:om-push .28s cubic-bezier(.2,.8,.2,1)">
+<button style="display:flex;align-items:center;gap:4px;color:var(--text);padding:8px 16px 0;background:none;border:none;font-family:inherit;font-size:12px;cursor:pointer" style-active="opacity:.6" onClick="{{ backToTopics }}"><span class="msr" style="font-size:18px">arrow_back_ios</span>Topics</button>
+<div style="padding:8px 16px 12px;display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:800;color:var(--text)">{{ domainTitle }}</span><span style="font-size:11px;color:var(--text-2)">{{ domainCount }} notes</span></div>
+<sc-if value="{{ domainHasNotes }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 16px"><div style="background:var(--surface);border-radius:20px;overflow:hidden;box-shadow:var(--card-shadow)">
+<sc-for list="{{ domainNotes }}" as="n" hint-placeholder-count="2">
+<button style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:none;border-bottom:1px solid var(--line);font-size:11px;color:var(--text);width:100%;background:none;font-family:inherit;text-align:left;cursor:pointer;opacity:0;animation:om-row .3s ease forwards;animation-delay:{{ n.delay }}" style-hover="background:var(--accent-soft)" onClick="{{ n.open }}"><span>{{ n.title }}</span><span style="color:var(--text-2);font-size:10px">{{ n.date }}</span></button>
+</sc-for>
+</div></div>
+</sc-if>
+<sc-if value="{{ domainEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 16px"><div style="background:var(--well);border-radius:20px;padding:24px;text-align:center;color:var(--text-2);font-size:11px;animation:om-fade .3s ease">No notes yet in {{ domainTitle }} — will appear after next run</div></div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showNote }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;animation:om-push .3s cubic-bezier(.2,.8,.2,1)">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px 6px;background:var(--frame);position:relative;z-index:6;box-shadow:{{ headerShadow }};transition:box-shadow .25s ease">
+<button style="background:none;border:none;color:var(--text);cursor:pointer;display:flex;align-items:center;font-family:inherit" style-active="opacity:.6" onClick="{{ closeNote }}"><span class="msr" style="font-size:20px">arrow_back_ios</span></button>
+<span style="font-size:13px;font-weight:700;color:var(--text);opacity:{{ headerTitleOpacity }};transition:opacity .25s ease">{{ noteTitle }}</span>
+<button style="background:none;border:none;color:var(--text);cursor:pointer;display:flex;align-items:center;font-family:inherit;border-radius:50%;padding:2px" style-active="transform:scale(.9)" onClick="{{ openToc }}"><span class="msr" style="font-size:20px">toc</span></button>
+</div>
+<div ref="{{ noteRef }}" onScroll="{{ onNoteScroll }}" style="position:absolute;top:44px;left:0;right:0;bottom:0;overflow:auto;padding:0 16px 130px">
+<div style="display:flex;flex-direction:column;gap:8px;padding-top:8px">
+<span style="font-size:16px;font-weight:800;color:var(--text)">{{ noteTitle }}</span>
+<span style="font-size:9px;font-weight:700;border-radius:10px;padding:4px 8px;align-self:flex-start;background:{{ noteTagBg }};color:{{ noteTagFg }}">{{ noteTag }}</span>
+</div>
+
+<sc-if value="{{ syncVisible }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:12px;display:flex;align-items:center;gap:8px;background:{{ syncBg }};color:{{ syncColor }};border-radius:14px;padding:10px 12px;font-size:10px;font-weight:700;animation:{{ syncAnim }}" onClick="{{ retrySave }}">
+<span class="msr" style="font-size:15px;animation:{{ syncIconAnim }}">{{ syncIcon }}</span>{{ syncText }}
+</div>
+</sc-if>
+
+<div id="sec-brief" style="padding-top:16px;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:1.6;color:var(--text-body)">
+<span style="font-weight:700;color:var(--text);font-size:9px;letter-spacing:.04em">BRIEF</span>
+<span onClick="{{ tapA }}" style="cursor:text;background-image:linear-gradient(var(--hl),var(--hl));background-repeat:no-repeat;background-size:{{ hlA }} 100%;color:{{ hlAColor }};border-radius:2px;transition:background-size .45s cubic-bezier(.3,.9,.2,1),color .3s ease">A Nash equilibrium is a state where no player can improve their outcome by changing strategy alone, given everyone else's strategy stays fixed.</span>
+<div style="position:relative">
+<span onClick="{{ tapB }}" style="cursor:text;background-image:linear-gradient(var(--hl),var(--hl));background-repeat:no-repeat;background-size:{{ hlB }} 100%;color:{{ hlBColor }};border-radius:2px;-webkit-box-decoration-break:clone;transition:background-size .45s cubic-bezier(.3,.9,.2,1),color .3s ease">The Prisoner's Dilemma is the standard proof of this — the equilibrium is worse for both players than if they'd cooperated.</span>
+<sc-if value="{{ calloutB }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:50%;transform:translateX(-50%);top:100%;margin-top:8px;background:var(--overlay);border-radius:10px;padding:8px 12px;font-size:9px;font-weight:600;display:flex;gap:10px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.5);z-index:8;animation:om-pop .22s cubic-bezier(.2,.9,.2,1)">
+<button style="background:none;border:none;color:#f2f0ec;font-family:inherit;font-size:9px;font-weight:700;cursor:pointer" onClick="{{ applyHlB }}">Highlight</button>
+<span style="color:#5c5d61">·</span>
+<button style="background:none;border:none;color:#f2f0ec;font-family:inherit;font-size:9px;font-weight:600;cursor:pointer" onClick="{{ copyText }}">Copy</button>
+<span style="color:#5c5d61">·</span>
+<button style="background:none;border:none;color:#f2f0ec;font-family:inherit;font-size:9px;font-weight:600;cursor:pointer" onClick="{{ copyText }}">Link</button>
+<div style="position:absolute;left:50%;top:-4px;width:8px;height:8px;background:var(--overlay);transform:translateX(-50%) rotate(45deg)"></div>
+</div>
+</sc-if>
+</div>
+</div>
+
+<div id="sec-index" style="padding-top:20px;display:flex;flex-direction:column;gap:8px">
+<span style="font-weight:700;color:var(--text);font-size:9px;letter-spacing:.04em">CONCEPT INDEX</span>
+<div style="background:var(--well);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--text-body)">
+<span>Best response · a strategy that maximises payoff given the others</span>
+<span>Dominant strategy · best regardless of what others do</span>
+<span>Mixed strategy · randomising between options</span>
+<span>Pareto efficiency · no one can gain without someone losing</span>
+<span>Payoff matrix · the table of outcomes for every strategy pair</span>
+</div>
+</div>
+
+<div id="sec-detail" style="padding-top:20px;display:flex;flex-direction:column;gap:12px">
+<span style="font-weight:700;color:var(--text);font-size:9px;letter-spacing:.04em">DETAILED NOTES</span>
+<span onClick="{{ tapC }}" style="font-size:11px;line-height:1.6;color:var(--text-body);cursor:text;background-image:linear-gradient(var(--hl),var(--hl));background-repeat:no-repeat;background-size:{{ hlC }} 100%;color:{{ hlCColor }};border-radius:2px;transition:background-size .45s cubic-bezier(.3,.9,.2,1),color .3s ease">Both betraying is the Nash equilibrium — neither player can improve by unilaterally switching — even though mutual silence leaves both better off.</span>
+<table style="width:100%;border-collapse:collapse;font-size:9px;text-align:center;color:var(--text)">
+<tr><td></td><td style="padding:6px;font-weight:700;background:var(--well)">Stay Silent</td><td style="padding:6px;font-weight:700;background:var(--well)">Betray</td></tr>
+<tr><td style="padding:6px;font-weight:700;background:var(--well)">Silent</td><td style="padding:6px;border:1px solid var(--line)">1yr, 1yr</td><td style="padding:6px;border:1px solid var(--line)">10yr, 0yr</td></tr>
+<tr><td style="padding:6px;font-weight:700;background:var(--well)">Betray</td><td style="padding:6px;border:1px solid var(--line)">0yr, 10yr</td><td style="padding:6px;border:1px solid var(--line);background:var(--accent-soft);font-weight:700">5yr, 5yr</td></tr>
+</table>
+<div style="border:1.5px dashed var(--dash);border-radius:14px;padding:16px;text-align:center;color:var(--text-2);font-size:9px">Flowchart diagram — strategy/best-response loop</div>
+<span style="font-size:11px;line-height:1.6;color:var(--text-body)">Read the matrix from one player's side at a time. Fix the column at Stay Silent: betraying gives 0 years against 1, so betraying wins. Fix it at Betray: betraying gives 5 against 10, so betraying wins again. Betrayal is a dominant strategy for both, and the pair of dominant strategies is the equilibrium.</span>
+<span style="font-size:11px;line-height:1.6;color:var(--text-body)">The result generalises past two players. Any finite game with a fixed number of players and strategies has at least one equilibrium once mixed strategies are allowed — Nash's 1950 proof, which is why the concept became the default lens for bargaining, auctions, arms races and pricing.</span>
+<span style="font-size:11px;line-height:1.6;color:var(--text-body)">Where it breaks down is worth knowing. Equilibria are not necessarily unique, not necessarily efficient, and say nothing about how players would find one. Repeated play changes the picture entirely: cooperation becomes sustainable once defection can be punished in later rounds.</span>
+<div style="background:var(--well);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--text-body)">
+<span style="font-size:9px;font-weight:700;color:var(--text);letter-spacing:.04em">WORKED EXAMPLE</span>
+<span>Two petrol stations across the road from each other. Both at £1.40 is an equilibrium: undercutting to £1.35 wins volume for a day, the other matches, and both end up earning less on the same customers.</span>
+</div>
+</div>
+
+<div id="sec-res" style="padding-top:20px;display:flex;flex-direction:column;gap:8px">
+<span style="font-weight:700;color:var(--text);font-size:9px;letter-spacing:.04em">RESOURCES</span>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--link)">
+<span>Wikipedia — Nash Equilibrium</span>
+<span>3Blue1Brown — Bayes &amp; game theory</span>
+<span>Khan Academy — Prisoner's Dilemma</span>
+</div>
+</div>
+</div>
+
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;padding:12px;background:var(--surface);border-radius:20px;box-shadow:var(--bar-shadow);align-items:center;justify-content:space-evenly;z-index:9;animation:om-toast .32s cubic-bezier(.2,.9,.2,1)">
+<sc-for list="{{ tools }}" as="t" hint-placeholder-count="4">
+<button style="background:{{ t.bg }};color:{{ t.color }};border:none;border-radius:50%;padding:6px;cursor:pointer;display:flex;transition:background .2s ease,color .2s ease,transform .18s cubic-bezier(.2,.8,.2,1);transform:{{ t.scale }}" style-active="transform:scale(.88)" onClick="{{ t.pick }}"><span class="msr" style="font-size:18px">{{ t.icon }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showPrompt }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;overflow:auto;padding-bottom:110px;animation:om-push .28s cubic-bezier(.2,.8,.2,1)">
+<button style="display:flex;align-items:center;gap:4px;color:var(--text);padding:8px 16px 0;background:none;border:none;font-family:inherit;font-size:12px;cursor:pointer" style-active="opacity:.6" onClick="{{ backToSettings }}"><span class="msr" style="font-size:18px">arrow_back_ios</span>Settings</button>
+<div style="padding:8px 16px 12px"><span style="font-size:16px;font-weight:800;color:var(--text)">Prompt</span></div>
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:16px">
+<div style="background:var(--well);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:9px;font-weight:700;color:var(--text-2);letter-spacing:.04em">ACTIVE PROMPT</span>
+<span style="font-size:12px;line-height:1.7;color:var(--text)">"Daily at 8:00 AM: deliver one new topic for a 1-hour session and log it to Notion. Rotate across my saved domains, never repeat a topic within 90 days, and include a brief, detailed notes with a worked example, and three resources to go deeper."</span>
+</div>
+<div style="background:var(--well);border-radius:20px;overflow:hidden">
+<sc-for list="{{ promptRows }}" as="r" hint-placeholder-count="4">
+<div style="display:flex;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);font-size:11px;color:var(--text)"><span style="color:var(--text-2)">{{ r.k }}</span><span>{{ r.v }}</span></div>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:0 4px"><span class="msr" style="font-size:14px;color:var(--text-2)">lock</span><span style="font-size:9px;color:var(--text-2)">Read only — edit this prompt in Cowork</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showSettings }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;overflow:auto;padding-bottom:110px;animation:om-fade .25s ease">
+<div style="padding:8px 16px 12px"><span style="font-size:16px;font-weight:800;color:var(--text)">Settings</span></div>
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:16px">
+<div style="background:var(--well);border-radius:20px;overflow:hidden">
+<button style="width:100%;padding:12px;border:none;border-bottom:1px solid var(--line);font-size:11px;color:var(--text);display:flex;flex-direction:column;gap:4px;background:none;font-family:inherit;text-align:left;cursor:pointer;transition:background .16s ease" style-hover="background:var(--accent-soft)" onClick="{{ openPrompt }}">
+<div style="display:flex;justify-content:space-between;align-items:center;width:100%"><span style="font-weight:700">Prompt</span><span class="msr" style="font-size:16px;color:var(--text-2)">chevron_right</span></div>
+<span style="font-size:9px;color:var(--text-2)">"Daily at 8:00 AM: deliver one new topic for a 1-hour session and log it to Notion…"</span>
+</button>
+<div style="display:flex;flex-direction:column;gap:4px;padding:12px"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text)"><span>Timing</span><span style="color:var(--text-2)">8:00 AM</span></div><span style="font-size:9px;color:var(--text-2)">Change schedule in Cowork — view only here</span></div>
+</div>
+
+<div style="background:var(--well);border-radius:20px;overflow:hidden">
+<sc-for list="{{ toggles }}" as="t" hint-placeholder-count="2">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--text)">
+<span>{{ t.label }}</span>
+<button style="width:28px;height:16px;background:{{ t.bg }};border-radius:9px;position:relative;border:none;cursor:pointer;padding:0;transition:background .25s ease" onClick="{{ t.toggle }}"><div style="width:12px;height:12px;background:{{ t.knob }};border-radius:50%;position:absolute;top:2px;left:{{ t.pos }};transition:left .25s cubic-bezier(.2,.9,.2,1),background .25s ease"></div></button>
+</div>
+</sc-for>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10px;font-weight:700;color:var(--text-2);padding-left:4px">APPEARANCE</span>
+<div style="background:var(--well);border-radius:20px;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;font-size:12px;color:var(--text)">
+<span>Dark mode</span>
+<button style="width:28px;height:16px;background:{{ darkBg }};border-radius:9px;position:relative;border:none;cursor:pointer;padding:0;transition:background .25s ease" onClick="{{ toggleMode }}"><div style="width:12px;height:12px;background:{{ darkKnob }};border-radius:50%;position:absolute;top:2px;left:{{ darkPos }};transition:left .25s cubic-bezier(.2,.9,.2,1),background .25s ease"></div></button>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-top:1px solid var(--line);font-size:12px;color:var(--text)">
+<span>Theme colour</span>
+<div style="display:flex;gap:12px">
+<sc-for list="{{ accents }}" as="a" hint-placeholder-count="4">
+<button style="width:20px;height:20px;flex:0 0 20px;box-sizing:border-box;border-radius:50%;background:{{ a.color }};border:none;padding:0;cursor:pointer;box-shadow:{{ a.ring }};transition:box-shadow .22s ease,transform .18s cubic-bezier(.2,.8,.2,1);transform:{{ a.scale }}" style-active="transform:scale(.85)" onClick="{{ a.pick }}"></button>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10px;font-weight:700;color:var(--text-2);padding-left:4px">STATS</span>
+<div style="background:var(--well);border-radius:20px;padding:12px;display:flex;gap:12px">
+<div style="flex:1;text-align:center;display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800;color:var(--text)">{{ totalNotes }}</span><span style="font-size:9px;color:var(--text-2)">total notes</span></div>
+<div style="flex:1;text-align:center;display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:800;color:var(--text)">{{ domainCountTotal }}</span><span style="font-size:9px;color:var(--text-2)">domains</span></div>
+</div>
+<div style="background:var(--well);border-radius:20px;padding:12px;font-size:10px;color:var(--text)">Most active: <span style="font-weight:700">Science &amp; Nature</span> (14)</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showQuick }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:60px;left:0;right:0;bottom:0;background:var(--frame);animation:om-fade .2s ease;z-index:12">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px">
+<button style="font-size:12px;color:var(--text-2);background:none;border:none;font-family:inherit;cursor:pointer" onClick="{{ closeQuick }}">Cancel</button>
+<button style="font-size:12px;font-weight:800;color:var(--text);background:none;border:none;font-family:inherit;cursor:pointer" style-active="opacity:.6" onClick="{{ saveQuick }}">Done</button>
+</div>
+<div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:16px;font-weight:800;color:var(--text)">Reading list ideas</span>
+<span style="font-size:9px;font-weight:700;color:var(--text-3);letter-spacing:.04em">{{ quickStamp }}</span>
+<div style="height:1px;background:var(--line)"></div>
+<div style="display:flex;align-items:flex-start">
+<textarea value="{{ quickText }}" onChange="{{ setQuickText }}" placeholder="Jot a topic to remember later…" style="flex:1;background:none;border:none;outline:none;resize:none;font-family:inherit;font-size:11px;line-height:1.7;color:var(--text-body);height:180px"></textarea>
+<div style="width:2px;height:14px;background:var(--accent);margin-top:3px;animation:om-caret 1s steps(1) infinite"></div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ scrim }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ dismissSheet }}" style="position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:24;animation:{{ scrimAnim }}"></div>
+</sc-if>
+
+<sc-if value="{{ sheetToc }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sheet-shadow);padding:16px 16px 32px;display:flex;flex-direction:column;gap:12px;z-index:26;animation:{{ sheetAnim }}">
+<div style="width:36px;height:4px;background:var(--handle);border-radius:2px;align-self:center"></div>
+<span style="font-size:13px;font-weight:800;color:var(--text)">Sections</span>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ tocRows }}" as="s" hint-placeholder-count="4">
+<button style="display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border:none;border-bottom:1px solid var(--line);background:none;font-family:inherit;font-size:11px;text-align:left;cursor:pointer;color:{{ s.color }};font-weight:{{ s.weight }};opacity:0;animation:om-row .3s ease forwards;animation-delay:{{ s.delay }};transition:color .2s ease" onClick="{{ s.jump }}">{{ s.label }}<span class="msr" style="font-size:14px;color:var(--text-3)">arrow_forward</span></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetAdd }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sheet-shadow);padding:12px 16px 32px;display:flex;flex-direction:column;gap:16px;z-index:26;animation:{{ sheetAnim }}">
+<div style="width:36px;height:4px;background:var(--handle);border-radius:2px;align-self:center"></div>
+<span style="font-size:15px;font-weight:800;color:var(--text);text-align:center">New topic</span>
+<div style="background:var(--well);border-radius:12px;overflow:hidden">
+<input value="{{ topicText }}" onChange="{{ setTopicText }}" placeholder="What should tomorrow's note cover?" style="width:100%;box-sizing:border-box;padding:12px;border:none;border-bottom:1px solid var(--line);background:none;outline:none;font-family:inherit;font-size:11px;color:var(--text)">
+<button style="display:flex;justify-content:space-between;align-items:center;padding:12px;font-size:12px;color:var(--text);font-weight:700;width:100%;background:none;border:none;font-family:inherit;cursor:pointer" style-active="opacity:.6" onClick="{{ openWheel }}"><span>{{ pickedDomain }}</span><span class="msr" style="font-size:16px;color:var(--text-2)">chevron_right</span></button>
+</div>
+<span style="font-size:9px;color:var(--text-2);text-align:center;line-height:1.5">Queued for the next run — the note appears tomorrow morning, not right away</span>
+<div style="display:flex;gap:12px">
+<button style="flex:1;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:12px;font-weight:600;color:var(--text);background:none;font-family:inherit;cursor:pointer" style-active="transform:scale(.97)" onClick="{{ dismissSheet }}">Cancel</button>
+<button style="flex:1;background:{{ submitBg }};border:none;border-radius:14px;padding:12px;font-size:12px;font-weight:700;color:{{ submitColor }};font-family:inherit;cursor:{{ submitCursor }};transition:background .2s ease,transform .16s ease,opacity .2s ease;opacity:{{ submitOpacity }}" style-active="transform:scale(.97)" onClick="{{ submitTopic }}">Queue it</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetWheel }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sheet-shadow);z-index:27;animation:{{ sheetAnim }}">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px">
+<button style="color:var(--text-2);background:none;border:none;font-family:inherit;font-size:12px;cursor:pointer" onClick="{{ closeWheel }}">Cancel</button>
+<span style="color:var(--text);font-weight:700">Domain</span>
+<button style="color:var(--text);font-weight:800;background:none;border:none;font-family:inherit;font-size:12px;cursor:pointer" onClick="{{ closeWheel }}">Done</button>
+</div>
+<div style="position:relative;height:200px">
+<div style="position:absolute;left:16px;right:16px;top:50%;height:40px;transform:translateY(-50%);background:var(--well);border-radius:14px;pointer-events:none"></div>
+<div ref="{{ wheelRef }}" onScroll="{{ onWheelScroll }}" style="position:absolute;inset:0;overflow:auto;scroll-snap-type:y mandatory;padding:80px 0;box-sizing:border-box;text-align:center">
+<sc-for list="{{ wheelItems }}" as="w" hint-placeholder-count="7">
+<div onClick="{{ w.pick }}" style="height:40px;display:flex;align-items:center;justify-content:center;scroll-snap-align:center;cursor:pointer;font-size:{{ w.size }};color:{{ w.color }};font-weight:{{ w.weight }};transition:color .2s ease,font-size .2s ease">{{ w.name }}</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetConfirm }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sheet-shadow);padding:24px 20px 32px;display:flex;flex-direction:column;gap:12px;align-items:center;z-index:26;animation:{{ sheetAnim }}">
+<div style="width:36px;height:4px;background:var(--handle);border-radius:2px"></div>
+<div style="width:44px;height:44px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--on-accent);margin-top:8px;animation:om-pop .4s cubic-bezier(.2,.9,.2,1)"><span class="msr" style="font-size:22px">check_circle</span></div>
+<span style="font-size:15px;font-weight:800;color:var(--text)">We'll let you know</span>
+<span style="font-size:11px;color:var(--text-2);text-align:center;line-height:1.5">{{ confirmLine }}</span>
+<button style="border:1px solid var(--line);border-radius:12px;padding:10px 24px;font-size:13px;color:var(--text);font-weight:600;margin-top:8px;background:none;font-family:inherit;cursor:pointer" style-active="transform:scale(.96)" onClick="{{ dismissSheet }}">Got it</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetDomain }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sheet-shadow);padding:12px 16px 32px;display:flex;flex-direction:column;gap:16px;z-index:26;animation:{{ sheetAnim }}">
+<div style="width:36px;height:4px;background:var(--handle);border-radius:2px;align-self:center"></div>
+<span style="font-size:15px;font-weight:800;color:var(--text);text-align:center">New domain</span>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:9px;font-weight:700;color:var(--text-2);letter-spacing:.04em">NAME</span>
+<input value="{{ domainName }}" onChange="{{ setDomainName }}" placeholder="Astrophysics" style="background:var(--well);border-radius:14px;padding:12px;font-size:12px;color:var(--text);border:1px solid transparent;outline:none;font-family:inherit;transition:border-color .2s ease" style-focus="border-color:var(--accent-line)">
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:9px;font-weight:700;color:var(--text-2);letter-spacing:.04em">COLOUR</span>
+<div style="display:flex;gap:12px">
+<sc-for list="{{ swatches }}" as="s" hint-placeholder-count="6">
+<button style="width:32px;height:32px;flex:0 0 32px;box-sizing:border-box;border-radius:50%;background:{{ s.color }};border:none;padding:0;cursor:pointer;box-shadow:{{ s.ring }};transform:{{ s.scale }};transition:box-shadow .22s ease,transform .2s cubic-bezier(.2,.9,.2,1)" style-active="transform:scale(.88)" onClick="{{ s.pick }}"></button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;gap:12px;margin-top:4px">
+<button style="flex:1;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;font-size:12px;font-weight:600;color:var(--text);background:none;font-family:inherit;cursor:pointer" style-active="transform:scale(.97)" onClick="{{ dismissSheet }}">Cancel</button>
+<button style="flex:1;background:{{ createBg }};border:none;border-radius:14px;padding:12px;text-align:center;font-size:12px;font-weight:700;color:{{ createColor }};font-family:inherit;cursor:{{ createCursor }};opacity:{{ createOpacity }};transition:opacity .2s ease,transform .16s ease" style-active="transform:scale(.97)" onClick="{{ createDomain }}">Create domain</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:24px;width:345px;box-sizing:border-box;bottom:100px;background:var(--overlay);color:#f2f0ec;border-radius:57px;padding:12px 16px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;box-shadow:var(--toast-shadow);z-index:28;animation:{{ toastAnim }}"><span class="msr" style="font-size:16px">{{ toastIcon }}</span>{{ toast }}</div>
+</sc-if>
+
+<sc-if value="{{ showTabBar }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;gap:12px;align-items:center;z-index:25">
+<div style="flex:1;height:54px;border-radius:27px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--pill-shadow);display:flex;justify-content:space-around;align-items:center;transition:background .35s ease">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+<button style="display:flex;align-items:center;gap:6px;background:{{ t.bg }};color:{{ t.color }};padding:{{ t.pad }};border-radius:16px;border:none;font-family:inherit;cursor:pointer;transition:background .28s cubic-bezier(.2,.85,.2,1),color .22s ease,padding .28s cubic-bezier(.2,.85,.2,1),transform .18s ease" style-active="transform:scale(.94)" onClick="{{ t.go }}"><span class="msr" style="font-size:18px">{{ t.icon }}</span><span style="font-size:8px;font-weight:700;max-width:{{ t.labelW }};overflow:hidden;white-space:nowrap;transition:max-width .28s cubic-bezier(.2,.85,.2,1)">{{ t.label }}</span></button>
+</sc-for>
+</div>
+<button style="width:54px;height:54px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--on-accent);font-size:26px;box-shadow:0 4px 12px var(--accent-glow);border:none;font-family:inherit;cursor:pointer;transform:{{ fabRotate }};transition:transform .3s cubic-bezier(.2,.9,.2,1),background .35s ease" style-active="transform:scale(.9)" onClick="{{ toggleAdd }}"><span class="msr" style="font-size:24px">add</span></button>
+</div>
+</sc-if>
+
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ sims }}" as="s" hint-placeholder-count="4">
+<button style="background:{{ s.bg }};border:1px solid var(--line);color:{{ s.color }};border-radius:12px;padding:7px 12px;font-size:10px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .2s ease,color .2s ease" style-hover="border-color:var(--accent-line)" onClick="{{ s.run }}">{{ s.label }}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="width:280px;display:flex;flex-direction:column;gap:14px;padding-top:8px">
+<span style="font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--text-2)">TRY THESE</span>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ hints }}" as="h" hint-placeholder-count="9">
+<div style="display:flex;gap:10px;font-size:11px;line-height:1.5;color:var(--text-2)"><span style="color:var(--text-3);font-weight:700;min-width:14px">{{ h.n }}</span><span><b style="color:var(--text);font-weight:700">{{ h.what }}</b> {{ h.detail }}</span></div>
+</sc-for>
+</div>
+</div>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:800,&quot;height&quot;:1000}}">
+const TAGS = {
+  math: 'Math & Logic', health: 'Health & Medicine', hist: 'History', tech: 'Technology',
+  mind: 'Mind & Psych', geo: 'Geopolitics', esp: 'Espionage', phys: 'Physical Cond.', sci: 'Science'
+};
+const BASE_DOMAINS = [
+  { name: 'Science & Nature', count: 14, main: '#2e9e5b', light: '#8FD1AC', key: 'sci' },
+  { name: 'History & Civilization', count: 11, main: '#d97635', light: '#F3BE8B', key: 'hist' },
+  { name: 'Math & Logic', count: 9, main: '#3b5fc4', light: '#A9BBEF', key: 'math' },
+  { name: 'Technology', count: 8, main: '#7a5fc4', light: '#C9BCEF', key: 'tech' },
+  { name: 'Mind & Psychology', count: 7, main: '#c45f8a', light: '#EFB9CE', key: 'mind' },
+  { name: 'Health & Medicine', count: 6, main: '#2f9e93', light: '#93D9D1', key: 'health' }
+];
+const ALL_NOTES = [
+  { title: 'Nash Equilibrium', key: 'math', date: 'Aug 14' },
+  { title: 'mRNA Vaccines', key: 'health', date: 'Aug 13' },
+  { title: 'Byzantine Empire', key: 'hist', date: 'Aug 12' },
+  { title: 'Illustrated Transformer', key: 'tech', date: 'Aug 11' },
+  { title: 'Loss Aversion & Anchoring', key: 'mind', date: 'Aug 10' },
+  { title: 'Silk Road Trade Networks', key: 'geo', date: 'Aug 9' },
+  { title: 'CIA Tradecraft History', key: 'esp', date: 'Aug 8' },
+  { title: "Bayes' Theorem", key: 'math', date: 'Aug 7' },
+  { title: 'Boxing Fundamentals', key: 'phys', date: 'Aug 6' }
+];
+const TOMORROW = ['Bronze Age Collapse', 'CIA Tradecraft History', 'CRISPR Gene Editing', 'Boxing Fundamentals'];
+const SWATCHES = ['#3b5fc4', '#2e9e5b', '#d97635', '#7a5fc4', '#c45f8a', '#2f9e93'];
+const ACCENTS = [{ id: 'neutral', color: 'var(--text)' }, { id: 'terracotta', color: '#d97635' }, { id: 'olive', color: '#5c6b2c' }, { id: 'blue', color: '#3b5fc4' }];
+const TOOLS = [{ id: 'text', icon: 'text_fields' }, { id: 'highlight', icon: 'highlight' }, { id: 'image', icon: 'image' }, { id: 'link', icon: 'link' }];
+const SECTIONS = [{ id: 'sec-brief', label: 'Brief' }, { id: 'sec-index', label: 'Concept Index' }, { id: 'sec-detail', label: 'Detailed Notes' }, { id: 'sec-res', label: 'Resources' }];
+const SKEL = {
+  home: { bars: [{ h: '18px', w: '55%', r: '6px' }, { h: '150px', w: '100%', r: '20px' }, { h: '14px', w: '35%', r: '6px' }], tiles: [38, 38, 38, 38] },
+  topics: { bars: [{ h: '20px', w: '35%', r: '6px' }, { h: '32px', w: '100%', r: '16px' }], tiles: [88, 88, 88, 88] },
+  settings: { bars: [{ h: '20px', w: '35%', r: '6px' }, { h: '70px', w: '100%', r: '20px' }, { h: '70px', w: '100%', r: '20px' }], tiles: [] },
+  note: { bars: [{ h: '16px', w: '65%', r: '6px' }, { h: '10px', w: '24%', r: '6px' }, { h: '7px', w: '95%', r: '6px' }, { h: '7px', w: '88%', r: '6px' }, { h: '7px', w: '70%', r: '6px' }], tiles: [] }
+};
+
+class Component extends DCLogic {
+  state = {
+    mode: 'dark', accent: 'neutral', tab: 'home', detail: null, sheet: null,
+    loading: 'home', visited: { home: true }, toast: null, toastIcon: 'check_circle',
+    picked: null, view: 'cat', filter: null, domains: BASE_DOMAINS,
+    note: { title: 'Nash Equilibrium', key: 'math' }, noteScroll: 0,
+    editing: false, tool: 'highlight', callout: null, hl: {}, sync: null,
+    notif1: true, notif2: true, domainName: '', domainColor: '#3b5fc4',
+    topicText: '', pickedDomain: 'History & Civilization', wheelIndex: 1,
+    quickText: '', quickSaved: false, homeEmpty: false, failNext: false,
+    sheetClosing: false, toastClosing: false
+  };
+  timers = [];
+  componentDidMount() { this.after(900, () => this.setState({ loading: null })); }
+  componentWillUnmount() { this.timers.forEach(clearTimeout); }
+  after(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
+
+  toast(text, icon) {
+    this.setState({ toast: text, toastIcon: icon || 'check_circle', toastClosing: false });
+    this.after(2200, () => this.setState({ toastClosing: true }));
+    this.after(2400, () => this.setState({ toast: null, toastClosing: false }));
+  }
+  closeSheet() {
+    this.setState({ sheetClosing: true });
+    this.after(260, () => this.setState({ sheet: null, sheetClosing: false }));
+  }
+  goTab = (tab) => () => {
+    if (this.state.tab === tab && !this.state.detail) return;
+    const first = !this.state.visited[tab];
+    this.setState({ tab, detail: null, sheet: null, editing: false, callout: null, filter: null, loading: first ? tab : null, visited: Object.assign({}, this.state.visited, { [tab]: true }) });
+    if (first) this.after(650, () => this.setState({ loading: null }));
+  };
+  openNoteFor = (note) => {
+    this.setState({ detail: 'note', note, loading: 'note', noteScroll: 0, editing: false, callout: null, hl: {}, sync: null });
+    this.after(600, () => this.setState({ loading: null }));
+  };
+
+  renderVals() {
+    const s = this.state;
+    const dark = s.mode === 'dark';
+    const tagVars = (k) => ({ bg: 'var(--tag-' + k + '-bg)', fg: 'var(--tag-' + k + '-fg)' });
+    const filtered = s.filter ? ALL_NOTES.filter(n => n.key === s.filter.key) : [];
+    const skel = SKEL[s.loading] || SKEL.home;
+    const sync = s.sync;
+    const domainNames = s.domains.map(d => d.name).concat(['Geopolitics', 'Espionage', 'Physical Cond.']);
+
+    return {
+      mode: s.mode, accent: s.accent,
+      showLoading: !!s.loading,
+      showHome: !s.loading && s.tab === 'home' && !s.detail,
+      homeHasToday: !s.homeEmpty, homeEmpty: s.homeEmpty,
+      showTopics: !s.loading && s.tab === 'topics' && !s.detail,
+      showSettings: !s.loading && s.tab === 'settings' && !s.detail,
+      showDomain: !s.loading && s.detail === 'domain',
+      showPrompt: !s.loading && s.detail === 'prompt',
+      showNote: !s.loading && s.detail === 'note',
+      showQuick: s.detail === 'quick',
+      showTabBar: s.detail !== 'note' && s.detail !== 'quick',
+      skelBars: skel.bars, skelTiles: skel.tiles.map(h => ({ h: h + 'px' })),
+
+      tabs: [['home', 'home', 'Home'], ['topics', 'folder', 'Topics'], ['settings', 'settings', 'Settings']].map(([id, icon, label]) => {
+        const on = s.tab === id && !s.detail;
+        return { icon, label, go: this.goTab(id), bg: on ? 'var(--accent)' : 'transparent', color: on ? 'var(--on-accent)' : 'var(--text-2)', pad: on ? '8px 14px' : '8px 10px', labelW: on ? '48px' : '0px' };
+      }),
+      fabRotate: s.sheet === 'add' || s.sheet === 'wheel' ? 'rotate(135deg)' : 'rotate(0deg)',
+      toast: s.toast, toastIcon: s.toastIcon,
+      toastAnim: s.toastClosing ? 'om-toast-out .2s ease forwards' : 'om-toast .36s cubic-bezier(.2,.9,.2,1)',
+
+      tomorrow: TOMORROW.map((name, i) => ({
+        name, pick: () => { this.setState({ picked: i }); this.toast('Saved as tomorrow\u2019s pick'); },
+        bg: s.picked === i ? 'var(--accent)' : 'var(--surface)',
+        fg: s.picked === i ? 'var(--on-accent)' : 'var(--text)',
+        border: s.picked === i ? '1px solid transparent' : '1px solid var(--line)',
+        weight: s.picked === i ? 700 : 500,
+        scale: s.picked === i ? 'scale(1.03)' : 'scale(1)'
+      })),
+      openNote: () => this.openNoteFor({ title: 'Nash Equilibrium', key: 'math' }),
+      openYesterday: () => this.openNoteFor({ title: 'mRNA Vaccines', key: 'health' }),
+      openQuick: () => this.setState({ detail: 'quick', quickSaved: false }),
+      closeQuick: () => this.setState({ detail: null }),
+      saveQuick: () => { this.setState({ detail: null }); this.toast('Note saved', 'edit_note'); },
+      quickStamp: s.quickSaved ? 'SAVED 9:41 AM' : 'NOT SAVED YET',
+      quickText: s.quickText,
+      setQuickText: (e) => this.setState({ quickText: e.target.value, quickSaved: true }),
+
+      isCat: s.view === 'cat', isAll: s.view === 'all',
+      segThumb: s.view === 'cat' ? 'translateX(0)' : 'translateX(100%)',
+      catColor: s.view === 'cat' ? 'var(--text)' : 'var(--text-2)', catWeight: s.view === 'cat' ? 700 : 500,
+      allColor: s.view === 'all' ? 'var(--text)' : 'var(--text-2)', allWeight: s.view === 'all' ? 700 : 500,
+      setCat: () => this.setState({ view: 'cat' }), setAll: () => this.setState({ view: 'all' }),
+      domains: s.domains.map((d, i) => Object.assign({}, d, { delay: (i * 45) + 'ms', open: () => this.setState({ detail: 'domain', filter: d }) })),
+      allNotes: ALL_NOTES.map((n, i) => Object.assign({ tag: TAGS[n.key], tagBg: tagVars(n.key).bg, tagFg: tagVars(n.key).fg, delay: (i * 30) + 'ms', open: () => this.openNoteFor(n) }, n)),
+      backToTopics: () => this.setState({ detail: null, filter: null }),
+      domainTitle: s.filter ? s.filter.name : '', domainCount: s.filter ? s.filter.count : 0,
+      domainHasNotes: filtered.length > 0, domainEmpty: filtered.length === 0,
+      domainNotes: filtered.map((n, i) => ({ title: n.title, date: n.date, delay: (i * 45) + 'ms', open: () => this.openNoteFor(n) })),
+
+      noteTitle: s.note.title, noteTag: TAGS[s.note.key], noteTagBg: tagVars(s.note.key).bg, noteTagFg: tagVars(s.note.key).fg,
+      noteRef: (el) => { this.noteEl = el; },
+      onNoteScroll: (e) => { const t = e.target.scrollTop; if (Math.abs(t - s.noteScroll) > 6) this.setState({ noteScroll: t, callout: null }); },
+      headerTitleOpacity: s.noteScroll > 24 ? 1 : 0,
+      headerShadow: s.noteScroll > 8 ? '0 6px 18px -8px rgba(0,0,0,.5)' : '0 0 0 rgba(0,0,0,0)',
+      closeNote: () => this.setState({ detail: null, editing: false, callout: null }),
+      openToc: () => this.setState({ sheet: 'toc' }),
+      editing: s.editing, tool: s.tool,
+      tools: TOOLS.map(t => ({ icon: t.icon, pick: () => this.setState({ tool: t.id }), bg: s.tool === t.id ? 'var(--accent)' : 'transparent', color: s.tool === t.id ? 'var(--on-accent)' : 'var(--text-2)', scale: s.tool === t.id ? 'scale(1.06)' : 'scale(1)' })),
+      tapA: () => this.setState({ editing: true, callout: null }),
+      tapB: () => this.setState({ editing: true, callout: s.callout === 'b' ? null : 'b' }),
+      tapC: () => { this.setState({ editing: true }); if (s.tool === 'highlight') this.applyHl('c'); },
+      calloutB: s.callout === 'b',
+      applyHlB: () => this.applyHl('b'),
+      copyText: () => { this.setState({ callout: null }); this.toast('Copied', 'content_copy'); },
+      hlA: s.hl.a ? '100%' : '0%', hlAColor: s.hl.a ? 'var(--hl-text)' : 'var(--text-body)',
+      hlB: s.hl.b ? '100%' : '0%', hlBColor: s.hl.b ? 'var(--hl-text)' : 'var(--text-body)',
+      hlC: s.hl.c ? '100%' : '0%', hlCColor: s.hl.c ? 'var(--hl-text)' : 'var(--text-body)',
+      syncVisible: !!sync,
+      syncText: sync === 'saving' ? 'Saving to Notion…' : sync === 'saved' ? 'Saved to Notion' : 'Save failed — edits not synced. Tap to retry.',
+      syncIcon: sync === 'saving' ? 'progress_activity' : sync === 'saved' ? 'cloud_done' : 'error',
+      syncIconAnim: sync === 'saving' ? 'om-spin 1s linear infinite' : 'none',
+      syncBg: sync === 'failed' ? 'var(--danger-bg)' : 'var(--well)',
+      syncColor: sync === 'failed' ? 'var(--danger)' : 'var(--text-2)',
+      syncAnim: sync === 'failed' ? 'om-shake .45s ease' : 'om-row .25s ease',
+      retrySave: () => { if (s.sync === 'failed') this.runSave(false); },
+
+      tocRows: SECTIONS.map((sec, i) => ({
+        label: sec.label, delay: (i * 40) + 'ms',
+        color: i === 0 ? 'var(--text)' : 'var(--text-2)', weight: i === 0 ? 700 : 500,
+        jump: () => { const el = this.noteEl && this.noteEl.querySelector('#' + sec.id); if (el && this.noteEl) this.noteEl.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' }); this.setState({ sheet: null }); }
+      })),
+
+      scrim: !!s.sheet,
+      dismissSheet: () => this.closeSheet(),
+      sheetAnim: s.sheetClosing ? 'om-sheet-out .26s cubic-bezier(.2,.8,.2,1) forwards' : 'om-sheet .34s cubic-bezier(.2,.9,.2,1)',
+      scrimAnim: s.sheetClosing ? 'om-scrim-out .2s ease forwards' : 'om-scrim .22s ease',
+      sheetToc: s.sheet === 'toc', sheetAdd: s.sheet === 'add', sheetWheel: s.sheet === 'wheel',
+      sheetConfirm: s.sheet === 'confirm', sheetDomain: s.sheet === 'domain',
+      toggleAdd: () => {
+        if (s.sheet === 'add' || s.sheet === 'wheel') { this.closeSheet(); return; }
+        this.setState({ sheet: 'add', detail: s.detail === 'note' || s.detail === 'quick' ? null : s.detail });
+      },
+      topicText: s.topicText, setTopicText: (e) => this.setState({ topicText: e.target.value }),
+      pickedDomain: s.pickedDomain,
+      submitBg: s.topicText.trim() ? 'var(--accent)' : 'var(--line)',
+      submitColor: s.topicText.trim() ? 'var(--on-accent)' : 'var(--text-3)',
+      submitCursor: s.topicText.trim() ? 'pointer' : 'not-allowed',
+      submitOpacity: s.topicText.trim() ? 1 : .7,
+      submitTopic: () => { if (s.topicText.trim()) this.setState({ sheet: 'confirm' }); },
+      confirmLine: '“' + (s.topicText.trim() || 'Your topic') + '” is queued in ' + s.pickedDomain + '. You\u2019ll get a notification once the note is ready.',
+      openWheel: () => { this.setState({ sheet: 'wheel' }); this.after(60, () => { if (this.wheelEl) this.wheelEl.scrollTop = s.wheelIndex * 40; }); },
+      closeWheel: () => this.setState({ sheet: 'add' }),
+      wheelRef: (el) => { this.wheelEl = el; },
+      onWheelScroll: (e) => { const i = Math.max(0, Math.min(domainNames.length - 1, Math.round(e.target.scrollTop / 40))); if (i !== s.wheelIndex) this.setState({ wheelIndex: i, pickedDomain: domainNames[i] }); },
+      wheelItems: domainNames.map((name, i) => {
+        const d = Math.abs(i - s.wheelIndex);
+        return { name, pick: () => { this.setState({ wheelIndex: i, pickedDomain: name }); if (this.wheelEl) this.wheelEl.scrollTo({ top: i * 40, behavior: 'smooth' }); }, size: d === 0 ? '12px' : '10px', weight: d === 0 ? 800 : 500, color: d === 0 ? 'var(--text)' : d === 1 ? 'var(--text-3)' : 'var(--text-3)' };
+      }),
+
+      openNewDomain: () => this.setState({ sheet: 'domain', domainName: '' }),
+      domainName: s.domainName, setDomainName: (e) => this.setState({ domainName: e.target.value }),
+      swatches: SWATCHES.map(c => ({ color: c, pick: () => this.setState({ domainColor: c }), ring: s.domainColor === c ? '0 0 0 2px var(--surface),0 0 0 4px var(--text)' : 'none', scale: s.domainColor === c ? 'scale(1.06)' : 'scale(1)' })),
+      createBg: s.domainName.trim() ? 'var(--accent)' : 'var(--line)',
+      createColor: s.domainName.trim() ? 'var(--on-accent)' : 'var(--text-3)',
+      createCursor: s.domainName.trim() ? 'pointer' : 'not-allowed',
+      createOpacity: s.domainName.trim() ? 1 : .7,
+      createDomain: () => {
+        const name = s.domainName.trim(); if (!name) return;
+        const light = this.tint(s.domainColor);
+        this.setState({ domains: [{ name, count: 0, main: s.domainColor, light, key: 'sci' }].concat(s.domains), sheet: null, view: 'cat', tab: 'topics', detail: null, domainName: '' });
+        this.toast(name + ' added to your domains', 'folder');
+      },
+
+      openPrompt: () => this.setState({ detail: 'prompt' }),
+      backToSettings: () => this.setState({ detail: null }),
+      promptRows: [{ k: 'Schedule', v: '8:00 AM, daily' }, { k: 'Session length', v: '1 hour' }, { k: 'Destination', v: 'Notion' }, { k: 'Rotation', v: s.domains.length + ' domains' }],
+      toggles: [
+        { label: "Today's note ready", on: s.notif1, toggle: () => this.setState({ notif1: !s.notif1 }) },
+        { label: 'Custom topic ready', on: s.notif2, toggle: () => this.setState({ notif2: !s.notif2 }) }
+      ].map(t => ({ label: t.label, toggle: t.toggle, bg: t.on ? 'var(--accent)' : 'var(--line)', knob: t.on ? 'var(--on-accent)' : 'var(--text-2)', pos: t.on ? '14px' : '2px' })),
+      darkBg: dark ? 'var(--accent)' : 'var(--line)', darkKnob: dark ? 'var(--on-accent)' : 'var(--text-2)', darkPos: dark ? '14px' : '2px',
+      toggleMode: () => this.setState({ mode: dark ? 'light' : 'dark' }),
+      accents: ACCENTS.map(a => ({ color: a.color, pick: () => this.setState({ accent: a.id }), ring: s.accent === a.id ? '0 0 0 2px var(--well),0 0 0 4px var(--text)' : 'none', scale: s.accent === a.id ? 'scale(1.1)' : 'scale(1)' })),
+      totalNotes: 84 + s.domains.length, domainCountTotal: s.domains.length + 9,
+
+      sims: [
+        { label: 'Reload screen', on: false, run: () => { const t = s.detail === 'note' ? 'note' : s.tab; this.setState({ loading: t }); this.after(900, () => this.setState({ loading: null })); } },
+        { label: 'First-launch empty', on: s.homeEmpty, run: () => this.setState({ homeEmpty: !s.homeEmpty, tab: 'home', detail: null, picked: null }) },
+        { label: 'Next save fails', on: s.failNext, run: () => this.setState({ failNext: !s.failNext }) }
+      ].map(x => ({ label: x.label, run: x.run, bg: x.on ? 'var(--accent)' : 'transparent', color: x.on ? 'var(--on-accent)' : 'var(--text-2)' })),
+
+      hints: [
+        { n: '01', what: 'Tap a “for tomorrow” card', detail: '— it fills with the accent and a toast confirms the write.' },
+        { n: '02', what: 'Read now', detail: '— the note pushes in; scrolling collapses the title into the header.' },
+        { n: '03', what: 'Tap the Prisoner’s Dilemma line', detail: '— a callout offers Highlight, and the highlight wipes in.' },
+        { n: '04', what: 'The toc icon', detail: '— sheet slides up, rows stagger, tapping one smooth-scrolls.' },
+        { n: '05', what: 'The + FAB', detail: '— rotates into a close mark; the topic sheet needs text before it will queue.' },
+        { n: '06', what: 'Domain field', detail: '— a snapping wheel picker; the centred row grows.' },
+        { n: '07', what: 'Topics segmented control', detail: '— the thumb slides; grid cards stagger in.' },
+        { n: '08', what: '+ Domain', detail: '— pick a swatch, create, and the new folder lands at the top.' },
+        { n: '09', what: 'Settings → Appearance', detail: '— dark mode and all four accents recolour the whole app live.' }
+      ]
+    };
+  }
+
+  applyHl(id) {
+    this.setState({ hl: Object.assign({}, this.state.hl, { [id]: true }), callout: null });
+    this.runSave(this.state.failNext);
+  }
+  runSave(fail) {
+    this.setState({ sync: 'saving' });
+    this.after(900, () => {
+      if (fail) { this.setState({ sync: 'failed', failNext: false }); }
+      else { this.setState({ sync: 'saved' }); this.after(1600, () => this.setState({ sync: null })); }
+    });
+  }
+  tint(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const mix = (c) => Math.round(c + (255 - c) * 0.55);
+    return '#' + [mix(n >> 16 & 255), mix(n >> 8 & 255), mix(n & 255)].map(v => v.toString(16).padStart(2, '0')).join('');
+  }
+}
+
+</script>
+</body>
+</html>
