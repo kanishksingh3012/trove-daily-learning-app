@@ -13,7 +13,7 @@ export default function TabsBottomBar() {
         position: "fixed",
         left: "50%",
         transform: "translateX(-50%)",
-        bottom: 26,
+        bottom: "calc(26px + env(safe-area-inset-bottom, 0px))",
         width: "100%",
         maxWidth: 480,
         padding: "0 24px",

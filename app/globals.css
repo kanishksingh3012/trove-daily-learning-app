@@ -177,6 +177,8 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html {
@@ -232,7 +234,7 @@ a {
 }
 
 .status-bar {
-  height: 60px;
+  height: max(60px, env(safe-area-inset-top, 0px));
   flex-shrink: 0;
 }
 

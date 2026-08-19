@@ -64,7 +64,9 @@ export default function AddTopicSheet({ open, onClose }: { open: boolean; onClos
                 border: "1px solid transparent",
                 borderRadius: 18,
                 padding: 14,
-                fontSize: 13,
+                // 16px, not the 13px note-body size — iOS Safari auto-zooms
+                // the viewport on focus for any input under 16px.
+                fontSize: 16,
                 color: "var(--text)",
                 outline: "none",
               }}

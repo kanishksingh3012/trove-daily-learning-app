@@ -38,7 +38,34 @@ const READ_LOG_SEED: Record<string, number> = {
   "2026-08-12": 1,
   "2026-07-22": 1,
   "2026-07-15": 2,
+  "2026-07-08": 1,
+  "2026-07-01": 2,
   "2026-06-30": 1,
+  "2026-06-24": 1,
+  "2026-06-17": 2,
+  "2026-06-10": 1,
+  "2026-06-03": 1,
+  "2026-05-27": 2,
+  "2026-05-20": 1,
+  "2026-05-13": 1,
+  "2026-05-06": 2,
+  "2026-04-29": 1,
+  "2026-04-22": 1,
+  "2026-04-15": 2,
+  "2026-04-08": 1,
+  "2026-04-01": 1,
+  "2026-03-25": 2,
+  "2026-03-18": 1,
+  "2026-03-11": 1,
+  "2026-03-04": 2,
+  "2026-02-25": 1,
+  "2026-02-18": 1,
+  "2026-02-11": 2,
+  "2026-02-04": 1,
+  "2026-01-28": 1,
+  "2026-01-21": 2,
+  "2026-01-14": 1,
+  "2026-01-07": 1,
 };
 
 // Notes already marked read (locks the "I have read this" button) —
@@ -146,9 +173,15 @@ export function buildActivity(log: Record<string, number>, today: Date): { weeks
 
   while (cur <= today) {
     const days: ActivityDay[] = [];
+    // Only a week that actually contains the 1st of a month gets labelled —
+    // reading whichever month the week's Sunday happened to fall in (the
+    // previous approach) mislabels the first week of the year as belonging
+    // to the *previous* December whenever Jan 1 isn't a Sunday, producing a
+    // "Dec" label immediately followed by "Jan" one column later. Since no
+    // month is shorter than 28 days, labelled columns are now never adjacent.
     let weekMonth = -1;
     for (let i = 0; i < 7; i++) {
-      if (i === 0) weekMonth = cur.getMonth();
+      if (cur.getDate() === 1) weekMonth = cur.getMonth();
       const isFuture = cur > today;
       const key = dateKey(cur);
       const count = isFuture ? 0 : log[key] || 0;
@@ -159,8 +192,8 @@ export function buildActivity(log: Record<string, number>, today: Date): { weeks
       });
       cur.setDate(cur.getDate() + 1);
     }
-    const monthLabel = weekMonth !== lastMonth ? MONTHS[weekMonth] : "";
-    lastMonth = weekMonth;
+    const monthLabel = weekMonth !== -1 && weekMonth !== lastMonth ? MONTHS[weekMonth] : "";
+    if (weekMonth !== -1) lastMonth = weekMonth;
     weeks.push({ days, monthLabel });
   }
 

@@ -23,7 +23,17 @@ export default function ActivityGraph() {
         <div style={{ display: "inline-flex", flexDirection: "column", gap: 3 }}>
           <div style={{ display: "flex", gap: 2 }}>
             {weeks.map((w, i) => (
-              <div key={i} style={{ width: 8, flex: "0 0 8px", fontSize: 7, color: "var(--text-3)" }}>
+              <div
+                key={i}
+                style={{
+                  width: 8,
+                  flex: "0 0 8px",
+                  fontSize: 7,
+                  color: "var(--text-3)",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {w.monthLabel}
               </div>
             ))}

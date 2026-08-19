@@ -49,7 +49,9 @@ export default function QuickNoteSheet({
           border: "1px solid transparent",
           borderRadius: 18,
           padding: 14,
-          fontSize: 13,
+          // 16px, not the 13px note-body size — iOS Safari auto-zooms the
+          // viewport on focus for any input under 16px.
+          fontSize: 16,
           lineHeight: 1.6,
           color: "var(--text)",
           fontFamily: "var(--font-sans)",
