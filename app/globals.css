@@ -234,7 +234,7 @@ a {
 }
 
 .status-bar {
-  height: max(60px, env(safe-area-inset-top, 0px));
+  height: calc(60px + env(safe-area-inset-top, 0px));
   flex-shrink: 0;
 }
 
