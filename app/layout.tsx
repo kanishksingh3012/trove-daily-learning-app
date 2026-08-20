@@ -34,6 +34,10 @@ export const viewport: Viewport = {
   themeColor: "#FDFCFA",
   width: "device-width",
   initialScale: 1,
+  // Native iOS apps don't support pinch-zooming their whole UI — matches
+  // that, and prevents an accidental pinch-out from getting stuck zoomed
+  // out in the installed standalone app (no page chrome to reset it via).
+  maximumScale: 1,
   viewportFit: "cover",
 };
 

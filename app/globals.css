@@ -225,7 +225,7 @@ a {
 .app-shell {
   max-width: 480px;
   margin: 0 auto;
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--frame);
   position: relative;
   display: flex;

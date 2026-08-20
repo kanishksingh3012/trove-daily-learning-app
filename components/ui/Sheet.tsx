@@ -39,10 +39,18 @@ export default function Sheet({
 
   useEffect(() => {
     if (!mounted) return;
-    const prev = document.body.style.overflow;
+    // .app-shell is height-capped to the viewport, so .screen-scroll (not
+    // body) is the element that actually scrolls on tab screens — lock
+    // both so the background can't scroll behind an open sheet regardless
+    // of which one applies for the current screen.
+    const scrollEl = document.querySelector<HTMLElement>(".screen-scroll");
+    const prevBody = document.body.style.overflow;
+    const prevScroll = scrollEl?.style.overflow;
     document.body.style.overflow = "hidden";
+    if (scrollEl) scrollEl.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevBody;
+      if (scrollEl) scrollEl.style.overflow = prevScroll ?? "";
     };
   }, [mounted]);
 
