@@ -68,7 +68,14 @@ export default function HomeScreen() {
       >
         <div>
           <div style={{ fontSize: 11, color: "var(--text-3)" }}>Welcome back {USER_NAME}!</div>
-          <div style={{ fontFamily: "var(--font-serif)", fontSize: 22, color: "var(--text)", marginTop: 2 }}>
+          <div
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "calc(22px * var(--tweak-title-scale, 1))",
+              color: "var(--text)",
+              marginTop: 2,
+            }}
+          >
             {DEMO_DATE.toLocaleDateString("en-GB", { day: "numeric", month: "long" })}, {DEMO_DATE.getFullYear()}
           </div>
         </div>
@@ -129,7 +136,9 @@ export default function HomeScreen() {
                 display: "block",
                 width: "calc(100% - 40px)",
                 textAlign: "center",
-                margin: "16px 20px 0",
+                marginTop: "calc(16px * var(--tweak-gap-scale, 1))",
+                marginLeft: 20,
+                marginRight: 20,
                 borderRadius: "var(--r-hero)",
                 padding: "22px 18px 20px",
                 background: "var(--grad)",
@@ -152,7 +161,15 @@ export default function HomeScreen() {
               >
                 {getDomain(today.domainId)?.name}
               </span>
-              <div style={{ fontFamily: "var(--font-serif)", fontSize: 28, color: "var(--text)", marginTop: 8, lineHeight: 1.15 }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-serif)",
+                  fontSize: "calc(28px * var(--tweak-title-scale, 1))",
+                  color: "var(--text)",
+                  marginTop: 8,
+                  lineHeight: 1.15,
+                }}
+              >
                 {today.topicName}
               </div>
               <div style={{ fontSize: 11, color: "var(--text-2)", marginTop: 8, lineHeight: 1.55 }}>{today.blurb}</div>
@@ -176,7 +193,7 @@ export default function HomeScreen() {
             </button>
           )}
 
-          <div style={{ padding: "20px 20px 0" }}>
+          <div style={{ paddingTop: "calc(20px * var(--tweak-gap-scale, 1))", paddingLeft: 20, paddingRight: 20 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)" }}>For tomorrow, select</div>
               <div style={{ fontSize: 10, color: "var(--text-3)" }}>
@@ -241,7 +258,9 @@ export default function HomeScreen() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                margin: "18px 20px 0",
+                marginTop: "calc(18px * var(--tweak-gap-scale, 1))",
+                marginLeft: 20,
+                marginRight: 20,
                 background: "var(--surface)",
                 borderRadius: 18,
                 padding: "12px 14px",

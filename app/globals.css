@@ -57,6 +57,13 @@
   --cat-other: #8a8577;
   --cat-other-tint: #f5f4f0;
 
+  /* -- live-tweakable (see components/DevTweakPanel.tsx) --
+     Temporary knobs for on-device tuning; read/written via JS, not meant
+     to stay referenced by name once real values are picked and hardcoded. */
+  --tweak-statusbar: 60px;
+  --tweak-title-scale: 1;
+  --tweak-gap-scale: 1;
+
   /* -- geometry -- */
   --r-device: 55px;
   --r-sheet: 32px;
@@ -234,7 +241,7 @@ a {
 }
 
 .status-bar {
-  height: calc(60px + env(safe-area-inset-top, 0px));
+  height: calc(var(--tweak-statusbar) + env(safe-area-inset-top, 0px));
   flex-shrink: 0;
 }
 
