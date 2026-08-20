@@ -60,10 +60,10 @@
   /* -- live-tweakable (see components/DevTweakPanel.tsx) --
      Temporary knobs for on-device tuning; read/written via JS, not meant
      to stay referenced by name once real values are picked and hardcoded. */
-  --tweak-statusbar: 60px;
-  --tweak-title-scale: 1;
-  --tweak-gap-scale: 1;
-  --tweak-scale: 1;
+  --tweak-statusbar: 0px;
+  --tweak-title-scale: 1.1;
+  --tweak-gap-scale: 1.3;
+  --tweak-scale: 0.85;
 
   /* -- geometry -- */
   --r-device: 55px;
@@ -249,19 +249,18 @@ a {
 .screen-scroll {
   flex: 1 1 auto;
   overflow-y: auto;
-  padding: 0 20px;
 }
 
-/* General "make everything bigger" control. transform:scale() renders the
-   wrapper's content larger without changing its own layout box, so the
-   pre-transform width is deliberately shrunk by the same factor the
-   transform grows it by (100%/scale, then scale() back up to ~100%) —
-   the two cancel out exactly, so there's no horizontal overflow at any
-   scale value. Vertical growth needs no such compensation: .screen-scroll
-   already scrolls, so a taller wrapper just means more to scroll through,
-   which is the correct behaviour. (transform, not the non-standard `zoom`
-   property, which testing showed doesn't reliably self-compensate.) */
+/* "Make everything bigger" control, including the side gutters — padding
+   lives here (inside the scaled box) rather than on .screen-scroll, so it
+   scales along with everything else instead of staying a fixed 20px
+   boundary. transform:scale() renders bigger without changing its own
+   layout box, so the pre-transform width is deliberately shrunk by the
+   same factor the transform grows it by (100%/scale, then scale() back
+   up to ~100%) — the two cancel out exactly, no horizontal overflow at
+   any scale value. */
 .tweak-scale-wrapper {
+  padding: 0 20px;
   width: calc(100% / var(--tweak-scale, 1));
   transform: scale(var(--tweak-scale, 1));
   transform-origin: top left;

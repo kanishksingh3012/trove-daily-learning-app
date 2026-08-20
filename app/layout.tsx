@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Lora } from "next/font/google";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
-import DevTweakPanel from "@/components/DevTweakPanel";
 import "./globals.css";
 import "./motion.css";
 
@@ -72,7 +71,6 @@ export default function RootLayout({
       <body>
         <div className="app-shell">{children}</div>
         <ServiceWorkerRegister />
-        <DevTweakPanel />
       </body>
     </html>
   );
