@@ -4,13 +4,17 @@ import { useEffect, useState } from "react";
 
 // Temporary, user-requested on-device tuning tool — NOT part of the design.
 // Lets values that were hard to get right by guessing through screenshots
-// (top spacer height, title text size, section spacing) be adjusted live
-// on the real device, so the final numbers can be reported back and
-// hardcoded properly. Safe to delete once tuning is done — nothing else
-// depends on this file. Deliberately avoids the CSS `zoom` property for a
-// blanket "scale everything" control — testing showed it doesn't reliably
-// compensate its own width, risking real horizontal overflow. Font-size
-// and spacing multipliers are plain, standard CSS with no such risk.
+// (top spacer height, title text size, section spacing, overall content
+// scale) be adjusted live on the real device, so the final numbers can be
+// reported back and hardcoded properly. Safe to delete once tuning is
+// done — nothing else depends on this file.
+//
+// The "Design scale" slider drives .tweak-scale-wrapper (app/globals.css)
+// via CSS transform:scale(), not the non-standard `zoom` property — an
+// earlier attempt with `zoom` didn't reliably self-compensate its own
+// width and risked real horizontal overflow. transform:scale() combined
+// with a pre-shrunk width (100%/scale) cancels out exactly, verified
+// against actual overflow measurements before shipping.
 
 const STORAGE_KEY = "trove-dev-tweak";
 
@@ -18,15 +22,17 @@ interface TweakValues {
   statusbar: number;
   titleScale: number;
   gapScale: number;
+  scale: number;
 }
 
-const DEFAULTS: TweakValues = { statusbar: 60, titleScale: 1, gapScale: 1 };
+const DEFAULTS: TweakValues = { statusbar: 60, titleScale: 1, gapScale: 1, scale: 1 };
 
 function apply(values: TweakValues) {
   const root = document.documentElement;
   root.style.setProperty("--tweak-statusbar", `${values.statusbar}px`);
   root.style.setProperty("--tweak-title-scale", String(values.titleScale));
   root.style.setProperty("--tweak-gap-scale", String(values.gapScale));
+  root.style.setProperty("--tweak-scale", String(values.scale));
 }
 
 function readSaved(): TweakValues {
@@ -71,7 +77,7 @@ export default function DevTweakPanel() {
   }
 
   async function copySummary() {
-    const text = `statusbar: ${values.statusbar}px\ntitleScale: ${values.titleScale}\ngapScale: ${values.gapScale}`;
+    const text = `statusbar: ${values.statusbar}px\ntitleScale: ${values.titleScale}\ngapScale: ${values.gapScale}\nscale: ${values.scale}`;
     try {
       await navigator.clipboard.writeText(text);
     } catch {
@@ -102,6 +108,18 @@ export default function DevTweakPanel() {
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".04em", textTransform: "uppercase", opacity: 0.6 }}>
             Tuning panel
           </div>
+
+          <label style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 12 }}>
+            <span>Design scale — {values.scale.toFixed(2)}x</span>
+            <input
+              type="range"
+              min={0.85}
+              max={1.3}
+              step={0.01}
+              value={values.scale}
+              onChange={(e) => update({ scale: Number(e.target.value) })}
+            />
+          </label>
 
           <label style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 12 }}>
             <span>Top space — {values.statusbar}px</span>
